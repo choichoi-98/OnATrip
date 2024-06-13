@@ -39,9 +39,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools' //html 변경 바로 적용, 자동 리로딩
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'//sql 파라미터 로그
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+	//implementation 'mysql:mysql-connector-j'
 
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//JUnit4 추가

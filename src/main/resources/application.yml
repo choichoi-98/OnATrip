@@ -1,0 +1,39 @@
+server:
+  port: 9100
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/travel
+    username: travel
+    password: us
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #mvc:
+  # view:
+  #   prefix: /WEB-INF/templates
+  #   suffix: .html
+  thymeleaf:
+    check-template-location: true
+    prefix: classpath:/templates/   # .html 파일을 불러오기 위한 경로 설정(src/main/resources/templates)
+    suffix: .html   # 파일 확장자
+    cache: false
+    mvc:
+      view:
+        prefix: /WEB-INF/templates
+        suffix: .html
+      static-path-pattern: /static/** # spring mvc 정적경로 변경
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true4
+        use_sql_comments: true        #jpql의 쿼리문을 보고싶을 때 사용
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+
