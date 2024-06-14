@@ -19,8 +19,8 @@ spring:
     cache: false
     mvc:
       view:
-        prefix: /WEB-INF/templates
-        suffix: .html
+#        prefix: /WEB-INF/templates
+#        suffix: .html
       static-path-pattern: /static/** # spring mvc 정적경로 변경
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
