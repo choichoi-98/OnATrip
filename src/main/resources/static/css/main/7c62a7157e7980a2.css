@@ -2363,7 +2363,10 @@ body {
 
 .bg-gray-800 {
     --tw-bg-opacity: 1;
+    background-color: #F5F6F5;
+/*
     background-color: rgb(247 248 249/var(--tw-bg-opacity))
+*/
 }
 
 .bg-lightScheme-confirm {
