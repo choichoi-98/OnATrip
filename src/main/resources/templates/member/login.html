@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<script src="/js/jquery-3.7.0.js"></script>
+<script src="/js/bootstrap.js"></script>
+<body>
+
+<div id="wrap">
+    <div class="container">
+        <div class="content login_page">
+            <h1 class="logo">
+                <a href="/main">
+                    <img src="../images/common/OnATrip_Logo.png">
+                </a>
+            </h1>
+            <form class="form_login" action="/member/login" method="POST">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                <div class="group">
+                    <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600
+                    rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="memberEmail" placeholder="이메일 주소" required="">
+                </div>
+
+                <div class="group">
+                    <input type="password" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600
+                    rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="memberPassword" placeholder="비밀번호" required="">
+                </div>
+
+                <a class="text-xs text-gray-500 hover:underline" href="/find-password">비밀번호를 잊으셨나요?</a>
+
+                <div class="btn_area">
+                    <button type="submit" class="relative w-full px-4 py-2 h-[48px] text-white bg-lightScheme-primary-focus rounded-md"
+                            style="background-color:#128D47; border-radius:10px; border-color:#128D47; border-width: 0px;">로그인</button>
+                </div>
+
+            </form>
+            <ul class="list_bar">
+
+                <li>
+                    <a href="/Member/join">회원가입</a>
+                </li>
+            </ul>
+            <ul class="list_sns">
+                <li>
+                    <button class="btn_sns_naver" value="naver"><span>네이버 아이디로 로그인</span>
+                        <img alt="naver_login" src="../images/member/naver.png">
+                    </button>
+                </li>
+                <li>
+                    <button class="btn_sns_kakao" value="kakao"><span>카카오톡 아이디로 로그인</span>
+                        <img alt="kakao_login" src="../images/member/kakao.png">
+
+                    </button>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <footer id="footer">
+        <address>Ⓒ OnATrip. All Rights Reserved.</address>
+    </footer>
+</div>
+
+</body>
+</html>
