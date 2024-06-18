@@ -33,6 +33,11 @@ spring:
         format_sql: true4
         use_sql_comments: true        #jpql의 쿼리문을 보고싶을 때 사용
 
+#카카오페이
+pay:
+  admin-key: 25f3c5241ac9ac3441dc3a1a2b893ae6
+  cid: TC0ONETIME
+
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
