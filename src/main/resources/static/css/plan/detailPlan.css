@@ -47,9 +47,20 @@
 
         .date-block {
             margin-top: 10px;
+            margin-left: 10px;
         }
 
         .btn-section {
             margin-top: 10px;
-            margin-left: 25px;
+            display: flex;
+            justify-content: center;
+            /*margin-left: 25px;*/
+        }
+        .btn-outline-primary{
+            color: rgb(18, 141, 71);
+            border-color: rgb(18, 141, 71);
+        }
+        .btn-outline-primary:hover{
+            background-color: rgb(199,200,122);
+            color: white;
         }

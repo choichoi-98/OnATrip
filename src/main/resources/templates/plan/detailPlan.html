@@ -12,13 +12,13 @@
 </head>
 <!--js 링크-->
 <script src="/js/jquery-3.7.0.js"></script>
-
 <script
         src="/js/plan/detailPlan.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/plan/detailPlan.css">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClupjj1Y0A3u-NHuIO7RaQZzZ5_5Yd2Mg&callback=myMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=[api_key]&callback=initMap&libraries=places&v=weekly&radius=5000"></script>
 
 <body>
 <div class="container-fluid">
@@ -52,20 +52,19 @@
                     <div class="container place-block">
                         <h6>유명한 전복김밥집</h6>
                     </div>
-                    <div class="d-flex flex-row btn-section">
+                    <div class="d-flex flex-row btn-section justify-content-center">
                         <div class="btn"><button type="button" class="btn btn-outline-secondary place-add">장소추가</button></div>
                         <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add">메모추가</button></div>
                     </div>
                 </div>
             </div>
-            <!-- Icon container -->
-<!--            <div class="icon-container" id="toggleSearch">-->
-<!--                <i class="fi fi-rr-angle-double-small-right" id="toggleIcon"></i>-->
-<!--            </div>-->
+
         </div>
         <div id="search-section" class="flex-fill">
-            <h2>Search Section</h2>
-            <!-- Content for search section goes here -->
+            <div class="input-group">
+                <input type="search" id="autocomplete" class="form-control rounded" placeholder="장소를 검색하세요." aria-label="Search" aria-describedby="search-addon" />
+                <button type="button" id="search-btn" class="btn btn-outline-primary">검색</button>
+            </div>
         </div>
         <div id="map-section" class="flex-fill">
             <div id="googleMap" style="width: 100%;height: 100%;">
