@@ -2241,7 +2241,7 @@ body {
 
 .border-lightScheme-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(152 221 227/var(--tw-border-opacity))
+    border-color: #C7C87A
 }
 
 .border-lightScheme-third {
@@ -3032,7 +3032,7 @@ body {
 
 .text-lightScheme-primary {
     --tw-text-opacity: 1;
-    color: rgb(152 221 227/var(--tw-text-opacity))
+    color: #C7C87A
 }
 
 .text-lightScheme-primary-focus {
