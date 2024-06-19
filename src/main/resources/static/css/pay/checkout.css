@@ -1,0 +1,17 @@
+.container {
+  max-width: 960px;
+}
+
+#submit{
+  background-color: #128D47;
+  border-color: #128D47;
+}
+
+.text-primary{
+  color: #128D47 !important;
+}
+
+.badge.bg-primary {
+  color: white !important;
+  background-color: #128D47 !important;
+}
