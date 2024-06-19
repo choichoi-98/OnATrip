@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default_layout">
+<head th:replace="fragments/header :: headerFragment">
+    <title>관리자</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <link rel="stylesheet" href="css/admin/admin.css">
+</head>
+
+<body>
+
+<div class="container" style="padding: 100px;">
+    <div class="row px-3">
+        <div class="col-md-8 border">
+            <label class="form-label">1. Title</label>
+            <input class="form-control" type="text">
+            <label class="form-label">2. Title</label>
+            <input class="form-control" type="text">
+        </div>
+
+        <div class="col-md-4 border">
+            <label class="form-label">3. Title</label>
+            <input class="form-control" type="text">
+            <label class="form-label">4. Title</label>
+            <input class="form-control" type="text">
+        </div>
+    </div>
+</div>
+</div>
+<!-- Footer -->
+<div th:replace="fragments/footer :: footerFragment"></div>
+
+<!-- External Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
