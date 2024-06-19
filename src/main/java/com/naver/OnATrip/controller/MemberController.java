@@ -13,10 +13,10 @@ public class MemberController {
                 ;
     }
 
-    @GetMapping("/find-password")
+    @GetMapping("/findPassword")
     public String findPassword(){
 
-        return "member/find-password"
+        return "member/findPassword"
                 ;
     }
 
