@@ -12,4 +12,9 @@ public class WebController {
     public String main(Model model) {
         return "main";
     }
+
+    @GetMapping("/test")
+    public String test(Model model) {
+        return "header_layout.html";
+    }
 }
