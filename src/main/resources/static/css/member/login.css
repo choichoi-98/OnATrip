@@ -3732,7 +3732,7 @@ body {
 
 .focus\:border-lightScheme-primary:focus {
     --tw-border-opacity: 1;
-    border-color: rgb(152 221 227/var(--tw-border-opacity))
+    border-color: rgb(199 200 122/var(--tw-border-opacity))
 }
 
 .focus\:border-red-500:focus {
@@ -3795,7 +3795,7 @@ body {
 
 .group:focus-within .group-focus-within\:text-lightScheme-primary {
     --tw-text-opacity: 1;
-    color: rgb(152 221 227/var(--tw-text-opacity))
+    color: rgb(199 200 122/var(--tw-text-opacity))
 }
 
 .group:focus-within .group-focus-within\:text-red-500 {
@@ -4839,7 +4839,7 @@ body {
 
     .md\:text-lightScheme-primary-focus {
         --tw-text-opacity: 1;
-        color: rgb(80 212 229/var(--tw-text-opacity))
+        color: rgb(199 200 122/var(--tw-text-opacity))
     }
 
     .md\:opacity-0 {
