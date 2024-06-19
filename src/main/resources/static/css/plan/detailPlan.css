@@ -1,0 +1,55 @@
+ body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+ .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        #route-section {
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            width: 40%;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .route-summary {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        #search-section {
+            background-color: #e9ecef;
+            width: 20%;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        #map-section {
+            background-color: #f8f9fa;
+            width: 40%;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .date-block {
+            margin-top: 10px;
+        }
+
+        .btn-section {
+            margin-top: 10px;
+            margin-left: 25px;
+        }

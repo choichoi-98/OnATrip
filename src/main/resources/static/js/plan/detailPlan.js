@@ -7,6 +7,22 @@ function myMap() {
     var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
 }
 
-$(document).ready(function(){
-    // 다른 초기화 코드가 여기로 올 수 있습니다.
+$(document).ready(function() {
+    const $toggleSearch = $('#toggleSearch');
+    const $searchSection = $('#search-section');
+    const $mapSection = $('#map-section');
+    const $toggleIcon = $('#toggleIcon');
+
+    $toggleSearch.on('click', function() {
+        if ($searchSection.hasClass('active')) {
+            $searchSection.removeClass('active');
+            $mapSection.removeClass('active');
+            $toggleIcon.attr('class', 'fi fi-rr-angle-double-small-right');
+        } else {
+            $searchSection.addClass('active');
+            $mapSection.addClass('active');
+            $toggleIcon.attr('class', 'fi fi-rr-angle-double-small-left');
+        }
+    });
 });
+
