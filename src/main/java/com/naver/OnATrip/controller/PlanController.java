@@ -1,6 +1,11 @@
 package com.naver.OnATrip.controller;
 
+import com.naver.OnATrip.entity.Plan;
+import com.naver.OnATrip.service.PlanService;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -8,17 +13,32 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Date;
 
 @Controller
+@RequiredArgsConstructor
 public class PlanController {
+    private final PlanService planService;
+    private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
-    //이용자가 여행도시 클릭시 일정 최초 생성
-    @GetMapping("/createPlan")
-    public String createPlan(){
-        return "plan/createPlan";//-> 수정 필요!
+    //이용자가 selectDate에서 일정 선택 후 완료 클릭시 일정 최초 생성
+    @PostMapping("/createPlan")
+    @ResponseBody
+    public String createPlan(Plan plan
+                             ,@RequestParam("startDate") String startDate,
+                             @RequestParam("endDate") String endDate){
+        logger.info("여기는 controller");
+
+        plan.setMemberId(1L);
+        plan.setCountry("제주도");
+        plan.setStartDate(startDate);
+        plan.setEndDate(endDate);
+        planService.createPlan(plan);
+
+        return "success";
     }
 
     //이용자 날짜 선택
     @GetMapping("/selectDate")
     public String selectDate(){
+
         return "plan/selectDate";
     }
 
