@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>회원가입</title>
+    <link rel="stylesheet" href="css/member/join.css">
 </head>
+<script src="/js/jquery-3.7.0.js"></script>
+<script src="/js/bootstrap.js"></script>
 <body>
+<div id="wrap">
+    <nav class="flex-status">
+        <div class="headLogo">
+            <div class="logo">
+                <a href="/main">
+                    <div class="cursor-pointer">
+                        <img class="w-20" alt="logo" src="../images/common/OnATrip_Logo.png">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="contents">
+            <h1 class="memberJoin">
+                회원가입
+            </h1>
+            <div class="my-1">
+                <h4 class="text">
+                    회원정보를 입력해 주세요.
+                </h4>
+                <form>
+                    <div class="group">
+                        <div class="input-group">
+                            <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이메일</label>
+                            <div class="groupEmail">
+                                <input type="email" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
+                                       name="memberEmail" placeholder="이메일 주소">
+                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="submit">인증</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이름</label>
+                            <div class="groupName">
+                                <input type="name" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
+                                     name="memberEmail" placeholder="이름">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호</label>
+                            <div class="groupPassword">
+                                <input type="password" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
+                                    name="memberPassword" placeholder="영어,숫자,특수문자 포함 8자리 이상">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <button type="submit" class="text-next">다음</button>
+                    </div>
+                </form>
+            </div>
+            <p class="mt-4 text-sm text-center">
+                <a class="font-medium hover:underline" href="/login">로그인화면가기</a>
+            </p>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
