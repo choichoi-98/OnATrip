@@ -13,4 +13,10 @@ public class AdminController {
     }
 
 
+    @GetMapping("/test")
+    public String test(Model model) {
+        return "header_layout";
+    }
+
+
 }

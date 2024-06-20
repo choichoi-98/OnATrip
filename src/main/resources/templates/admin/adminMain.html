@@ -2,40 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/default_layout">
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/admin/admin.css">
+<!-- header -->
 <head th:replace="fragments/header :: headerFragment">
-    <title>관리자</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
-    <link rel="stylesheet" href="css/admin/admin.css">
 </head>
 
-<body>
+<!-- body -->
+<body class="safari_only_body">
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KW2LQK7V" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+</noscript>
 
-<div class="container" style="padding: 100px;">
-    <div class="row px-3">
-        <div class="col-md-8 border">
-            <label class="form-label">1. Title</label>
-            <input class="form-control" type="text">
-            <label class="form-label">2. Title</label>
-            <input class="form-control" type="text">
-        </div>
+<div class="safari_only_wrapper">
+    <div class="fixed-status"></div>
 
-        <div class="col-md-4 border">
-            <label class="form-label">3. Title</label>
-            <input class="form-control" type="text">
-            <label class="form-label">4. Title</label>
-            <input class="form-control" type="text">
+
+    <div class="h-full mx-auto">
+
+        <div id="searchcity" class="md:pb-16 xl:pb-24"></div>
+        <div class="w-screen pl-8 mb-8 md:pl-0">
+            <div class="container relative mx-auto">
+                <!-- 여기다 내용 넣기 -->
+                <div class="tab">
+                    <ul class="tabnav">
+                        <li><a href="#tab01">탭1</a></li>
+                        <li><a href="#tab02">탭2</a></li>
+                    </ul>
+                    <div class="tabcontent">
+                        <div id="tab01">tab1 content</div>
+                        <div id="tab02">tab2 content</div>
+                    </div>
+                </div><!--tab-->
+
+            </div>
         </div>
     </div>
 </div>
-</div>
-<!-- Footer -->
+
+<!-- footer -->
 <div th:replace="fragments/footer :: footerFragment"></div>
 
-<!-- External Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
