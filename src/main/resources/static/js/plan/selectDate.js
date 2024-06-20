@@ -40,13 +40,36 @@ $(document).ready(function(){
             console.log(dateRange);
 
             if(!dateRange){
-
                 $('#datepicker-container').focus();
             }else{
-                // URL 생성
-                var url = '../detailPlan?dateRange=' + encodeURIComponent(dateRange);
-                // 페이지 이동
-                window.location.href = url;
+                /*
+                createPlan url 요청
+                -> createPlan에서 db 삽입 성공 시
+                -> detailPlan으로 이동
+                */
+                var dates = dateRange.split('-');
+                var startDate = dates[0];
+                var endDate = dates[1];
+                console.log(startDate);
+                console.log(endDate);
+
+                $.ajax({
+                    url: '/createPlan',
+                    type: 'POST',
+                    data: {
+                        startDate: startDate,
+                        endDate: endDate
+                    },
+                    success: function(response){
+                         console.log("db삽입 성공")
+                        var url = '../detailPlan?dateRange=' + encodeURIComponent(dateRange);
+                        window.location.href = url;
+
+                    },
+                    error: function(xhr, status, error){
+                        console.error('db삽입 실패', status, error);
+                    }
+                });
             }
 
          });//$('.btn-get-started').on('click',function(){
