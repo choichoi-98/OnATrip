@@ -12,17 +12,16 @@
     height: 100%;
     border: solid 0.5px rgb(213 215 219);
     border-radius: .375rem;
-    margin: 8% 35%;
+    margin: 0% 35%;
 
 }
 
 .contents {
     padding: 1.5rem;
     border-radius: .375rem;
-    margin: 0px;
 }
 
-.findPassword {
+.memberJoin {
     font-weight : 700;
     font-size: 1.875 rem;
     font-family: Montserrat, Noto Sans KR, sans-serif;
@@ -30,42 +29,47 @@
 }
 
 .text {
-    margin: 0%;
-    font-size: .75rem;
+    margin-top: 5%;
+    font-size: .9rem;
     font-weight: 600;
+    font-family: Montserrat, Noto Sans KR, sans-serif;
 }
 
-.name {
+.block {
     font-size: .75rem;
     --tw-text-opacity: 1;
     color: rgb(170 177 184 / var(--tw-text-opacity));
 }
 
-.groupEmail {
+.groupEmail, .groupName {
     display: flex;
 }
 
-.flex-1 {
-    width: 70%;
-    margin-right: 3%;
+.flex-1, .flex-2 {
+    width: 100%;
     padding: 0.625rem;
     --tw-text-opacity: 1;
-    color:  rgb(213 215 219 / var(--tw-text-opacity));
-    border: 1px solid  rgb(213 215 219 / var(--tw-text-opacity));
+    color: rgb(213 215 219 / var(--tw-text-opacity));
+    border: 1px solid rgb(213 215 219 / var(--tw-text-opacity));
     border-radius: 0.375rem;
     outline: none;
     transition: border-color 0.2s;
+    box-sizing: border-box;
 }
 
-.flex-1::placeholder {
+.flex-1 {
+    margin-right: 3%;
+}
+
+.flex-1::placeholder, .flex-2::placeholder {
     color: rgb(170 177 184 / var(--tw-text-opacity));
 }
 
-.group:focus-within .name {
+.input-group:focus-within .block {
     color: rgb(199 200 122 / var(--tw-text-opacity));
 }
 
-.flex-1:focus {
+.flex-1:focus, .flex-2:focus {
     --tw-text-opacity: 1;
     border-color: rgb(199 200 122 / var(--tw-text-opacity));
 }
@@ -77,7 +81,25 @@
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
     background-color: rgb(18 141 71 / var(--tw-text-opacity));
+    text-align: center;
+    cursor: pointer;
 }
+
+.mt-8 {
+    margin-top: 1rem
+}
+
+.text-next {
+    width: 100%;
+    --tw-text-opacity: 1;
+    border: .5px solid  rgb(18 141 71 / var(--tw-text-opacity));
+    background-color: rgb(18 141 71 / var(--tw-text-opacity));
+    color: white;
+    border-radius: .375rem;
+    padding: 3%;
+    cursor: pointer;
+}
+
 
 .mt-4{
     text-align: center;
@@ -94,5 +116,6 @@
 .font-medium:hover {
     text-decoration: underline;
 }
+
 
 
