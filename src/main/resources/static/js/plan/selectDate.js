@@ -42,11 +42,6 @@ $(document).ready(function(){
             if(!dateRange){
                 $('#datepicker-container').focus();
             }else{
-                /*
-                createPlan url 요청
-                -> createPlan에서 db 삽입 성공 시
-                -> detailPlan으로 이동
-                */
                 var dates = dateRange.split('-');
                 var startDate = dates[0];
                 var endDate = dates[1];
@@ -64,6 +59,7 @@ $(document).ready(function(){
                          console.log("db삽입 성공")
                         var url = '../detailPlan?dateRange=' + encodeURIComponent(dateRange);
                         window.location.href = url;
+
 
                     },
                     error: function(xhr, status, error){

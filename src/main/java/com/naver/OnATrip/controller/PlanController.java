@@ -1,6 +1,7 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Plan;
+import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.service.PlanService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,17 @@ public class PlanController {
         return "plan/selectDate";
     }
 
-    //세부 계획 설정
+    //세부 계획 생성
     @GetMapping("detailPlan")
-    public ModelAndView createDetailPlan(ModelAndView mv
+    public ModelAndView createDetailPlan(ModelAndView mv,
+                                 DetailPlan detailPlan
                                 , @RequestParam("dateRange") String dateRange){
 
         mv.addObject("dateRange",dateRange);
+
+        //(endDate-startDate)계산해서 각 일자 별로 나누는 메서드 필요
+        planService.calDate(dateRange);
+
         System.out.println("============dateRange = " + dateRange);
         mv.setViewName("plan/detailPlan");
         return mv;
