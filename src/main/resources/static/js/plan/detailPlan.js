@@ -8,21 +8,6 @@ function myMap() {
 }
 
 $(document).ready(function() {
-    const $toggleSearch = $('#toggleSearch');
-    const $searchSection = $('#search-section');
-    const $mapSection = $('#map-section');
-    const $toggleIcon = $('#toggleIcon');
 
-    $toggleSearch.on('click', function() {
-        if ($searchSection.hasClass('active')) {
-            $searchSection.removeClass('active');
-            $mapSection.removeClass('active');
-            $toggleIcon.attr('class', 'fi fi-rr-angle-double-small-right');
-        } else {
-            $searchSection.addClass('active');
-            $mapSection.addClass('active');
-            $toggleIcon.attr('class', 'fi fi-rr-angle-double-small-left');
-        }
-    });
 });
 

@@ -2,6 +2,7 @@ package com.naver.OnATrip.repository;
 
 import com.naver.OnATrip.controller.PlanController;
 import com.naver.OnATrip.entity.Plan;
+import com.naver.OnATrip.entity.plan.DetailPlan;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,10 +18,15 @@ public class PlanRepository {
     private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
 
-    //계획 최초 생성
+    //계획 생성
     @Transactional
     public void createPlan(Plan plan) {
-        logger.info("여기는 레포지토리");
         em.persist(plan);
+    }
+
+    //세부 계획 생성
+    @Transactional
+    public void createDetailPlan(DetailPlan detailPlan) {
+        em.persist(detailPlan);
     }
 }
