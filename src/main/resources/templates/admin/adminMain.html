@@ -6,8 +6,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/admin/admin.css">
 <!-- header -->
-<head th:replace="fragments/header :: headerFragment">
-</head>
+<head th:replace="fragments/header :: headerFragment"></head>
 
 <!-- body -->
 <body class="safari_only_body">
@@ -22,21 +21,49 @@
 
     <div class="h-full mx-auto">
 
-        <div id="searchcity" class="md:pb-16 xl:pb-24"></div>
-        <div class="w-screen pl-8 mb-8 md:pl-0">
-            <div class="container relative mx-auto">
+        <div id="searchcity" class="md:pb-160 xl:pb-240"></div>
+        <div class="w-screen pl-8 mb-800 md:pl-0">
+            <div class="container2 relative mx-auto">
                 <!-- 여기다 내용 넣기 -->
-                <div class="tab">
-                    <ul class="tabnav">
-                        <li><a href="#tab01">탭1</a></li>
-                        <li><a href="#tab02">탭2</a></li>
-                    </ul>
-                    <div class="tabcontent">
-                        <div id="tab01">tab1 content</div>
-                        <div id="tab02">tab2 content</div>
-                    </div>
-                </div><!--tab-->
 
+                <div class="layout">
+                    <div class="tab">
+                        <button class="tablinks" onclick="openCity(event, 'London')">회원</button>
+                        <button class="tablinks" onclick="openCity(event, 'Paris')">여행지</button>
+                        <button class="tablinks" onclick="openCity(event, 'Tokyo')">구독권</button>
+                    </div>
+
+                    <div id="London" class="tabcontent">
+                        <h3>회원</h3>
+                        <p>London is the capital city of England.</p>
+                    </div>
+
+                    <div id="Paris" class="tabcontent">
+                        <h3>여행지</h3>
+                        <p>Paris is the capital of France.</p>
+                    </div>
+
+                    <div id="Tokyo" class="tabcontent">
+                        <h3>구독권</h3>
+                        <p>Tokyo is the capital of Japan.</p>
+                    </div>
+
+                    <script>
+                        function openCity(evt, cityName) {
+                          var i, tabcontent, tablinks;
+                          tabcontent = document.getElementsByClassName("tabcontent");
+                          for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                          }
+                          tablinks = document.getElementsByClassName("tablinks");
+                          for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                          }
+                          document.getElementById(cityName).style.display = "block";
+                          evt.currentTarget.className += " active";
+                        }
+                    </script>
+                </div>
             </div>
         </div>
     </div>
