@@ -27,34 +27,21 @@
                 <div class="route-summary">
                     <h2 class="heading">city-name</h2>
                     <div>
-                        <strong class="bold-text" th:text="${dateRange}"></strong>
+                        <strong class="bold-text" th:text="${detailPlans[0].perDate}"></strong> -
+                        <strong class="bold-text" th:text="${detailPlans[#lists.size(detailPlans)-1].perDate}"></strong>
                     </div>
                 </div>
 
-            <div class="date-block">
-                <div class="heading-2"><strong class="bold-text">day1 6.18</strong></div>
+            <div th:each="detailPlan, iterStat : ${detailPlans}" class="date-block">
+                <div class="heading-2">
+                    <strong class="bold-text" th:text="'day' + (${iterStat.index + 1}) + '. ' + ${detailPlan.perDate}"></strong></div>
                 <div class="container">
                     <div class="container place-block">
                         <h6>제주 공항</h6>
                     </div>
-                    <div class="container place-block">
-                        <h6>해수욕장</h6>
-                    </div>
                     <div class="d-flex flex-row btn-section">
                     <div class="btn"><button type="button" class="btn btn-outline-secondary place-add">장소추가</button></div>
                     <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add">메모추가</button></div>
-                    </div>
-                </div>
-            </div>
-            <div class="date-block">
-                <div class="heading-2"><strong class="bold-text">day2 6.19</strong></div>
-                <div class="container">
-                    <div class="container place-block">
-                        <h6>유명한 전복김밥집</h6>
-                    </div>
-                    <div class="d-flex flex-row btn-section justify-content-center">
-                        <div class="btn"><button type="button" class="btn btn-outline-secondary place-add">장소추가</button></div>
-                        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add">메모추가</button></div>
                     </div>
                 </div>
             </div>

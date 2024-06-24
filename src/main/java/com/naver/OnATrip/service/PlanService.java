@@ -8,6 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -18,32 +27,60 @@ public class PlanService {
 
     /*
     * createPlan
-    * - 일정 최초 생성
+    * - PLAN 생성
      */
+    @Transactional
     public Long createPlan(Plan plan){
-        logger.info("여기는 서비스");
         planRepository.createPlan(plan);
         return plan.getId();
     }
 
     /*
-    여행 기간 계산 및 각 일자 구함
+    Plan 객체 조회
+    for createDetailPlan
      */
-    public String calDate(String dateRange) {
-        String[] dates = dateRange.split("-");
-        String startDate = dates[0];
-        String endDate = dates[1];
-
-
-        return null;
+    @Transactional
+    public Plan findPlanById(Long planId){
+        return (Plan) planRepository.findPlanById(planId)
+                .orElseThrow(()-> new IllegalArgumentException("Plan not found with id: " + planId));
     }
 
     /*
-    * 일자 별 계획 생성
+    여행 기간 계산 및 각 일자 구함
      */
+    public Map<String, Object> calDate(String dateRange) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-    public void createDetailPlan(DetailPlan detailPlan) {
-        planRepository.createDetailPlan(detailPlan);
+        String[] dates = dateRange.split("-");
+        LocalDate startDate = LocalDate.parse(dates[0].trim(), formatter);
+        LocalDate endDate = LocalDate.parse(dates[1].trim(), formatter);
+
+        long duration = ChronoUnit.DAYS.between(startDate, endDate);
+
+        List<LocalDate> dateList = new ArrayList<>();
+        LocalDate date = startDate;
+        while (!date.isAfter(endDate)) {
+            dateList.add(date);
+            date = date.plusDays(1);
+        }
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("duration", duration);
+        result.put("dates", dateList);
+
+        return result;
     }
 
+
+
+    /*
+    Plan, DetailPlan 함께 저장
+     */
+//    public void createPlanWithDetails(Plan plan, DetailPlan detailPlan){
+//        createPlan(plan);
+//
+//        detailPlan.setPlan(plan);
+//
+//        createDetailPlan(detailPlan);
+//    }
 }
