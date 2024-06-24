@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,26 +18,39 @@ public class QDetailPlan extends EntityPathBase<DetailPlan> {
 
     private static final long serialVersionUID = 1210336358L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QDetailPlan detailPlan = new QDetailPlan("detailPlan");
 
     public final StringPath country = createString("country");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath perDate = createString("perDate");
+    public final NumberPath<Long> memberId = createNumber("memberId", Long.class);
 
-    public final NumberPath<Long> planId = createNumber("planId", Long.class);
+    public final DatePath<java.time.LocalDate> perDate = createDate("perDate", java.time.LocalDate.class);
+
+    public final com.naver.OnATrip.entity.QPlan plan;
 
     public QDetailPlan(String variable) {
-        super(DetailPlan.class, forVariable(variable));
+        this(DetailPlan.class, forVariable(variable), INITS);
     }
 
     public QDetailPlan(Path<? extends DetailPlan> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QDetailPlan(PathMetadata metadata) {
-        super(DetailPlan.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QDetailPlan(PathMetadata metadata, PathInits inits) {
+        this(DetailPlan.class, metadata, inits);
+    }
+
+    public QDetailPlan(Class<? extends DetailPlan> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.plan = inits.isInitialized("plan") ? new com.naver.OnATrip.entity.QPlan(forProperty("plan")) : null;
     }
 
 }

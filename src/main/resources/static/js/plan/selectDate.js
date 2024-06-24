@@ -55,11 +55,11 @@ $(document).ready(function(){
                         startDate: startDate,
                         endDate: endDate
                     },
-                    success: function(response){
+                    success: function(planId){
                          console.log("db삽입 성공")
-                        var url = '../detailPlan?dateRange=' + encodeURIComponent(dateRange);
+                        var url = '../detailPlan?planId='+ encodeURIComponent(planId)
+                                    + '&dateRange=' + encodeURIComponent(dateRange);
                         window.location.href = url;
-
 
                     },
                     error: function(xhr, status, error){
