@@ -96,4 +96,7 @@ input#check_btn:checked + label:before{
   background-image: url('check_btn.png');
   background-repeat: no-repeat;
   background-position: 50%;
-  }
+
+
+/*여행지 CSS*/
+
