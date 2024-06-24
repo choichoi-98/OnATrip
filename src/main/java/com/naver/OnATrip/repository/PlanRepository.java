@@ -4,18 +4,20 @@ import com.naver.OnATrip.controller.PlanController;
 import com.naver.OnATrip.entity.Plan;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class PlanRepository {
 
     private final EntityManager em;
-    private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
 
     //계획 생성
@@ -28,5 +30,15 @@ public class PlanRepository {
     @Transactional
     public void createDetailPlan(DetailPlan detailPlan) {
         em.persist(detailPlan);
+    }
+
+    //Plan 객체 Id로 조회
+    @Transactional
+    public Optional<Object> findPlanById(Long planId) {
+        try {
+            return Optional.ofNullable(em.find(Plan.class, planId));
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
