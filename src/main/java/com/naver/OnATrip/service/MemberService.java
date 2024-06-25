@@ -2,11 +2,8 @@ package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.repository.MemberRepository;
-import com.naver.OnATrip.web.dto.MemberDTO;
-import lombok.RequiredArgsConstructor;
+import com.naver.OnATrip.web.dto.member.MemberDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

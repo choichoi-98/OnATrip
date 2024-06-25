@@ -1,6 +1,6 @@
 package com.naver.OnATrip.entity;
 
-import com.naver.OnATrip.web.dto.MemberDTO;
+import com.naver.OnATrip.web.dto.member.MemberDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
