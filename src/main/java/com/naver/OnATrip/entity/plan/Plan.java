@@ -1,4 +1,4 @@
-package com.naver.OnATrip.entity;
+package com.naver.OnATrip.entity.plan;
 
 import jakarta.persistence.*;
 import lombok.Getter;

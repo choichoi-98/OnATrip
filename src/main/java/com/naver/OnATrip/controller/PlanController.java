@@ -1,10 +1,9 @@
 package com.naver.OnATrip.controller;
 
-import com.naver.OnATrip.entity.Plan;
+import com.naver.OnATrip.entity.plan.Plan;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.service.DetailPlanService;
 import com.naver.OnATrip.service.PlanService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +28,7 @@ public class PlanController {
     public String createPlan(Plan plan
             ,@RequestParam("startDate") String startDate,
                              @RequestParam("endDate") String endDate){
-        logger.info("-createController");
+        logger.info("PlanController-createPlan");
 
         plan.setMemberId(1L); //->회원가입 및 로그인 완료 후 수정 필요
         plan.setCountry("태국");//->관리자 국가/도시 추가 후 수정 필요
@@ -45,7 +43,7 @@ public class PlanController {
     //이용자 날짜 선택
     @GetMapping("/selectDate")
     public String selectDate(){
-
+        logger.info("PlanController-selectDate");
         return "plan/selectDate";
     }
 
@@ -56,6 +54,7 @@ public class PlanController {
                                  @RequestParam("dateRange") String dateRange){
 
         Plan plan = planService.findPlanById(planId);
+        logger.info("PlanController-createDetailPlan");
 
         Map<String, Object> calDate = planService.calDate(dateRange);
 
@@ -78,6 +77,5 @@ public class PlanController {
         mv.setViewName("plan/detailPlan");
         return mv;
     }
-
 
 }

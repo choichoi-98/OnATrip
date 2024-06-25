@@ -60,12 +60,8 @@ $(document).ready(function(){
                         endDate: endDate
                     },
                     dataType: "json",
-                    // JSON 데이터로 응답을 기대합니다.
                     beforeSend : function(xhr)
                      { //데이터를 전송하기 전에 헤더에 csrf값을 설정
-                     console.log('beforeSend',token);
-                            	console.log('beforeSend', header);
-
                        xhr.setRequestHeader(header, token);
                      },
                     success: function(planId){
@@ -73,7 +69,6 @@ $(document).ready(function(){
                         var url = '../detailPlan?planId='+ encodeURIComponent(planId)
                                     + '&dateRange=' + encodeURIComponent(dateRange);
                         window.location.href = url;
-
                     },
                     error: function(xhr, status, error){
                         console.error('db삽입 실패', status, error);

@@ -1,8 +1,7 @@
 package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.controller.PlanController;
-import com.naver.OnATrip.entity.Plan;
-import com.naver.OnATrip.entity.plan.DetailPlan;
+import com.naver.OnATrip.entity.plan.Plan;
 import com.naver.OnATrip.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class PlanService {
 
     private final PlanRepository planRepository;
-    private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlanService.class);
 
     /*
     * createPlan
@@ -31,6 +30,7 @@ public class PlanService {
      */
     @Transactional
     public Long createPlan(Plan plan){
+        logger.info("PlanService-createPlan");
         planRepository.createPlan(plan);
         return plan.getId();
     }
@@ -41,6 +41,7 @@ public class PlanService {
      */
     @Transactional
     public Plan findPlanById(Long planId){
+        logger.info("PalnService-findByID");
         return (Plan) planRepository.findPlanById(planId)
                 .orElseThrow(()-> new IllegalArgumentException("Plan not found with id: " + planId));
     }
@@ -49,6 +50,8 @@ public class PlanService {
     여행 기간 계산 및 각 일자 구함
      */
     public Map<String, Object> calDate(String dateRange) {
+        logger.info("PlanService-calDate");
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
         String[] dates = dateRange.split("-");
