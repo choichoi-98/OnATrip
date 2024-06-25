@@ -1,12 +1,10 @@
 package com.naver.OnATrip.entity.plan;
 
-import com.naver.OnATrip.entity.Plan;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter @Setter

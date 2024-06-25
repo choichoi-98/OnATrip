@@ -5,6 +5,8 @@
 <th:block th:fragment="headerFragment">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
         <title>OnATrip - 여행 플래너</title>
 
         <meta name="robots" content="index,follow">
