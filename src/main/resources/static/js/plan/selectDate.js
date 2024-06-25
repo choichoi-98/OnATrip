@@ -1,4 +1,8 @@
 $(document).ready(function(){
+   	    let token = $("meta[name='_csrf']").attr("content");
+       	let header = $("meta[name='_csrf_header']").attr("content");
+       	console.log(token);
+       	console.log(header);
         // moment.js 한국어 설정 로드
             moment.locale('ko');
 
@@ -55,6 +59,15 @@ $(document).ready(function(){
                         startDate: startDate,
                         endDate: endDate
                     },
+                    dataType: "json",
+                    // JSON 데이터로 응답을 기대합니다.
+                    beforeSend : function(xhr)
+                     { //데이터를 전송하기 전에 헤더에 csrf값을 설정
+                     console.log('beforeSend',token);
+                            	console.log('beforeSend', header);
+
+                       xhr.setRequestHeader(header, token);
+                     },
                     success: function(planId){
                          console.log("db삽입 성공")
                         var url = '../detailPlan?planId='+ encodeURIComponent(planId)
