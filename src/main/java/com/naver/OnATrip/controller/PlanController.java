@@ -24,23 +24,6 @@ public class PlanController {
     private final DetailPlanService detailPlanService;
     private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
-    //이용자가 selectDate에서 일정 선택 후 완료 클릭시 일정 최초 생성
-//    @PostMapping("/createPlan")
-//    @ResponseBody
-//    public String createPlan(Plan plan
-//                             ,@RequestParam("startDate") String startDate,
-//                             @RequestParam("endDate") String endDate){
-//        logger.info("-createController");
-//
-//        plan.setMemberId(1L);
-//        plan.setCountry("제주도");
-//        plan.setStartDate(startDate);
-//        plan.setEndDate(endDate);
-//        Long planId = planService.createPlan(plan);
-//
-//        return String.valueOf(planId);
-//    }
-
     //dto 객체 이용 createPlan
     @PostMapping("/createPlan")
     @ResponseBody
@@ -49,8 +32,8 @@ public class PlanController {
                              @RequestParam("endDate") String endDate){
         logger.info("-createController");
 
-        plan.setMemberId(1L);
-        plan.setCountry("제주도");
+        plan.setMemberId(1L); //->회원가입 및 로그인 완료 후 수정 필요
+        plan.setCountry("태국");//->관리자 국가/도시 추가 후 수정 필요
         plan.setStartDate(startDate);
         plan.setEndDate(endDate);
         Long planId = planService.createPlan(plan);
@@ -90,14 +73,10 @@ public class PlanController {
             logger.info("DetailPlan ID: {}, Country: {}, PerDate: {}", dp.getId(), dp.getCountry(), dp.getPerDate());
         }
 
-//        mv.addObject("dateRange",dateRange);
-//        mv.addObject("duration", calDate.get("duration"));
-//        mv.addObject("dates", calDate.get("dates"));
         mv.addObject("detailPlans", detailPlans);
         mv.setViewName("plan/detailPlan");
         return mv;
     }
 
-    //
 
 }
