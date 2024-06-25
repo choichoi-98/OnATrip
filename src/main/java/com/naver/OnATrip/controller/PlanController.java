@@ -35,6 +35,7 @@ public class PlanController {
         plan.setMemberId(1L); //->회원가입 및 로그인 완료 후 수정 필요
         plan.setCountry("태국");//->관리자 국가/도시 추가 후 수정 필요
         plan.setStartDate(startDate);
+        logger.info(startDate);
         plan.setEndDate(endDate);
         Long planId = planService.createPlan(plan);
 
