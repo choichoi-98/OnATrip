@@ -1,4 +1,4 @@
-package com.naver.OnATrip.web.dto;
+package com.naver.OnATrip.web.dto.member;
 
 
 import com.naver.OnATrip.entity.Member;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberDTO {
     private Long id;
-    //    @NotNull - Null 허용하지 않는 것 - String 외 타입에 사용
+//    @NotNull - Null 허용하지 않는 것 - String 외 타입에 사용
 //    @NotEmpty - Null 과 "" 둘 다 허용하지 않는 것 - String, List<> 에만 사용!
 //    @NotBlank - Null 과 "", " " 모두 허용하지 않는 것 - String에만 사용!
     @NotBlank(message = "메일주소를 입력해주세요")

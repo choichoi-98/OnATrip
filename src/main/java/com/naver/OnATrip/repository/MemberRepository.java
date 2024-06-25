@@ -13,7 +13,9 @@ public class MemberRepository {
 
     private final EntityManager em;
 
-    public void join(Member member){
+    //회원가입
+    public void join(Member member) {
         em.persist(member);
     }
+
 }

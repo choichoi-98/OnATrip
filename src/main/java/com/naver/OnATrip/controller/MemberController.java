@@ -1,7 +1,7 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.service.MemberService;
-import com.naver.OnATrip.web.dto.MemberDTO;
+import com.naver.OnATrip.web.dto.member.MemberDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

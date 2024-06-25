@@ -23,6 +23,10 @@ public class WebSecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
+                        .failureUrl("/login")	        // 로그인 실패 후 이동 페이지
+                        .usernameParameter("email") //사용자 이름 파라미터 이름 설정
+                        .passwordParameter("password") // 비밀번호 파라미터 이름 설정
+                        .defaultSuccessUrl("/main")  // 로그인 성공 후 이동 페이지
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());
