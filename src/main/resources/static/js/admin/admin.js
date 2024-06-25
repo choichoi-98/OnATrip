@@ -1,135 +1,202 @@
-// openCity 함수 정의
-function openCity(evt, cityName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-// 초기 실행 함수
-document.addEventListener("DOMContentLoaded", function () {
-    var domesticCheckbox = document.getElementById('domestic_check');
-    if (domesticCheckbox.checked) {
-        toggleDomesticInputs();
-    } else {
-        toggleOverseasInputs(); // 초기 상태에서는 해외 체크박스가 선택되어 있을 수 있으므로 이 경우도 고려
-    }
-
-    document.getElementsByClassName("tablinks")[0].click();
-});
-
-// 국내 체크박스 선택 시 나라 입력란 활성화 처리
-function toggleDomesticInputs() {
-    var countryInput = document.getElementById('country_input');
-    if (document.getElementById('domestic_check').checked) {
-        countryInput.disabled = false;
-    } else {
-        countryInput.disabled = true;
-    }
-}
-
-// 해외 체크박스 선택 시 나라 입력란 비활성화 처리
-function toggleOverseasInputs() {
-    var countryInput = document.getElementById('country_input');
-    if (document.getElementById('overseas_check').checked) {
-        countryInput.disabled = true;
-    } else {
-        countryInput.disabled = false;
-    }
-}
-
-// 여행지 추가 버튼 클릭 시 처리
-document.getElementById('add_location_btn').addEventListener('click', function () {
-    var locationType = document.querySelector('input[name="locationType"]:checked');
-    var countryInput = document.getElementById('country_input').value;
-    var cityInput = document.getElementById('city_input').value;
-    var fileInput = document.getElementById('file_input').value;
-
-    if (locationType && ((locationType.value === 'domestic' && cityInput && fileInput) ||
-        (locationType.value === 'overseas' && countryInput && cityInput && fileInput))) {
-        var listItem = document.createElement('li');
-        var listContent = document.createElement('div');
-        var listImage = document.createElement('img');
-        var locationName = document.createElement('h4');
-        var locationDetails = document.createElement('p');
-
-        listContent.className = 'location-info';
-        listImage.src = 'placeholder.jpg'; // 이미지 경로 수정 필요
-        locationName.textContent = locationType.value === 'domestic' ? '국내' : '해외';
-        locationDetails.textContent = locationType.value === 'domestic' ?
-            '도시: ' + cityInput : '나라: ' + countryInput + ', 도시: ' + cityInput;
-
-        listContent.appendChild(locationName);
-        listContent.appendChild(locationDetails);
-        listItem.appendChild(listImage);
-        listItem.appendChild(listContent);
-
-        if (locationType.value === 'domestic') {
-            document.getElementById('domestic_list').querySelector('ul').appendChild(listItem);
-        } else if (locationType.value === 'overseas') {
-            document.getElementById('overseas_list').querySelector('ul').appendChild(listItem);
+   $(document).ready(function() {
+        // 탭 전환 함수
+        function openCity(evt, cityName) {
+            $(".tabcontent").hide();
+            $(".tablinks").removeClass("active");
+            $("#" + cityName).show();
+            $(evt.currentTarget).addClass("active");
         }
 
-        // 초기화
-        document.getElementById('reset_btn').click();
-    } else {
-        alert('모든 필드를 입력하고 체크박스를 선택해주세요.');
-    }
-});
+        // DOMContentLoaded 이벤트 핸들러
+        $(function() {
+            var domesticCheckbox = $('#domestic_check');
+            var overseasCheckbox = $('#overseas_check');
 
-// 초기화 버튼 클릭 시 처리
-document.getElementById('reset_btn').addEventListener('click', function () {
-    var countryInput = document.getElementById('country_input');
-    var cityInput = document.getElementById('city_input');
-    var fileInput = document.getElementById('file_input');
-    var checkboxes = document.querySelectorAll('input[name="locationType"]');
+            if (domesticCheckbox.prop('checked')) {
+                toggleDomesticInputs();
+            } else {
+                toggleOverseasInputs();
+            }
 
-    countryInput.value = '';
-    cityInput.value = '';
-    fileInput.value = '';
+            $(".tablinks").eq(0).click(); // 기본적으로 첫 번째 탭을 활성화
+        });
 
-    checkboxes.forEach(function (checkbox) {
-        checkbox.checked = false;
-    });
+        // 국내 체크박스 처리 함수
+        function toggleDomesticInputs() {
+            var countryInput = $('#country_input');
+            var overseasCheckbox = $('#overseas_check');
 
-    toggleDomesticInputs(); // 초기화 후 국내 체크박스 상태에 따라 입력란 활성화/비활성화 처리
-    toggleOverseasInputs(); // 초기화 후 해외 체크박스 상태에 따라 입력란 활성화/비활성화 처리
-});
+            if ($('#domestic_check').prop('checked')) {
+                countryInput.prop('disabled', false).removeClass('disabled-input');
+                overseasCheckbox.prop('checked', false); // 해외 체크박스 해제
+            } else {
+                countryInput.prop('disabled', true).addClass('disabled-input');
+            }
+        }
 
-// Location 탭 전환
-function openLocationTab(evt, tabName) {
-    var i, locationLists, locationTabs;
-    locationLists = document.getElementsByClassName("location-list");
-    for (i = 0; i < locationLists.length; i++) {
-        locationLists[i].classList.remove("active");
-    }
-    locationTabs = document.getElementsByClassName("location-tab");
-    for (i = 0; i < locationTabs.length; i++) {
-        locationTabs[i].classList.remove("active");
-    }
-    document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.classList.add("active");
-}
+        // 초기화 버튼 클릭 처리
+        $('#reset_btn').click(function() {
+            $('#country_input, #city_input, #file_input').val('');
 
-// 국내, 해외 체크박스 1개만 선택되도록
-var checkboxes = document.querySelectorAll('input[name="locationType"]');
-checkboxes.forEach(function (checkbox) {
-    checkbox.addEventListener('change', function () {
-        checkboxes.forEach(function (cb) {
-            if (cb !== checkbox) {
-                cb.checked = false;
+            $('input[name="locationType"]').prop('checked', false);
+
+            if ($('#domestic_check').prop('checked')) {
+                toggleDomesticInputs();
+            } else if ($('#overseas_check').prop('checked')) {
+                toggleOverseasInputs();
             }
         });
 
-        // 체크박스에 따라 입력 필드 활성화/비활성화 처리
-        toggleDomesticInputs();
-        toggleOverseasInputs();
+        // 해외 체크박스 처리 함수
+        function toggleOverseasInputs() {
+            var countryInput = $('#country_input');
+            var domesticCheckbox = $('#domestic_check');
+
+            if ($('#overseas_check').prop('checked')) {
+                countryInput.prop('disabled', false);
+                domesticCheckbox.prop('checked', false); // 국내 체크박스 해제
+            } else {
+                countryInput.prop('disabled', true);
+            }
+        }
+
+        // 여행지 추가 버튼 클릭 처리
+        $('#add_location_btn').click(function() {
+            var locationType = $('input[name="locationType"]:checked').val();
+            var countryInput = $('#country_input').val();
+            var cityInput = $('#city_input').val();
+            var fileInput = $('#file_input').val();
+
+            if (locationType && ((locationType === 'domestic' && cityInput && fileInput) ||
+                (locationType === 'overseas' && countryInput && cityInput && fileInput))) {
+
+                var listItem = $('<li>');
+                var listContent = $('<div>').addClass('location-info');
+                var listImage = $('<img>').attr('src', 'placeholder.jpg'); // 이미지 경로 수정 필요
+                var locationName = $('<h4>').text(locationType === 'domestic' ? '국내' : '해외');
+                var locationDetails = $('<p>').text(locationType === 'domestic' ?
+                    '도시: ' + cityInput : '나라: ' + countryInput + ', 도시: ' + cityInput);
+
+                listContent.append(locationName);
+                listContent.append(locationDetails);
+                listItem.append(listImage);
+                listItem.append(listContent);
+
+                var editButton = $('<button>').text('수정').addClass('btn');
+                editButton.click(function() {
+                    editLocation(listItem);
+                });
+
+                var deleteButton = $('<button>').text('삭제').addClass('btn cancel');
+                deleteButton.click(function() {
+                    deleteLocation(listItem);
+                });
+
+                listItem.append(editButton);
+                listItem.append(deleteButton);
+
+                if (locationType === 'domestic') {
+                    $('#domestic_list ul').append(listItem);
+                } else if (locationType === 'overseas') {
+                    $('#overseas_list ul').append(listItem);
+                }
+
+                $('#reset_btn').click();
+            } else {
+                alert('모든 필드를 입력하고 체크박스를 선택해주세요.');
+            }
+        });
+
+        // 여행지 수정 처리 함수
+        function editLocation(listItem) {
+            var locationType = listItem.find('h4').text() === '국내' ? 'domestic' : 'overseas';
+            var country = '';
+            var city = '';
+
+            if (locationType === 'domestic') {
+                city = listItem.find('.location-info > p').text().replace('도시: ', '');
+            } else {
+                var details = listItem.find('.location-info > p').text().split(', ');
+                country = details[0].replace('나라: ', '');
+                city = details[1].replace('도시: ', '');
+            }
+
+            var editForm = $('<div>').addClass('edit-form').html(`
+                <label>
+                    <input type="checkbox" id="edit_domestic_check" name="edit_locationType" value="domestic">
+                    국내
+                </label>
+                <label>
+                    <input type="checkbox" id="edit_overseas_check" name="edit_locationType" value="overseas">
+                    해외
+                </label>
+                <br>
+                <label for="edit_country_input">나라:</label><br>
+                <input type="text" id="edit_country_input" name="edit_country" placeholder="나라를 입력하세요" value="${country}">
+                <br>
+                <label for="edit_city_input">도시:</label><br>
+                <input type="text" id="edit_city_input" name="edit_city" placeholder="도시를 입력하세요" value="${city}">
+                <br>
+                <label for="edit_file_input">이미지:</label><br>
+                <input type="file" id="edit_file_input" name="edit_file">
+                <br>
+                <button id="save_edit_btn" class="btn">저장</button>
+                <button id="cancel_edit_btn" class="btn cancel">취소</button>
+            `);
+
+            listItem.find('.location-info').hide().after(editForm);
+
+            var editDomesticCheckbox = editForm.find('#edit_domestic_check');
+            var editOverseasCheckbox = editForm.find('#edit_overseas_check');
+
+            // 수정 폼에서 국내, 해외 체크박스 중 하나만 선택되도록 제어
+            if (locationType === 'domestic') {
+                editDomesticCheckbox.prop('checked', true);
+                editOverseasCheckbox.prop('disabled', true);
+            } else {
+                editOverseasCheckbox.prop('checked', true);
+                editDomesticCheckbox.prop('disabled', true);
+            }
+
+            $('#cancel_edit_btn').click(function() {
+                listItem.find('.location-info').show();
+                editForm.remove();
+            });
+
+            $('#save_edit_btn').click(function() {
+                var editedLocationType = $('input[name="edit_locationType"]:checked').val();
+                var editedCountry = $('#edit_country_input').val();
+                var editedCity = $('#edit_city_input').val();
+                var editedImage = $('#edit_file_input').val(); // 파일 업로드 처리 필요
+
+                if (editedLocationType && ((editedLocationType === 'domestic' && editedCity && editedImage) ||
+                    (editedLocationType === 'overseas' && editedCountry && editedCity && editedImage))) {
+                    listItem.find('h4').text(editedLocationType === 'domestic' ? '국내' : '해외');
+                    listItem.find('.location-info > p').text(editedLocationType === 'domestic' ?
+                        '도시: ' + editedCity : '나라: ' + editedCountry + ', 도시: ' + editedCity);
+
+                    editForm.remove();
+                    listItem.find('.location-info').show();
+
+                    // 수정 완료 후 체크박스 다시 활성화
+                    editDomesticCheckbox.prop('disabled', false);
+                    editOverseasCheckbox.prop('disabled', false);
+                } else {
+                    alert('모든 필드를 입력하고 체크박스를 선택해주세요.');
+                }
+            });
+        }
+
+        // 여행지 삭제 처리 함수
+        function deleteLocation(listItem) {
+            listItem.remove();
+        }
+
+        // Location 탭 전환 함수
+        function openLocationTab(evt, tabName) {
+            $(".location-list").removeClass("active");
+            $(".location-tab").removeClass("active");
+            $("#" + tabName).addClass("active");
+            $(evt.currentTarget).addClass("active");
+        }
     });
-});
