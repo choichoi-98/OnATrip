@@ -3389,7 +3389,7 @@ body {
     overflow-y: overlay!important
 }
 
-.myro-btn {
+.onATrip-btn {
     box-shadow: 0 8px 32px 0 rgba(31,38,135,.2)!important;
     background-color: #98dde3;
     border-radius: 4px;
@@ -3400,7 +3400,7 @@ body {
     text-decoration: unset!important
 }
 
-.myro-box-shadow {
+.onATrip-box-shadow {
     box-shadow: 0 2px 8px 0 rgba(31,38,135,.08)!important;
     border-radius: 8px;
     border: initial none!important;
@@ -4873,7 +4873,7 @@ body {
         transition-duration: .5s
     }
 
-    .md\:myro-box-shadow {
+    .md\:onATrip-box-shadow {
         box-shadow: 0 2px 8px 0 rgba(31,38,135,.08)!important;
         border-radius: 8px;
         border: initial none!important;
