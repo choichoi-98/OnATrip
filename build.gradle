@@ -40,7 +40,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail' //메일관련
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'//sql 파라미터 로그
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
-    //implementation 'mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-security' //시큐리티
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE' //시큐리티
+    testImplementation 'org.springframework.security:spring-security-test' //시큐리티
+
 
   
     compileOnly 'org.projectlombok:lombok'

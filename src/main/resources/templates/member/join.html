@@ -31,13 +31,13 @@
                 <h4 class="text">
                     회원정보를 입력해 주세요.
                 </h4>
-                <form>
+                <form class="form_join"  th:action="@{/join}" method="POST">
                     <div class="group">
                         <div class="input-group">
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이메일</label>
                             <div class="groupEmail">
                                 <input type="email" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
-                                       name="memberEmail" placeholder="이메일 주소">
+                                       name="email" placeholder="이메일 주소">
                                 <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="submit">인증</button>
                             </div>
                         </div>
@@ -45,19 +45,26 @@
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이름</label>
                             <div class="groupName">
                                 <input type="name" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
-                                     name="memberEmail" placeholder="이름">
+                                     name="name" placeholder="이름">
                             </div>
                         </div>
                         <div class="input-group">
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호</label>
                             <div class="groupPassword">
                                 <input type="password" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
-                                    name="memberPassword" placeholder="영어,숫자,특수문자 포함 8자리 이상">
+                                    name="password" placeholder="영어,숫자,특수문자 포함 8자리 이상">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호 확인</label>
+                            <div class="groupPassword">
+                                <input type="password" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
+                                       name="passwdCheck" placeholder="비밀번호 재입력">
                             </div>
                         </div>
                     </div>
                     <div class="mt-8">
-                        <button type="submit" class="text-next">다음</button>
+                        <button type="submit" class="text-next">회원가입</button>
                     </div>
                 </form>
             </div>
