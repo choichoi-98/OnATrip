@@ -4,18 +4,16 @@ package com.naver.OnATrip.repository;
 import com.naver.OnATrip.entity.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-@RequiredArgsConstructor
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    private final EntityManager em;
+//    Optional<Member> findByMember(Long id);
 
-    //회원가입
-    public void join(Member member) {
-        em.persist(member);
-    }
-
+//    boolean existsByEmail(String email);
 }
