@@ -3,22 +3,18 @@ package com.naver.OnATrip.service;
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Transactional
     public int join(MemberDTO memberDTO) {
@@ -29,7 +25,7 @@ public class MemberService {
             String encPass = passwordEncoder.encode(rawPass);
             member.setPassword(encPass);
             member.setRole("USER");
-            memberRepository.join(member);
+            memberRepository.save(member);
             return 100;
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,6 +34,9 @@ public class MemberService {
         return -100;
     }
 
+//    public boolean checkEmail(String email) {
+//        return memberRepository.existsByEmail(email);
+//    }
 }
 
 
