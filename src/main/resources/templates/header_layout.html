@@ -4,14 +4,44 @@
       layout:decorate="layout/default_layout">
 
 <head th:replace="fragments/header :: headerFragment"></head>
+<style>
+.mb-800 {
+    margin-bottom: 50rem;
+}
+
+
+@media (min-width: 1280px) {
+    .xl\:pb-240 {
+        padding-bottom: 10rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:pb-160 {
+        padding-bottom: 10rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container2 {
+        max-width: 1200px;
+    }
+}
+</style>
 <body>
 <!--  Body Wrapper -->
 
 <!--  Main wrapper -->
-<div class="body-wrapper" style="padding: 300px;">
-    <!--  여기에 내용 채우기 -->
-
-
+<div class="safari_only_wrapper">
+    <div class="fixed-status"></div>
+    <div class="h-full mx-auto">
+        <div id="searchcity" class="md:pb-160 xl:pb-240"></div>
+        <div class="w-screen pl-8 mb-800 md:pl-0">
+            <div class="container2 relative mx-auto">
+                <!--  여기에 내용 채우기 -->
+            </div>
+        </div>
+    </div>
 </div>
 <!--  Footer -->
 <div th:replace="fragments/footer :: footerFragment"></div>
