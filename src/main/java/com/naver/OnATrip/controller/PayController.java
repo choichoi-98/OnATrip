@@ -1,22 +1,14 @@
 package com.naver.OnATrip.controller;
 
-import com.naver.OnATrip.entity.pay.Pay;
 import com.naver.OnATrip.service.PayService;
-import com.naver.OnATrip.service.PaymentService;
 import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.response.IamportResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.io.IOException;
 
 @Controller
 @Slf4j
@@ -53,12 +45,15 @@ public class PayController {
         return "pay/subscribe";
     }
 
+    /*
     @GetMapping("/payPage")
-    public String pay() {
+    public String payOrder(Model model, ItemDto itemDto) {
+    model.addAttribute("itemDto", itemDto);
+
 
         return "pay/payPage";
     }
-
+*/
 
 
 }
