@@ -16,4 +16,5 @@ public class MemberRepository {
     public void join(Member member){
         em.persist(member);
     }
+
 }

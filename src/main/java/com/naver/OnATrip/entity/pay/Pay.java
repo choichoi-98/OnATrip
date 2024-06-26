@@ -1,5 +1,6 @@
 package com.naver.OnATrip.entity.pay;
 
+import com.naver.OnATrip.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,23 +14,31 @@ public class Pay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pay_id")
     private Long id;
 
-    @JoinColumn(name = "member_id", insertable = false, updatable = false) //MEMBER_ID를 읽기 전용으로만 사용
-    private String memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Orders orders;       // 해당 결제가 속한 주문
 
-    private String payName; //주문명
+    private String payName;     //주문명
 
-    private int payPrice;
+    private int payPrice;       //결제 가격
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private Item item;
+    private Item item;              //상품
 
-    private String pgToken;
+    private LocalDateTime payDate;   //결제 시각
 
-    @Column(name = "pay_date")
-    private LocalDateTime payDate;   //결제 날짜
+    private Boolean status = true; // 상태
+
+    public Member getMember() {
+        if (orders != null) {
+            return orders.getMember();
+        }
+        return null;
+    }
 
 
 }

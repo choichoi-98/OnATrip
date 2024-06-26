@@ -1,4 +1,4 @@
-package com.naver.OnATrip.repository;
+package com.naver.OnATrip.repository.pay;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

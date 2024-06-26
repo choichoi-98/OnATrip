@@ -33,6 +33,13 @@ spring:
         format_sql: true4
         use_sql_comments: true        #jpql의 쿼리문을 보고싶을 때 사용
 
+#아임포트
+imp:
+  code: imp63854110
+  api:
+    key: 5567300760752543
+    secretKey: akexds3WZwtp2HRTUZtWHI7Nk1SFMg4ZT6IQtTKWM7O8xOaeZqDZsWyHwaEnqj7qwAf1TzyadBK4ouUv
+
 #카카오페이
 pay:
   admin-key: 25f3c5241ac9ac3441dc3a1a2b893ae6
