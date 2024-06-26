@@ -15,7 +15,7 @@
         #route-section {
             overflow-y: auto;
             background-color: #f8f9fa;
-            width: 40%;
+            width: 30%;
             padding: 20px;
             border-right: 1px solid #ddd;
         }
@@ -30,7 +30,7 @@
 
         #search-section {
             background-color: #e9ecef;
-            width: 20%;
+            width: 30%;
             padding: 20px;
             border-right: 1px solid #ddd;
         }
