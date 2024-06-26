@@ -1,4 +1,4 @@
-package com.naver.OnATrip.repository;
+package com.naver.OnATrip.repository.pay;
 
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.pay.*;
