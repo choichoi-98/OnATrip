@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default_layout">
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/admin/admin.css">
+<!-- header -->
+<head th:replace="fragments/header :: headerFragment"></head>
+<!-- style -->
+<!-- style -->
+<style>
+    /* 기존 CSS와 충돌을 방지하기 위해 직접 스타일링 */
+    .tabcontent {
+        display: none;
+    }
+
+    .tabcontent.active {
+        display: block;
+    }
+
+    .tablinks {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        cursor: pointer;
+        padding: 10px 20px;
+        float: left;
+    }
+
+    .tablinks:hover {
+        background-color: #ddd;
+    }
+
+    .location-tabs {
+        display: flex;
+        margin-top: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .location-tab {
+        padding: 10px;
+        text-align: center;
+        border-right: 1px solid #ccc;
+        cursor: pointer;
+        flex: 1;
+        background-color: #f1f1f1;
+    }
+
+    .location-tab.active {
+        background-color: #ddd;
+        font-weight: bold;
+    }
+
+    .location-list {
+        display: none;
+        padding: 10px;
+    }
+
+    .location-list.active {
+        display: block;
+    }
+
+    .location-list ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .location-list li {
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+    }
+
+    .location-list li img {
+        margin-right: 10px;
+        width: 100px;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    .location-list li .location-info {
+        flex: 1;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .btn.cancel {
+        background-color: #dc3545;
+        margin-left: 10px;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: calc(100% - 22px); /* 입력 필드 너비 조정 */
+    }
+
+    /* 체크박스 스타일링 */
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .checkbox-container label {
+        margin-right: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    /* 비활성화된 입력 필드 스타일 */
+    .disabled-input {
+        background-color: #f0f0f0;
+        color: #666;
+        cursor: not-allowed;
+    }
+
+    /* 수정 폼 스타일 */
+    .edit-form {
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .edit-form label {
+        display: block;
+        margin-top: 10px;
+    }
+</style>
+
+<!-- body -->
+<body class="safari_only_body">
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KW2LQK7V" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+</noscript>
+
+<div class="safari_only_wrapper">
+    <div class="fixed-status"></div>
+
+    <div class="h-full mx-auto">
+        <div id="searchcity" class="md:pb-160 xl:pb-240"></div>
+        <div class="w-screen pl-8 mb-800 md:pl-0">
+            <div class="container2 relative mx-auto">
+                <div class="layout">
+                    <div class="tab">
+                        <button class="tablinks" onclick="openCity(event, 'London')">회원</button>
+                        <button class="tablinks" onclick="openCity(event, 'Paris')">여행지</button>
+                        <button class="tablinks" onclick="openCity(event, 'Tokyo')">구독권</button>
+                    </div>
+
+                    <div id="London" class="tabcontent">
+                        <h3>회원</h3>
+                        <p>내용입력하시오.</p>
+                    </div>
+
+                    <div id="Paris" class="tabcontent">
+                        <div class="checkbox-container">
+                            <label for="domestic_check">
+                                <input type="checkbox" id="domestic_check" name="locationType" value="domestic"
+                                       onchange="toggleDomesticInputs()">
+                                <span>국내</span>
+                            </label>
+                            <label for="overseas_check">
+                                <input type="checkbox" id="overseas_check" name="locationType" value="overseas"
+                                       onchange="toggleOverseasInputs()">
+                                <span>해외</span>
+                            </label>
+                        </div>
+                        <p>
+                            <label for="country_input">국가:</label><br>
+                            <input type="text" id="country_input" name="country" placeholder="나라를 입력하세요">
+                        </p>
+                        <p>
+                            <label for="country_input">국가코드:</label><br>
+                            <input type="text" id="countryCode_input" name="countryCode" placeholder="국가코드" readonly>
+                        </p>
+
+                        <p>
+                            <label for="city_input">도시:</label><br>
+                            <input type="text" id="city_input" name="city" placeholder="도시를 입력하세요">
+                        </p>
+                        <p>
+                            <label for="city_input">설명:</label><br>
+                            <input type="text" id="description_input" name="description" placeholder="설명을 입력하세요">
+                        </p>
+                        <p>
+                            <label for="file_input">이미지:</label><br>
+                            <input type="file" id="file_input" name="file">
+                        </p>
+                        <p>
+                            <button id="add_location_btn" class="btn">여행지 추가</button>
+                            <button id="reset_btn" type="button" class="btn cancel">취소</button>
+                        </p>
+                        <div class="location-tabs">
+                            <div class="location-tab active"
+                                 onclick="openLocationTab(event, 'domestic_list')">국내
+                            </div>
+                            <div class="location-tab"
+                                 onclick="openLocationTab(event, 'overseas_list')">해외
+                            </div>
+                        </div>
+                        <div id="location_list">
+                            <div id="domestic_list" class="location-list active">
+                                <ul></ul>
+                            </div>
+                            <div id="overseas_list" class="location-list">
+                                <ul></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="Tokyo" class="tabcontent">
+                        <h3>구독권</h3>
+                        <p>내용입력하시오.</p>
+                    </div>
+                    <script>
+                        // 탭 전환 함수
+                        function openCity(evt, cityName) {
+                            var i, tabcontent, tablinks;
+                            tabcontent = document.getElementsByClassName("tabcontent");
+                            for (i = 0; i < tabcontent.length; i++) {
+                                tabcontent[i].style.display = "none";
+                            }
+                            tablinks = document.getElementsByClassName("tablinks");
+                            for (i = 0; i < tablinks.length; i++) {
+                                tablinks[i].className = tablinks[i].className.replace(" active", "");
+                            }
+                            document.getElementById(cityName).style.display = "block";
+                            evt.currentTarget.className += " active";
+                        }
+
+                        // DOMContentLoaded 이벤트 핸들러
+                        document.addEventListener("DOMContentLoaded", function () {
+                            var domesticCheckbox = document.getElementById('domestic_check');
+                            var overseasCheckbox = document.getElementById('overseas_check');
+
+                            if (domesticCheckbox.checked) {
+                                toggleDomesticInputs();
+                            } else {
+                                toggleOverseasInputs();
+                            }
+
+                            document.getElementsByClassName("tablinks")[0].click(); // 기본적으로 첫 번째 탭을 활성화
+                        });
+
+                        // 국내 체크박스 처리 함수
+                        function toggleDomesticInputs() {
+                            var countryInput = document.getElementById('country_input');
+                            var overseasCheckbox = document.getElementById('overseas_check');
+
+                            if (document.getElementById('domestic_check').checked) {
+                                countryInput.disabled = false;
+                                countryInput.classList.remove('disabled-input');
+                                overseasCheckbox.checked = false; // 해외 체크박스 해제
+                            } else {
+                                countryInput.disabled = true;
+                                countryInput.classList.add('disabled-input');
+                            }
+                        }
+
+                        // 초기화 버튼 클릭 처리
+                        document.getElementById('reset_btn').addEventListener('click', function () {
+                            var countryInput = document.getElementById('country_input');
+                            var cityInput = document.getElementById('city_input');
+                            var fileInput = document.getElementById('file_input');
+                            var checkboxes = document.querySelectorAll('input[name="locationType"]');
+
+                            countryInput.value = '';
+                            cityInput.value = '';
+                            fileInput.value = '';
+
+                            checkboxes.forEach(function (checkbox) {
+                                checkbox.checked = false;
+                            });
+
+                            if (document.getElementById('domestic_check').checked) {
+                                toggleDomesticInputs();
+                            } else if (document.getElementById('overseas_check').checked) {
+                                toggleOverseasInputs();
+                            }
+                        });
+
+                        // 해외 체크박스 처리 함수
+                        function toggleOverseasInputs() {
+                            var countryInput = document.getElementById('country_input');
+                            var domesticCheckbox = document.getElementById('domestic_check');
+
+                            if (document.getElementById('overseas_check').checked) {
+                                countryInput.disabled = false;
+                                domesticCheckbox.checked = false; // 국내 체크박스 해제
+                            } else {
+                                countryInput.disabled = true;
+                            }
+                        }
+
+                        // 여행지 추가 버튼 클릭 처리
+                        document.getElementById('add_location_btn').addEventListener('click', function () {
+                            var locationType = document.querySelector('input[name="locationType"]:checked');
+                            var countryInput = document.getElementById('country_input').value;
+                            var cityInput = document.getElementById('city_input').value;
+                            var fileInput = document.getElementById('file_input').value;
+
+                            if (locationType && ((locationType.value === 'domestic' && cityInput && fileInput) ||
+                                (locationType.value === 'overseas' && countryInput && cityInput && fileInput))) {
+                                var listItem = document.createElement('li');
+                                var listContent = document.createElement('div');
+                                var listImage = document.createElement('img');
+                                var locationName = document.createElement('h4');
+                                var locationDetails = document.createElement('p');
+
+                                listContent.className = 'location-info';
+                                listImage.src = 'placeholder.jpg'; // 이미지 경로 수정 필요
+                                locationName.textContent = locationType.value === 'domestic' ? '국내' : '해외';
+                                locationDetails.textContent = locationType.value === 'domestic' ?
+                                    '도시: ' + cityInput : '나라: ' + countryInput + ', 도시: ' + cityInput;
+
+                                listContent.appendChild(locationName);
+                                listContent.appendChild(locationDetails);
+                                listItem.appendChild(listImage);
+                                listItem.appendChild(listContent);
+
+                                var editButton = document.createElement('button');
+                                editButton.textContent = '수정';
+                                editButton.className = 'btn';
+                                editButton.addEventListener('click', function () {
+                                    editLocation(listItem);
+                                });
+
+                                var deleteButton = document.createElement('button');
+                                deleteButton.textContent = '삭제';
+                                deleteButton.className = 'btn cancel';
+                                deleteButton.addEventListener('click', function () {
+                                    deleteLocation(listItem);
+                                });
+
+                                listItem.appendChild(editButton);
+                                listItem.appendChild(deleteButton);
+
+                                if (locationType.value === 'domestic') {
+                                    document.getElementById('domestic_list').querySelector('ul').appendChild(listItem);
+                                } else if (locationType.value === 'overseas') {
+                                    document.getElementById('overseas_list').querySelector('ul').appendChild(listItem);
+                                }
+
+                                document.getElementById('reset_btn').click();
+                            } else {
+                                alert('모든 필드를 입력하고 체크박스를 선택해주세요.');
+                            }
+                        });
+
+                        // 여행지 수정 처리 함수
+                        function editLocation(listItem) {
+                            var locationType = listItem.querySelector('h4').textContent === '국내' ? 'domestic' : 'overseas';
+                            var country = '';
+                            var city = '';
+                            var imageSrc = ''; // 이미지 경로 필요
+
+                            if (locationType === 'domestic') {
+                                city = listItem.querySelector('.location-info > p').textContent.replace('도시: ', '');
+                            } else {
+                                var details = listItem.querySelector('.location-info > p').textContent.split(', ');
+                                country = details[0].replace('나라: ', '');
+                                city = details[1].replace('도시: ', '');
+                            }
+
+                            var editForm = document.createElement('div');
+                            editForm.className = 'edit-form';
+                            editForm.innerHTML = `
+                                <label>
+                                    <input type="checkbox" id="edit_domestic_check" name="edit_locationType" value="domestic">
+                                    국내
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="edit_overseas_check" name="edit_locationType" value="overseas">
+                                    해외
+                                </label>
+                                <br>
+                                <label for="edit_country_input">나라:</label><br>
+                                <input type="text" id="edit_country_input" name="edit_country" placeholder="나라를 입력하세요" value="${country}">
+                                <br>
+                                <label for="edit_city_input">도시:</label><br>
+                                <input type="text" id="edit_city_input" name="edit_city" placeholder="도시를 입력하세요" value="${city}">
+                                <br>
+                                <label for="edit_file_input">이미지:</label><br>
+                                <input type="file" id="edit_file_input" name="edit_file">
+                                <br>
+                                <button id="save_edit_btn" class="btn">저장</button>
+                                <button id="cancel_edit_btn" class="btn cancel">취소</button>
+                            `;
+
+                            listItem.querySelector('.location-info').style.display = 'none';
+                            listItem.appendChild(editForm);
+
+                            var editDomesticCheckbox = editForm.querySelector('#edit_domestic_check');
+                            var editOverseasCheckbox = editForm.querySelector('#edit_overseas_check');
+
+                            // 수정 폼에서 국내, 해외 체크박스 중 하나만 선택되도록 제어
+                            if (locationType === 'domestic') {
+                                editDomesticCheckbox.checked = true;
+                                editOverseasCheckbox.disabled = true;
+                            } else {
+                                editOverseasCheckbox.checked = true;
+                                editDomesticCheckbox.disabled = true;
+                            }
+
+                            document.getElementById('cancel_edit_btn').addEventListener('click', function () {
+                                listItem.querySelector('.location-info').style.display = 'block';
+                                editForm.remove();
+                            });
+
+                            document.getElementById('save_edit_btn').addEventListener('click', function () {
+                                var editedLocationType = document.querySelector('input[name="edit_locationType"]:checked');
+                                var editedCountry = document.getElementById('edit_country_input').value;
+                                var editedCity = document.getElementById('edit_city_input').value;
+                                var editedImage = document.getElementById('edit_file_input').value; // 파일 업로드 처리 필요
+
+                                if (editedLocationType && ((editedLocationType.value === 'domestic' && editedCity && editedImage) ||
+                                    (editedLocationType.value === 'overseas' && editedCountry && editedCity && editedImage))) {
+                                    listItem.querySelector('h4').textContent = editedLocationType.value === 'domestic' ? '국내' : '해외';
+                                    listItem.querySelector('.location-info > p').textContent = editedLocationType.value === 'domestic' ?
+                                        '도시: ' + editedCity : '나라: ' + editedCountry + ', 도시: ' + editedCity;
+
+                                    editForm.remove();
+                                    listItem.querySelector('.location-info').style.display = 'block';
+
+                                    // 수정 완료 후 체크박스 다시 활성화
+                                    editDomesticCheckbox.disabled = false;
+                                    editOverseasCheckbox.disabled = false;
+                                } else {
+                                    alert('모든 필드를 입력하고 체크박스를 선택해주세요.');
+                                }
+                            });
+                        }
+
+                        // 여행지 삭제 처리 함수
+                        function deleteLocation(listItem) {
+                            listItem.remove();
+                        }
+
+                        // Location 탭 전환 함수
+                        function openLocationTab(evt, tabName) {
+                            var i, locationLists, locationTabs;
+                            locationLists = document.getElementsByClassName("location-list");
+                            for (i = 0; i < locationLists.length; i++) {
+                                locationLists[i].classList.remove("active");
+                            }
+                            locationTabs = document.getElementsByClassName("location-tab");
+                            for (i = 0; i < locationTabs.length; i++) {
+                                locationTabs[i].classList.remove("active");
+                            }
+                            document.getElementById(tabName).classList.add("active");
+                            evt.currentTarget.classList.add("active");
+                        }
+                    </script>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- footer -->
+<div th:replace="fragments/footer :: footerFragment"></div>
+
+</body>
+</html>

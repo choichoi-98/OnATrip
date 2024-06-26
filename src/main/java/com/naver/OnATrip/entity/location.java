@@ -17,7 +17,9 @@ public class location {
     @Column(name = "location_id")
     private Long id;
 
-    private String country;
+    private String countryName;
+
+    private String countryCode;
 
     private String city;
 
