@@ -64,3 +64,8 @@
             background-color: rgb(199,200,122);
             color: white;
         }
+
+        #placeReview{
+            max-height: 200px;
+            overflow-y: auto;
+        }
