@@ -4,14 +4,18 @@ import com.naver.OnATrip.entity.plan.Plan;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.service.DetailPlanService;
 import com.naver.OnATrip.service.PlanService;
+import com.naver.OnATrip.web.dto.plan.RouteDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +80,21 @@ public class PlanController {
         mv.addObject("detailPlans", detailPlans);
         mv.setViewName("plan/detailPlan");
         return mv;
+    }
+
+    //일자별 route 생성
+    @PostMapping("addRoute")
+    public ResponseEntity<?> addRoute(@RequestBody RouteDto routeData){
+        logger.info("addRoute의 Received day: " + routeData.getDay());
+        logger.info("addRoute의 plcaeName: " + routeData.getPlaceName());
+
+        //test 응답 데이터
+        Map<String,String> response = new HashMap<>();
+        response.put("test","test-val");
+
+        return ResponseEntity.ok(response);
+
+
     }
 
 }

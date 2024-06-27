@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <title>Title</title>
     <!-- css 링크-->
@@ -42,8 +44,8 @@
                         <h6>제주 공항</h6>
                     </div>
                     <div class="d-flex flex-row btn-section">
-                        <div class="btn"><button type="button" class="btn btn-outline-secondary place-add">장소추가</button></div>
-                        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add">메모추가</button></div>
+                        <div class="btn"><button type="button" class="btn btn-outline-secondary place-add" th:data-day="${iterStat.index + 1}">장소추가</button></div>
+                        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" th:data-day="${iterStat.index + 1}">메모추가</button></div>
                     </div>
                 </div>
             </div>
@@ -51,11 +53,11 @@
         </div>
         <div id="search-section" class="flex-fill">
             <div class="input-group">
-                <input type="search" id="autocomplete" class="form-control rounded" placeholder="장소를 검색하세요." aria-label="Search" aria-describedby="search-addon" />
+                <input type="search" id="autocomplete" class="form-control rounded" placeholder="장소를 검색하세요." aria-label="Search" aria-describedby="search-addon" disabled />
                 <button type="button" id="search-btn" class="btn btn-outline-primary">검색</button>
             </div>
-            <div id="placeInfo" class="container">
-
+            <div id="placeInfo" class="container" style="display:none;">
+                    <!-- 장소 세부 정보 js로 처리-->
             </div>
         </div>
         <div id="map-section" class="flex-fill">

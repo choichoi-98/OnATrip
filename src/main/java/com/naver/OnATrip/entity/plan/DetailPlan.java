@@ -12,6 +12,7 @@ public class DetailPlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "detailPlan_id")
     private Long id;
 
     @ManyToOne
