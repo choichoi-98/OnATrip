@@ -38,7 +38,6 @@ public class PayController {
 //    }
 
 
-
     @GetMapping("/subscribe")
     public String subscribe() {
 
@@ -54,6 +53,20 @@ public class PayController {
         return "pay/payPage";
     }
 */
+
+//    @PostMapping("/{imp_uid}")
+//    public IamportResponse<Payment> paymentByImpUid(Model model, Locale locale,
+//                                                    HttpSession httpSession, @PathVariable(value = "imp_uid") String imp_uid)
+//            throws IamportResponseException, IOException {
+//        return api.paymentByImpUid(imp_uid);
+//    }
+
+//    @PostMapping("/payment/prepare")
+//    public void preparePayment(@RequestBody PrePaymentEntity request)
+//            throws IamportResponseException, IOException {
+//        payService.postPrepare(request);
+//    }
+
 
 
 }
