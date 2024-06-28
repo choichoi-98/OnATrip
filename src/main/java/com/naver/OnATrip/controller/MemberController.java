@@ -28,6 +28,15 @@ public class MemberController {
                 ;
     }
 
+    @PostMapping("/login")
+    public String loginProc(){
+
+        System.out.println("@@@@@ MemberLogin Success");
+
+        return "main";
+
+    }
+
     @GetMapping("/findPassword")
     public String findPassword(){
 
