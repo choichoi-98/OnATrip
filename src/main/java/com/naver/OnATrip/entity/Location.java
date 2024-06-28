@@ -1,9 +1,6 @@
 package com.naver.OnATrip.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +12,11 @@ public class Location {
 
     @Id
     @Column(name = "location_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략 설정
     private Long id;
+
+    @Column(name = "location_type")
+    private String locationType;
 
     private String countryName;
 
@@ -29,3 +30,4 @@ public class Location {
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
 }
+

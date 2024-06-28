@@ -70,15 +70,22 @@
         }
         .btn {
             padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
+            background-color: #fff; /* 배경색을 흰색으로 설정 */
+            color: #000; /* 텍스트 색상을 검정으로 설정 */
+            border: 2px solid #b3b1b18c; /* 보더 색상 및 두께 설정 */
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #f1f1f1; /* 호버 시 배경색 변경 */
         }
         .btn.cancel {
-            background-color: #dc3545;
             margin-left: 10px;
+            border-color: #2125295c; /* 취소 버튼 보더 색상 */
+        }
+        .btn.cancel:hover {
+            background-color: #f1f1f1; /* 호버 시 배경색 변경 */
         }
         input[type="text"],
         input[type="file"] {
@@ -122,6 +129,31 @@
             display: block;
             margin-top: 10px;
         }
+        .location-list li button {
+            padding: 5px 10px;
+            margin-left: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .location-list li button:hover {
+            background-color: #218838;
+        }
+        .location-list li button.delete {
+            background-color: #dc3545;
+        }
+        .location-list li button.delete:hover {
+            background-color: #c82333;
+        }
+        .location-list li button.cancel {
+            background-color: #6c757d;
+        }
+        .location-list li button.cancel:hover {
+            background-color: #5a6268;
+        }
     </style>
     <!-- header -->
     <head th:replace="fragments/header :: headerFragment"></head>
@@ -150,42 +182,51 @@
                         <p>내용입력하시오.</p>
                     </div>
                     <div id="Paris" class="tabcontent">
-                        <div class="checkbox-container">
-                            <label for="domestic_check">
-                                <input type="checkbox" id="domestic_check" name="locationType" value="domestic"
-                                       onchange="toggleDomesticInputs()">
-                                <span>국내</span>
-                            </label>
-                            <label for="overseas_check">
-                                <input type="checkbox" id="overseas_check" name="locationType" value="overseas"
-                                       onchange="toggleOverseasInputs()">
-                                <span>해외</span>
-                            </label>
-                        </div>
-                        <p>
-                            <label for="country_input">국가:</label><br>
-                            <input type="text" id="country_input" name="country" placeholder="나라를 입력하세요">
-                        </p>
-                        <p>
-                            <label for="countryCode_input">국가코드:</label><br>
-                            <input type="text" id="countryCode_input" name="countryCode" placeholder="국가코드" readonly>
-                        </p>
-                        <p>
-                            <label for="city_input">도시:</label><br>
-                            <input type="text" id="city_input" name="city" placeholder="도시를 입력하세요">
-                        </p>
-                        <p>
-                            <label for="description_input">설명:</label><br>
-                            <input type="text" id="description_input" name="description" placeholder="설명을 입력하세요">
-                        </p>
-                        <p>
-                            <label for="file_input">이미지:</label><br>
-                            <input type="file" id="file_input" name="file">
-                        </p>
-                        <p>
-                            <button id="add_location_btn" class="btn">여행지 추가</button>
-                            <button id="reset_btn" type="button" class="btn cancel">취소</button>
-                        </p>
+                        <form id="locationForm" th:action="@{/admin/addLocation}" method="post"
+                              enctype="multipart/form-data">
+
+                            <div class="checkbox-container">
+                                <label for="domestic_check">
+                                    <input type="checkbox" id="domestic_check" name="locationType" value="domestic"
+                                           onchange="toggleDomesticInputs()">
+                                    <span>국내</span>
+                                </label>
+                                <label for="overseas_check">
+                                    <input type="checkbox" id="overseas_check" name="locationType" value="overseas"
+                                           onchange="toggleOverseasInputs()">
+                                    <span>해외</span>
+                                </label>
+
+                            </div>
+                            <p>
+                                <label for="country_input">국가:</label><br>
+                                <input type="text" id="country_input" name="country" placeholder="나라를 입력하세요">
+                            </p>
+                            <p>
+                                <label for="countryCode_input">국가코드:</label><br>
+                                <input type="text" id="countryCode_input" name="countryCode" placeholder="국가코드"
+                                       readonly>
+                            </p>
+                            <p>
+                                <label for="city_input">도시:</label><br>
+                                <input type="text" id="city_input" name="city" placeholder="도시를 입력하세요">
+                            </p>
+                            <p>
+                                <label for="description_input">설명:</label><br>
+                                <input type="text" id="description_input" name="description" placeholder="설명을 입력하세요">
+                            </p>
+                            <p>
+                                <label for="file_input">이미지:</label><br>
+                                <input type="file" id="file_input" name="file">
+                            </p>
+                            <p>
+                                <button id="add_location_btn" class="btn" style="border-color: #2125295c;">여행지 추가
+                                </button>
+                                <button id="reset_btn" type="button" class="btn cancel">취소</button>
+                            </p>
+
+                        </form>
+
                         <div class="location-tabs">
                             <div class="location-tab active" onclick="openLocationTab(event, 'domestic_list')">국내</div>
                             <div class="location-tab" onclick="openLocationTab(event, 'overseas_list')">해외</div>
