@@ -2,6 +2,8 @@ package com.naver.OnATrip.repository;
 
 import com.naver.OnATrip.controller.PlanController;
 import com.naver.OnATrip.entity.plan.DetailPlan;
+import com.naver.OnATrip.entity.plan.Route;
+import com.naver.OnATrip.web.dto.plan.RouteDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityResult;
@@ -46,4 +48,11 @@ public class DetailPlanRepository {
                 .where(detailPlan.plan.id.eq(planId))
                 .fetch();
     }
+
+    //route 추가-일자별 route
+    @Transactional
+    public void addRoute(Route route) {
+        em.persist(route);
+    }
+
 }

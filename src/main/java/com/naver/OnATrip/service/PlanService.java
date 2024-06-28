@@ -3,6 +3,7 @@ package com.naver.OnATrip.service;
 import com.naver.OnATrip.controller.PlanController;
 import com.naver.OnATrip.entity.plan.Plan;
 import com.naver.OnATrip.repository.PlanRepository;
+//import com.naver.OnATrip.web.dto.plan.RouteDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,7 @@ public class PlanService {
 
         return result;
     }
+
 
 
 

@@ -38,14 +38,16 @@
 
             <div th:each="detailPlan, iterStat : ${detailPlans}" class="date-block">
                 <div class="heading-2">
-                    <strong class="bold-text" th:text="'day' + (${iterStat.index + 1}) + '. ' + ${detailPlan.perDate}"></strong></div>
+                    <strong class="bold-text" th:text="'day' + (${iterStat.index + 1}) + '. ' + ${detailPlan.perDate}"></strong>
+                </div>
                 <div class="container">
                     <div class="container place-block">
                         <h6>제주 공항</h6>
+                        <strong th:text="${detailPlan.id}"></strong>
                     </div>
                     <div class="d-flex flex-row btn-section">
-                        <div class="btn"><button type="button" class="btn btn-outline-secondary place-add" th:data-day="${iterStat.index + 1}">장소추가</button></div>
-                        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" th:data-day="${iterStat.index + 1}">메모추가</button></div>
+                        <div class="btn"><button type="button" class="btn btn-outline-secondary place-add" th:data-day="${iterStat.index + 1}" th:data-detailplanid="${detailPlan.id}">장소추가</button></div>
+                        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" th:data-day="${iterStat.index + 1}" th:data-detailplanid="${detailPlan.id}">메모추가</button></div>
                     </div>
                 </div>
             </div>

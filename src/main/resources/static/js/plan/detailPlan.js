@@ -4,7 +4,9 @@ let countryName;
 const apiUrl = "https://restcountries.com/v3/alpha/";
 // 공공데이터포털 API 키
 const apiKey = 'GqsVgyYpktxrLRv1S%2FvX5a%2BU0How0aXThcAAfkLelSha90ZyXvuhuZYsF5T1A5btMEBpUyTq6Dj8UWEKKQ%2BVOQ%3D%3D';
-let dayNumber;
+let dayNumber;//일차
+let detailPlanId;
+let category;//memo, place
 let token = $("meta[name='_csrf']").attr("content");
 let header = $("meta[name='_csrf_header']").attr("content");
 
@@ -18,8 +20,10 @@ $(document).ready(function() {
     $(document).on('click', '.add-route', function(e) {
             e.preventDefault();
             const day = $(this).data('day');
+            console.log("day: ", day);
+            console.log("detailplanid: ", detailplanid);
             const placeName = $(this).closest('.card').find('.card-title').text();
-            addRoute(day, placeName);
+            addRoute(day, placeName, category,detailPlanId);
     });
 
 });//$(document).ready(function() {
@@ -106,15 +110,21 @@ function initAutocomplete(countryCode){
     const autocompleteInput = $('#autocomplete');
     const searchButton = $('#search-btn');
 
-    //장소추가 btn 클릭시 검색창 focus
+    //장소, 메모 추가
        const placeAddBtn = $('.place-add');
+       const memoAddBtn = $('.memo-add');
+
        placeAddBtn.on('click', function() {
-           const placeAddBtn = $('.place-add');
 
            placeAddBtn.removeClass('active');
 
            $(this).addClass('active');
             dayNumber = $(this).attr('data-day');
+            console.log('placeAddBtn-dayNumber:',dayNumber);
+            detailPlanId = $(this).attr('data-detailPlanId');
+            console.log('placeAddBtn-detailPlanId: ', detailPlanId);
+            category = 'PLACE';
+
             console.log("장소추가 btn 클릭 이벤트 : ",dayNumber);
 
             autocompleteInput.prop('disabled',false);
@@ -224,12 +234,12 @@ function showPlaceOnMap(place, dayNumber){
 }
 
 //------------ROUTE, addRoute
-function addRoute(day, placeName){
+function addRoute(day, placeName, category, detailPlanId){
     $.ajax({
         url:'/addRoute',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({day:day, placeName: placeName}),
+        data: JSON.stringify({day:day, placeName: placeName, category: category, detailPlanId: detailPlanId}),
         beforeSend : function(xhr)
         { //데이터를 전송하기 전에 헤더에 csrf값을 설정
             xhr.setRequestHeader(header, token);

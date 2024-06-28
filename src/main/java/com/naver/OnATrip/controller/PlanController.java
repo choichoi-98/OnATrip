@@ -86,7 +86,11 @@ public class PlanController {
     @PostMapping("addRoute")
     public ResponseEntity<?> addRoute(@RequestBody RouteDto routeData){
         logger.info("addRoute의 Received day: " + routeData.getDay());
-        logger.info("addRoute의 plcaeName: " + routeData.getPlaceName());
+        logger.info("addRoute의 placeName: " + routeData.getPlaceName());
+        logger.info("addRoute의 category: " + routeData.getCategory());
+        logger.info("addRoute의 detailPlanId: " + routeData.getDetailPlan_id());
+
+        detailPlanService.addRoute(routeData);
 
         //test 응답 데이터
         Map<String,String> response = new HashMap<>();
@@ -94,7 +98,5 @@ public class PlanController {
 
         return ResponseEntity.ok(response);
 
-
     }
-
 }
