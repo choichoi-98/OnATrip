@@ -8,6 +8,18 @@ spring:
     username: travel
     password: us
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  mail:
+    host: smtp.naver.com # SMTP 서버 호스트
+    port: 587 # SMTP 서버 포트
+    username: real_onatrip # SMTP 서버 로그인 아이디 (발신자)
+    password: travelus33 # SMTP 서버 로그인 패스워드 (앱 비밀번호)
+    properties:
+      mail:
+        smtp:
+          auth: true # 사용자 인증 시도 여부 (기본값 : false)
+          starttls:
+            enable: true # StartTLS 활성화 여부 (기본값 : false)
   #mvc:
   # view:
   #   prefix: /WEB-INF/templates
@@ -48,18 +60,4 @@ pay:
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
-
-##메일
-#spring:
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: your-email@gmail.com
-#    password: your-email-password
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
 

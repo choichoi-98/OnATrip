@@ -39,6 +39,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools' //html 변경 바로 적용, 자동 리로딩
     implementation 'org.springframework.boot:spring-boot-starter-mail' //메일관련
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis' //인증번호 유효시간 관련
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'//sql 파라미터 로그
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
     implementation 'org.springframework.boot:spring-boot-starter-security' //시큐리티
