@@ -1,6 +1,6 @@
 package com.naver.OnATrip.service;
 
-import com.naver.OnATrip.entity.pay.PrePaymentEntity;
+//import com.naver.OnATrip.entity.pay.PrePaymentEntity;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.PrepareData;
