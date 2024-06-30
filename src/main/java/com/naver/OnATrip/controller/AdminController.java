@@ -40,9 +40,6 @@ public class AdminController {
         logger.info("Received request to add location with country={}, countryCode={}, city={}, description={}, locationType={}",
                 country, countryCode, city, description, locationType);
 
-        // 디버그 로그 추가
-        logger.debug("Received file: {}", file.getOriginalFilename());
-
         // 파일 유효성 검사
         if (file.isEmpty()) {
             throw new IllegalArgumentException("이미지 파일을 업로드해야 합니다.");
@@ -53,4 +50,5 @@ public class AdminController {
 
         return "redirect:/admin"; // 추가 성공 시 관리자 페이지로 리다이렉트
     }
+
 }
