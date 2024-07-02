@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,6 +48,17 @@ public class EmailController {
         System.out.println("메일보내기 성공");
         model.addAttribute("success", "메일 보내기 성공. 이메일을 확인해주세요.");
         return "member/login";
+    }
+
+    @ResponseBody
+    @PostMapping("/mail")
+    public String MailSend(@RequestParam("email") String email){
+
+        int number = emailService.sendNumber(email);
+
+        String num = "" + number;
+
+        return num;
     }
 }
 

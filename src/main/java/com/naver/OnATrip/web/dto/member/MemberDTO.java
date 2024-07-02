@@ -18,14 +18,14 @@ public class MemberDTO {
 
     @NotBlank(message = "비밀번호를 입력해주세요")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message= "비밀번호는 숫자,영문,특수문자 포함 8~16자리 입니다.")
-    @Size(min=8, max=20)
+    @Size(min=8, max=16, message= "")
     private String password;
 
     @NotBlank(message = "비밀번호 한번 더 입력해주세요")
     private String passwdCheck;
 
     @NotBlank(message = "이름을 입력해주세요")
-    @Size(min = 2, max=10)
+    @Size(min = 2, max=10, message = "이름은 한글자 이상이어야 합니다.")
     private String name;
 
     private String role;

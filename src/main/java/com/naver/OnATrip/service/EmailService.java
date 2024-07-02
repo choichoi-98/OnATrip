@@ -6,6 +6,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
+    private static int number;
 
     @Value("${spring.mail.username}")
     private String from;
@@ -43,5 +45,36 @@ public class EmailService {
         } catch (MessagingException e) {
             throw  new RuntimeException(e);
         }
+    }
+
+    public static void createNumber(){
+        number = (int)(Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
+    }
+
+    public MimeMessage CreateMail(String mail){
+        createNumber();
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            message.setFrom(from+ "@naver.com");
+            message.setRecipients(MimeMessage.RecipientType.TO, mail);
+            message.setSubject("OnATrip 회원가입 인증 번호입니다.");
+            String body = "";
+            body += "<h1>" + number + "</h1>";
+            message.setText(body,"UTF-8", "html");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
+    public int sendNumber(String mail){
+
+        MimeMessage message = CreateMail(mail);
+
+        javaMailSender.send(message);
+
+        return number;
     }
 }

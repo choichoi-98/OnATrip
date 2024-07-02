@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>회원가입</title>
     <link rel="stylesheet" href="css/member/join.css">
+    <script src="/js/jquery-3.7.0.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/member/join.js"></script>
 </head>
 <body>
 <div id="wrap">
@@ -37,8 +42,16 @@
                             <div class="groupEmail">
                                 <input type="email" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
                                        th:field="*{email}" placeholder="이메일 주소">
-                                <div class="error-class" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Invalid email</div>
-                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="submit">인증</button>
+                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="button" onclick="sendNumber()">인증</button>
+                            </div>
+                            <div class="error-class" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Invalid email</div>
+                        </div>
+                        <div id ="input-group" style="display: none">
+                            <div id="mail_number" name="mail_number" >
+                                <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
+                                   name="number" id="number" placeholder="인증번호 입력">
+                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">확인</button>
+                                <input type="hidden" id="Confirm" value="">
                             </div>
                         </div>
                         <div class="input-group">
@@ -46,24 +59,24 @@
                             <div class="groupName">
                                 <input type="text" th:field="*{name}" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
                                        placeholder="이름">
-                                <div class="error-class" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Invalid name</div>
                             </div>
+                            <div class="error-class" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Invalid name</div>
                         </div>
                         <div class="input-group">
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호</label>
                             <div class="groupPassword">
                                 <input type="password" th:field="*{password}" class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
                                        th:errorclass="error-input" placeholder="영어,숫자,특수문자 포함 8자리 이상">
-                                <div class="error-class" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid password</div>
                             </div>
+                            <div class="error-class" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid password</div>
                         </div>
                         <div class="input-group">
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호 확인</label>
                             <div class="groupPassword">
                                 <input type="password" th:field="*{passwdCheck}"class="flex-2 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
                                        th:errorclass="error-input" placeholder="비밀번호 재입력">
-                                <div class="error-class" th:if="${#fields.hasErrors('passwdCheck')}" th:errors="*{passwdCheck}">Invalid passwdCheck</div>
                             </div>
+                            <div class="error-class" th:if="${#fields.hasErrors('passwdCheck')}" th:errors="*{passwdCheck}">Invalid passwdCheck</div>
                         </div>
                     </div>
                     <div class="mt-8">
@@ -77,7 +90,5 @@
         </div>
     </div>
 </div>
-<script src="/js/jquery-3.7.0.js"></script>
-<script src="/js/bootstrap.js"></script>
 </body>
 </html>
