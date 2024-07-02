@@ -59,13 +59,13 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>총 결제 금액</span>
-                        <strong id="total_price">100</strong>    <!-- th:text="${totalPrice}"로 바꾸기 -->
+                        <strong id="total_price" th:text="${item.itemPrice}"></strong>    <!-- th:text="${totalPrice}"로 바꾸기 -->
                     </li>
                 </ul>
                 <form class="card p-2">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="프로모션 코드">
-                        <button type="button0000000" class="btn btn-secondary">적용</button>
+                        <button type="button" class="btn btn-secondary">적용</button>
                     </div>
                 </form>
             </div>
@@ -135,19 +135,33 @@
         let totalPrice =  $('#total_price').text();
 
         //** 결제정보 사전 검증 - 페이지 로드시 주문번호와 결제 예정금액을 전달 */
-        $.ajax({
-            url: "pay/prepare",
-            method: "post",
-            contentType: "application/json",
-            data: JSON.stringify({
-                merchant_uid : merchant_uid,    //가맹점 주문번호
-                amount : totalPrice             //결제 예정 금액
-            })
-        })
+        // $.ajax({
+        //     url: "pay/prepare",
+        //     method: "post",
+        //     contentType: "application/json",
+        //     data: JSON.stringify({
+        //         merchant_uid : merchant_uid,    //가맹점 주문번호
+        //         amount : totalPrice             //결제 예정 금액
+        //     })
+        // })
     })
 
 
     $('#submit').click(function () {    //결제 요청 스크립트
+
+        if (!$('#agree-services').is(':checked')){
+            alert('구독 서비스 운영정책 이용약관 동의 사항에 체크 해야 합니다.');
+            return;
+        }
+        if (!$('#agree-condition').is(':checked')){
+            alert('구매 조건 확인 및 동의 사항에 체크해야 합니다.');
+            return;
+        }
+        if (!$('#agree-refund').is(':checked')){
+            alert('환불 안내 및 동의 사항에 체크해야 합니다.');
+            return;
+        }
+
         var IMP = window.IMP;
         IMP.init('imp63854110');   //가맹점 식별코드 입력
 
