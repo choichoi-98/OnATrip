@@ -1,17 +1,13 @@
 package com.naver.OnATrip.entity.plan;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@ToString
 public class DetailPlan {
 
     @Id
@@ -30,4 +26,16 @@ public class DetailPlan {
     //locationId로 바꿔야 함.
 
     private LocalDate perDate; //날짜별
+
+    protected DetailPlan() {
+    }
+
+    @Builder
+    public DetailPlan( Long id,Plan plan, Long memberId, String country, LocalDate perDate) {
+        this.id = id;
+        this.plan = plan;
+        this.memberId = memberId;
+        this.country = country;
+        this.perDate = perDate;
+    }
 }

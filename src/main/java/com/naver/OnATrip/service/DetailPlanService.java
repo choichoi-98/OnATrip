@@ -4,7 +4,7 @@ import com.naver.OnATrip.controller.PlanController;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.entity.plan.Route;
 import com.naver.OnATrip.repository.DetailPlanRepository;
-import com.naver.OnATrip.web.dto.plan.RouteDto;
+//import com.naver.OnATrip.web.dto.plan.RouteDto;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,13 +37,5 @@ public class DetailPlanService {
         logger.info("DetailPlanService-findDetailPlanByPlanId");
         return detailPlanRepository.findDetailPlanByPlanId(planId);
     }
-    // 루트 추가
-    public void addRoute(RouteDto routeData) {
-        logger.info("DetailPlanService-addRoute");
 
-        DetailPlan detailPlan = em.find(DetailPlan.class, routeData.getDetailPlan_id());
-        Route route = routeData.toEntity(detailPlan);  // RouteDto를 Route 엔티티로 변환
-
-        detailPlanRepository.addRoute(route);
-    }
 }
