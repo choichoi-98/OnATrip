@@ -183,7 +183,8 @@
                     </div>
                     <div id="Paris" class="tabcontent">
                         <form id="locationForm" th:action="@{/admin/addLocation}" method="post"
-                              enctype="multipart/form-data">
+                              enctype="multipart/form-data" onsubmit="return false;">
+
 
                             <div class="checkbox-container">
                                 <label for="domestic_check">
