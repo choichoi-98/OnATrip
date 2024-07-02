@@ -185,7 +185,6 @@
                         <form id="locationForm" th:action="@{/admin/addLocation}" method="post"
                               enctype="multipart/form-data" onsubmit="return false;">
 
-
                             <div class="checkbox-container">
                                 <label for="domestic_check">
                                     <input type="checkbox" id="domestic_check" name="locationType" value="domestic"
@@ -202,6 +201,7 @@
                             <p>
                                 <label for="country_input">국가:</label><br>
                                 <input type="text" id="country_input" name="country" placeholder="나라를 입력하세요">
+                                <button type="button" id="country_search_btn" class="btn">검색</button>
                             </p>
                             <p>
                                 <label for="countryCode_input">국가코드:</label><br>
@@ -250,6 +250,7 @@
         </div>
     </div>
 </div>
+
 <script src="js/admin/admin.js"></script>
 <div th:replace="fragments/footer :: footerFragment"></div>
 </body>

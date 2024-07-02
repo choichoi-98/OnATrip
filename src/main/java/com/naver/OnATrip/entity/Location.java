@@ -26,8 +26,6 @@ public class Location {
 
     private String description;
 
-    @Lob
-    @Column(name = "image", columnDefinition = "BLOB")
-    private byte[] image;
+    private String image;
 }
 
