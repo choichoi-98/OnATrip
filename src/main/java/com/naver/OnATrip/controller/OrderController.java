@@ -22,25 +22,25 @@ public class OrderController {
     private final OrderService orderService;
     private final HttpSession httpSession;
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> payload){
-           //* 임시로 itemId설정 *//
-         int itemId = 1;
-
-//        List<Integer> itemIdsInteger = (List<Integer>) payload.get("itemIds");
-//        List<Long> itemIds = itemIdsInteger.stream().map(Long::valueOf).collect(Collectors.toList());
-
-        //요청받은 상품ID로 주문 테이블 생성
-        Orders temporaryOrder = orderService.creatOrder(itemId);
-
-        //세션에 임시 주문 정보를 저장
-        httpSession.setAttribute("temporaryOrder", temporaryOrder);
-        httpSession.setAttribute("itemId", itemId);   //상품ID 저장
-
-        Object itemIdsAttr = httpSession.getAttribute("itemIds");
-
-        return ResponseEntity.ok("주문 임시 저장 완료");
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> payload){
+//           //* 임시로 itemId설정 *//
+//         int itemId = 1;
+//
+////        List<Integer> itemIdsInteger = (List<Integer>) payload.get("itemIds");
+////        List<Long> itemIds = itemIdsInteger.stream().map(Long::valueOf).collect(Collectors.toList());
+//
+//        //요청받은 상품ID로 주문 테이블 생성
+//        Orders temporaryOrder = orderService.creatOrder(itemId);
+//
+//        //세션에 임시 주문 정보를 저장
+//        httpSession.setAttribute("temporaryOrder", temporaryOrder);
+//        httpSession.setAttribute("itemId", itemId);   //상품ID 저장
+//
+//        Object itemIdsAttr = httpSession.getAttribute("itemIds");
+//
+//        return ResponseEntity.ok("주문 임시 저장 완료");
+//    }
 
 //    //최종 주문 테이블 생성
 //    @PostMapping("/done")

@@ -168,7 +168,6 @@
             //결제 완료시
             if (rsp.success) {
                 var msg = '결제가 완료되었습니다.';
-                alert(msg);
 
                 // //데이터를 ajax로 보낼 시 사용할 코드
                 // $.ajax({
@@ -183,9 +182,9 @@
             } else {
                 //결제 실패시
                 var msg = '결제에 실패하였습니다.';
-                alert(msg);
                 console.log(rsp);
             }
+            alert(msg);
         })
 
     })

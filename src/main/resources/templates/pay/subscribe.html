@@ -68,34 +68,15 @@
                 <form class="item_select"  th:action="@{/payPage}" th:object="${itemDto}" method="POST">
                     <div class="container-fluid">
                         <div class="item_select" style="display:flex; margin: auto">
-                            <div class="card" style="width: 18rem;">
+                            <div class="card" style="width: 18rem;" th:each="item : ${item}">
                                 <img src="/images/common/OnATrip_Logo.png" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title">1개월</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                    <h5 class="card-title" th:text="${item.name}"></h5>
+                                    <p class="card-text" th:text="${item.itemPrice}">Some quick example text to build on the card title and make up the bulk
                                         of
                                         the card's content.</p>
-                                    <input type="radio" name="item_id" value="1">
-                                </div>
-                            </div>
-                            <div class="card" style="width: 18rem;">
-                                <img src="/images/common/OnATrip_Logo.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">2개월</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                        of
-                                        the card's content.</p>
-                                    <input type="radio" name="item_id" value="2">
-                                </div>
-                            </div>
-                            <div class="card" style="width: 18rem;">
-                                <img src="/images/common/OnATrip_Logo.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">3개월</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                        of
-                                        the card's content.</p>
-                                    <input type="radio" name="item_id" value="3">
+                                    <input type="radio" name="item_id" th:value="${item.id}">
+                                    <input type="hidden" th:value="${item.period}">
                                 </div>
                             </div>
                         </div>
