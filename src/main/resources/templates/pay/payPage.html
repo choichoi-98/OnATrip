@@ -59,7 +59,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>총 결제 금액</span>
-                        <strong id="total_price">100</strong>    <!-- th:text="${totalPrice}"로 바꾸기 -->
+                        <strong id="total_price" th:text="${item.itemPrice}"></strong>    <!-- th:text="${totalPrice}"로 바꾸기 -->
                     </li>
                 </ul>
                 <form class="card p-2">
@@ -148,6 +148,20 @@
 
 
     $('#submit').click(function () {    //결제 요청 스크립트
+
+        if (!$('#agree-services').is(':checked')){
+            alert('구독 서비스 운영정책 이용약관 동의 사항에 체크 해야 합니다.');
+            return;
+        }
+        if (!$('#agree-condition').is(':checked')){
+            alert('구매 조건 확인 및 동의 사항에 체크해야 합니다.');
+            return;
+        }
+        if (!$('#agree-refund').is(':checked')){
+            alert('환불 안내 및 동의 사항에 체크해야 합니다.');
+            return;
+        }
+
         var IMP = window.IMP;
         IMP.init('imp63854110');   //가맹점 식별코드 입력
 
