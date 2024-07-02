@@ -31,17 +31,6 @@ public class ItemController {
 
 
 
-
-    @PostMapping("/payPage")
-    public String getItemById(@RequestParam("item_id") int id, Model model) {
-
-        List<Item> item = itemService.findAllById(id);
-        model.addAttribute("item", item);
-
-        return "pay/payPage";
-    }
-
-
     @GetMapping("/subscribe")
     public String subscribe(Model model) {
 

@@ -65,7 +65,7 @@
             </main>
 
             <div> <!-- 구독권 선택 -->
-                <form class="item_select"  th:action="@{/payPage}" th:object="${itemDto}" method="POST">
+                <form class="item_select"  th:action="@{/payPage}"  method="POST">
                     <div class="container-fluid">
                         <div class="item_select" style="display:flex; margin: auto">
                             <div class="card" style="width: 18rem;" th:each="item : ${item}">
@@ -75,7 +75,8 @@
                                     <p class="card-text" th:text="${item.itemPrice}">Some quick example text to build on the card title and make up the bulk
                                         of
                                         the card's content.</p>
-                                    <input type="radio" name="item_id" th:value="${item.id}">
+<!--                                    <input type="radio" th:attr="name=${item.id}" th:value="${item.id}" >-->
+                                    <input type="radio" th:name="item_id" th:value="${item.id}" >
                                     <input type="hidden" th:value="${item.period}">
                                 </div>
                             </div>
@@ -88,6 +89,7 @@
                             </button>
                         </div>
                     </div>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 </form>
 
             </div>

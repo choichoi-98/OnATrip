@@ -65,7 +65,7 @@
                 <form class="card p-2">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="프로모션 코드">
-                        <button type="button0000000" class="btn btn-secondary">적용</button>
+                        <button type="button" class="btn btn-secondary">적용</button>
                     </div>
                 </form>
             </div>
@@ -135,15 +135,15 @@
         let totalPrice =  $('#total_price').text();
 
         //** 결제정보 사전 검증 - 페이지 로드시 주문번호와 결제 예정금액을 전달 */
-        $.ajax({
-            url: "pay/prepare",
-            method: "post",
-            contentType: "application/json",
-            data: JSON.stringify({
-                merchant_uid : merchant_uid,    //가맹점 주문번호
-                amount : totalPrice             //결제 예정 금액
-            })
-        })
+        // $.ajax({
+        //     url: "pay/prepare",
+        //     method: "post",
+        //     contentType: "application/json",
+        //     data: JSON.stringify({
+        //         merchant_uid : merchant_uid,    //가맹점 주문번호
+        //         amount : totalPrice             //결제 예정 금액
+        //     })
+        // })
     })
 
 
