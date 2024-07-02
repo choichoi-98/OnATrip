@@ -26,11 +26,11 @@ public class PlanService {
     private static final Logger logger = LoggerFactory.getLogger(PlanService.class);
 
     /*
-    * createPlan
-    * - PLAN 생성
+     * createPlan
+     * - PLAN 생성
      */
     @Transactional
-    public Long createPlan(Plan plan){
+    public Long createPlan(Plan plan) {
         logger.info("PlanService-createPlan");
         planRepository.createPlan(plan);
         return plan.getId();
@@ -41,10 +41,10 @@ public class PlanService {
     for createDetailPlan
      */
     @Transactional
-    public Plan findPlanById(Long planId){
+    public Plan findPlanById(Long planId) {
         logger.info("PalnService-findByID");
         return (Plan) planRepository.findPlanById(planId)
-                .orElseThrow(()-> new IllegalArgumentException("Plan not found with id: " + planId));
+                .orElseThrow(() -> new IllegalArgumentException("Plan not found with id: " + planId));
     }
 
     /*
