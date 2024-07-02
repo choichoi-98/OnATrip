@@ -1,13 +1,8 @@
 package com.naver.OnATrip.repository;
 
-import com.naver.OnATrip.controller.PlanController;
 import com.naver.OnATrip.entity.plan.DetailPlan;
-import com.naver.OnATrip.entity.plan.Route;
-import com.naver.OnATrip.web.dto.plan.RouteDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityResult;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -19,7 +14,6 @@ import static com.naver.OnATrip.entity.plan.QDetailPlan.detailPlan;
 
 
 @Repository
-//@RequiredArgsConstructor
 public class DetailPlanRepository {
 
     private final EntityManager em;
@@ -43,16 +37,13 @@ public class DetailPlanRepository {
 
     public List<DetailPlan> findDetailPlanByPlanId(Long planId){
         logger.info("DetailPlanRepository-findDetailPlanByPlanId");
+        logger.info("DetailPlanRepository-findEtailPlanByPlanId-planId: ", planId);
         return queryFactory
                 .selectFrom(detailPlan)
                 .where(detailPlan.plan.id.eq(planId))
                 .fetch();
     }
 
-    //route 추가-일자별 route
-    @Transactional
-    public void addRoute(Route route) {
-        em.persist(route);
-    }
+
 
 }

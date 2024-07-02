@@ -75,17 +75,17 @@ public class PlanService {
         return result;
     }
 
+    public List<LocalDate> calculateDates(LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> dates = new ArrayList<>();
+        LocalDate currentDate = startDate;
+
+        while (!currentDate.isAfter(endDate)) {
+            dates.add(currentDate);
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return dates;
+    }
 
 
-
-    /*
-    Plan, DetailPlan 함께 저장
-     */
-//    public void createPlanWithDetails(Plan plan, DetailPlan detailPlan){
-//        createPlan(plan);
-//
-//        detailPlan.setPlan(plan);
-//
-//        createDetailPlan(detailPlan);
-//    }
 }

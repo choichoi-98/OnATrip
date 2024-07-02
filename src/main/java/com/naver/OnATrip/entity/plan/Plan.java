@@ -1,11 +1,12 @@
 package com.naver.OnATrip.entity.plan;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Getter @Setter
+@Getter
+@ToString
 public class Plan {
 
     @Id
@@ -27,4 +28,16 @@ public class Plan {
 
     private Long mateId;
 
+    protected Plan() {
+    }
+
+    @Builder
+    public Plan(Long id, Long memberId, String country, String startDate, String endDate, Long mateId) {
+        this.id = id;
+        this.memberId = memberId;
+        this.country = country;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.mateId = mateId;
+    }
 }
