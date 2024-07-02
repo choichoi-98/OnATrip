@@ -20,6 +20,7 @@ $(document).ready(function() {
 
     //addRoute('장소추가' -> '추가'_db에 데이터 삽입)
     $(document).on('click', '.add-route', function(e) {
+            category = 'PLACE';
             e.preventDefault();
             console.log("-------------addRoute.on.click-----------");
             const day = $(this).data('day');
@@ -33,6 +34,22 @@ $(document).ready(function() {
             const placeName = $(this).closest('.card').find('.card-title').text();
             addRoute(day, placeName, category,detailPlanId, lat, lng);
     });
+
+    //addMeMo
+   $(document).on('click', '#addMemo', function(e){
+        category = 'MEMO';
+        e.preventDefault();
+        const memoInput = $(this).siblings('input');
+        const memoText = memoInput.val().trim();
+        if(memoText){
+            const day = $(this).closest('.input-group').attr('id').split('-')[1];
+            const detailPlanId = $(this).data('detailplanid');
+            console.log('#addMemo - day, detailPlanId', day, detailPlanId);
+            addRoute(day,memoText, category , detailPlanId,null,null);
+            memoInput.val('');
+        }
+
+   });
 
 
 });//$(document).ready(function() {
@@ -308,7 +325,14 @@ function updateRoute(dayToUpdate, routes) {
 
     bindPlaceAddButtons();//버튼 이벤트 제어
 
-    addMarkersFromRoutes(routes); //마커 동적 추가
+    //'장소추가'인 경우에만 마커 추가(지도)
+    if(routes.some(route => {
+        console.log('updateRoute-category: ', route.category);
+                return route.category =='PLACE'
+                })) {
+
+        addMarkersFromRoutes(routes); //마커 동적 추가
+    }
 
 }
 
@@ -326,10 +350,14 @@ function bindPlaceAddButtons() {
 
     // 장소, 메모 추가 버튼
     const placeAddBtn = $('.place-add');
+    const memoAddBtn = $('.memo-add');
+
+    //'장소추가'버튼
     placeAddBtn.off('click').on('click', function() {
 
         placeAddBtn.removeClass('active');
         $(this).addClass('active');
+        memoAddBtn.removeClass('active');
 
         dayNumber = $(this).attr('data-day');
         console.log('placeAddBtn-dayNumber:', dayNumber);
@@ -346,10 +374,45 @@ function bindPlaceAddButtons() {
 
         $('#placeInfo').css('display', 'none').html(''); // placeInfo 초기화
     });
+
+    //'메모추가'버튼
+    memoAddBtn.off('click').on('click', function(){
+        placeAddBtn.removeClass('active');
+        autocompleteInput.prop('disabled', true);
+        autocompleteInput.val('');
+
+
+        const memoInputSectionId = '#memoInputSection-' + dayNumber;
+        memoAddBtn.removeClass('active');
+        $(this).addClass('active');
+
+
+        dayNumber = $(this).attr('data-day');
+        console.log('memoAddBtn-dayNumber: ', dayNumber);
+
+        detailPlanId = $(this).attr('data-detailplanid');
+        console.log('memoAddBtn-detailPlanId: ',detailPlanId );
+
+        category = 'MEMO';
+        console.log("메모추가 btn 클릭 이벤트 : ", dayNumber);
+
+        //메모 입력 섹션 생성
+        if($(memoInputSectionId).length == 0 ){
+            let memoInputSection =
+                `<div id="memoInputSection-${dayNumber}" class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="메모를 입력하세요" aria-label="Memo" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="button" id="addMemo" data-detailplanid=${detailPlanId}>추가</button>
+                </div>`;
+            $(this).closest('.btn-section').before(memoInputSection);
+        } else {
+            $(memoInputSectionId).remove();
+        }
+    });//
 }
 
 //------------------------------------------초기 마커 추가 함수
 function addMarkersFromHTML(){
+    console.log('-----------------------------addMarkersFromHTML 실행')
     markerIndex=1;
     // 모든 h6 태그에서 lat과 lng 값을 가져와서 마커 추가
     $('h6[data-lat][data-lng]').each(function() {
@@ -404,6 +467,8 @@ function addMarkersFromHTML(){
 
 //-------------------------------------------동적으로 구성된 마커 추가
 function addMarkersFromRoutes(routes) {
+    console.log('-------------------------addMarkersFromRoutes 실행');
+
     // 기존 마커 제거
     markers.forEach(marker => marker.setMap(null));
     markers = [];
