@@ -243,7 +243,28 @@
                     </div>
                     <div id="Tokyo" class="tabcontent">
                         <h3>구독권</h3>
-                        <p>내용입력하시오.</p>
+                        <form id="subscribeItemForm" th:action="@{/addItem}" method="post"
+                              enctype="multipart/form-data" >
+
+                            <p>
+                                <label for="country_input">상품명:</label><br>
+                                <input type="text" id="item_name" name="name" placeholder="상품명을 입력하세요">
+                            </p>
+                            <p>
+                                <label for="country_input">상품 가격:</label><br>
+                                <input type="text" id="item_price" name="itemPrice" placeholder="상품 가격을 입력하세요">
+                            </p>
+                            <p>
+                                <label for="country_input">구독 기간:</label><br>
+                                <input type="text" id="item_period" name="period" placeholder="구독 기간을 입력하세요">
+                            </p>
+                            <p>
+                                <button type="submit" id="add_item_btn" class="btn" style="border-color: #2125295c;">구독권 추가
+                                </button>
+                                <button id="reset_item_btn" type="button" class="btn cancel">취소</button>
+                            </p>
+
+                        </form>
                     </div>
                 </div>
             </div>
