@@ -199,9 +199,14 @@
 
                             </div>
                             <p>
-                                <label for="country_input">국가:</label><br>
-                                <input type="text" id="country_input" name="country" placeholder="나라를 입력하세요">
-                                <button type="button" id="country_search_btn" class="btn">검색</button>
+                                <label for="country_input" style="margin: 0; padding: 0;">국가:</label>
+                            <div style="display:flex;">
+                                <input type="text" id="country_input" name="country" placeholder="나라를 입력하세요"
+                                       style="width:calc(93% - 22px) ">
+                                <button type="button" id="country_search_btn" class="btn"
+                                        style="border-color: #2125295c; width: 75px; height: 44px;">검색
+                                </button>
+                            </div>
                             </p>
                             <p>
                                 <label for="countryCode_input">국가코드:</label><br>
@@ -244,7 +249,7 @@
                     <div id="Tokyo" class="tabcontent">
                         <h3>구독권</h3>
                         <form id="subscribeItemForm" th:action="@{/addItem}" method="post"
-                              enctype="multipart/form-data" >
+                              enctype="multipart/form-data">
 
                             <p>
                                 <label for="country_input">상품명:</label><br>
@@ -259,7 +264,8 @@
                                 <input type="text" id="item_period" name="period" placeholder="구독 기간을 입력하세요">
                             </p>
                             <p>
-                                <button type="submit" id="add_item_btn" class="btn" style="border-color: #2125295c;">구독권 추가
+                                <button type="submit" id="add_item_btn" class="btn" style="border-color: #2125295c;">구독권
+                                    추가
                                 </button>
                                 <button id="reset_item_btn" type="button" class="btn cancel">취소</button>
                             </p>
