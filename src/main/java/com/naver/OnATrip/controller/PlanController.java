@@ -136,4 +136,13 @@ public class PlanController {
 
         return ResponseEntity.ok(routes);
     }
+
+
+    //routeDelete
+    @PostMapping("/deleteRoute")
+    public boolean deleteRoute(@RequestParam ("routeId") Long routeId){
+
+        boolean result = routeService.deleteRoute(routeId);
+        return result;
+    }
 }

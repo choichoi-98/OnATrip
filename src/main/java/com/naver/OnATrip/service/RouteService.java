@@ -53,4 +53,8 @@ public class RouteService {
         logger.info("RouteService-findRoutesByDetailPlanId - DetailPlan ID: {}", detailPlanId);
         return routeRepository.findRouteByDetailPlanId(detailPlanId);
     }
+
+    public boolean deleteRoute(Long routeId) {
+        return routeRepository.deleteRouteById(routeId);
+    }
 }
