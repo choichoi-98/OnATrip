@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,6 +28,9 @@ public class DetailPlan {
     //locationId로 바꿔야 함.
 
     private LocalDate perDate; //날짜별
+
+    @OneToMany(mappedBy = "detailPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Route> routes = new ArrayList<>();
 
     protected DetailPlan() {
     }

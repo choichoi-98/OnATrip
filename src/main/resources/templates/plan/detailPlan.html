@@ -16,6 +16,7 @@
 <script src="/js/jquery-3.7.0.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 <link rel="stylesheet" href="css/plan/detailPlan.css">
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script
@@ -24,6 +25,16 @@
 ></script>
 
 <script src="/js/plan/detailPlan.js"></script>
+<style>
+    .sortable-ghost {
+        opacity: 0.4;
+        background-color: #e0e0e0;
+        border: 2px dashed #000;
+    }
+    .place-block {
+        cursor: move; /* Cursor changes to move icon */
+    }
+</style>
 <body>
 <div class="container-fluid">
     <div class="d-flex flex-row" style="height: 100vh;">
@@ -43,8 +54,24 @@
                         <strong class="bold-text" th:text="'day' + (${iterStat.index + 1}) + '. ' + ${detailPlan.perDate}"></strong>
                     </div>
                     <div class="container">
-                        <div th:each="route : ${routesMap[detailPlan.id]}" class="container place-block">
-                            <h6 th:text="${route.placeName}" th:data-lat="${route.lat}" th:data-lng="${route.lng}" th:data-sortkey="${route.sortKey}"></h6>
+                        <div id="sortable-${iterStat.index + 1}" th:each="route : ${routesMap[detailPlan.id]}" class="container place-block">
+<!--                            <h6 th:text="${route.placeName}" th:data-lat="${route.lat}" th:data-lng="${route.lng}" th:data-sortkey="${route.sortKey}" th:data-category="${route.category}"></h6>-->
+                            <div  class="d-flex align-items-center mb-2">
+                                <span class="badge badge-primary mr-2" style="background-color: #007bff; color: #fff; border-radius: 50%; padding: 6px 10px;">
+                                    <span th:text="${route.routeSequence}"></span>
+                                </span>
+                                <h6 th:text="${route.placeName}" th:data-lat="${route.lat}" th:data-lng="${route.lng}" th:data-sortkey="${route.sortKey}" th:data-category="${route.category}"></h6>
+                            </div>
+
+<!--                            <div th:unless="${route != null and route.category == 'PLACE'" class="memo-block">-->
+<!--                               <h6 th:text="${route.placeName}" th:data-lat="${route.lat}" th:data-lng="${route.lng}" th:data-sortkey="${route.sortKey}" th:data-category="${route.category}"></h6>&ndash;&gt;-->
+<!--                            </div>-->
+
+<!--th:if="${route != null and route.category == 'PLACE'"-->
+
+
+
+
                         </div>
                         <div class="d-flex flex-row btn-section">
                             <div class="btn"><button type="button" class="btn btn-outline-secondary place-add" th:data-day="${iterStat.index + 1}" th:data-detailplanid="${detailPlan.id}">장소추가</button></div>
@@ -63,7 +90,34 @@
             <div id="placeInfo" class="container" style="display:none;">
                     <!-- 장소 세부 정보 js로 처리-->
             </div>
+
+            <div id="trash" style="position: fixed; bottom: 10px; ">
+                <img src="../images/plan/bin.png" alt="Trash Icon" width="50" height="50">
+            </div>
+            <!-- 삭제 확인 모달-->
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteConfirmModalLabel">삭제 확인</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            삭제하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                            <button type="button" class="btn btn-danger" id="confirmDelete">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
+
         <div id="map-section" class="flex-fill">
             <div id="map" style="width: 100%;height: 100%;">
             </div>

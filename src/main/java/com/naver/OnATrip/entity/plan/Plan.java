@@ -3,6 +3,9 @@ package com.naver.OnATrip.entity.plan;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -27,6 +30,9 @@ public class Plan {
     private String endDate;
 
     private Long mateId;
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetailPlan> detailPlans = new ArrayList<>();
 
     protected Plan() {
     }
