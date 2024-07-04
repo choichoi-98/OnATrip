@@ -40,20 +40,23 @@
                         <div class="input-group">
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이메일</label>
                             <div class="groupEmail">
-                                <input type="email" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
-                                       th:field="*{email}" placeholder="이메일 주소">
-                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="button" onclick="sendNumber()">인증</button>
+                                <input type="email" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary"
+                                       th:field="*{email}" id="email" placeholder="이메일 주소">
+                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm"
+                                        type="button" onclick="checkEmail()">인증</button>
                             </div>
                             <div class="error-class" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Invalid email</div>
                         </div>
-                        <div id ="input-group" style="display: none">
-                            <div id="mail_number" name="mail_number" >
-                                <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined"
-                                   name="number" id="number" placeholder="인증번호 입력">
-                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm" type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">확인</button>
+                        <div id="input-group" style="display: none;">
+                            <div id="mail_number" name="mail_number">
+                                <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary"
+                                       name="number" id="number" placeholder="인증번호 입력">
+                                <button class="button p-2 px-8 ml-2 font-bold text-white rounded-md disabled:opacity-50 disabled:scale-100 disabled:bg-gray-500 bg-lightScheme-confirm"
+                                        type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">확인</button>
                                 <input type="hidden" id="Confirm" value="">
                             </div>
                         </div>
+
                         <div class="input-group">
                             <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이름</label>
                             <div class="groupName">
