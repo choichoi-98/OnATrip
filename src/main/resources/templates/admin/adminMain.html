@@ -214,8 +214,14 @@
                                        readonly>
                             </p>
                             <p>
-                                <label for="city_input">도시:</label><br>
-                                <input type="text" id="city_input" name="city" placeholder="도시를 입력하세요">
+                                <label for="city_input" style="margin: 0; padding: 0;">도시:</label>
+                            <div style="display:flex;">
+                                <input type="text" id="city_input" name="city" placeholder="도시를 입력하세요"
+                                       style="width:calc(93% - 22px) ">
+                                <button type="button" id="city_search_btn" class="btn"
+                                        style="border-color: #2125295c; width: 75px; height: 44px;">검색
+                                </button>
+                            </div>
                             </p>
                             <p>
                                 <label for="description_input">설명:</label><br>

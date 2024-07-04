@@ -50,7 +50,7 @@ public class LocationService {
 
         // DTO를 엔티티로 변환
         Location location = new Location();
-        location.setCountryName(locationDTO.getCountry());
+        location.setCountryName(locationDTO.getCountryName());
         location.setCountryCode(locationDTO.getCountryCode());
         location.setCity(locationDTO.getCity());
         location.setDescription(locationDTO.getDescription());
@@ -59,5 +59,15 @@ public class LocationService {
 
         // 여행지 저장
         locationRepository.save(location);
+    }
+
+    // 도시 중복 검사
+    public boolean existsCity(String cityName) {
+        return locationRepository.existsByCity(cityName);
+    }
+
+    // 국가 중복 검사
+    public boolean existsbyName(String countryName) {
+        return locationRepository.existsByCountryName(countryName);
     }
 }

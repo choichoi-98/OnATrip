@@ -1,6 +1,44 @@
 $(document).ready(function() {
+    // 도시명 검색 버튼 클릭 이벤트 처리
+        $('#city_search_btn').click(function(event) {
+            event.preventDefault(); // 기본 이벤트 방지
+
+            var city = $('#city_input').val().trim();
+
+            // 입력된 도시명이 있는지 서버에 확인 요청
+            checkCityExistence(city);
+        });
+
+        // 서버로 도시명 검색 요청을 보내는 함수
+        function checkCityExistence(cityName) {
+            // CSRF 토큰 가져오기
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+            $.ajax({
+                url: '/admin/checkCity',
+                type: 'POST',
+                data: {
+                    cityName: cityName
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // AJAX 요청 헤더에 CSRF 토큰 추가
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        alert('이미 존재하는 도시입니다.');
+                    } else {
+                        alert('사용할 수 있는 도시입니다.');
+                    }
+                },
+                error: function(error) {
+                    console.error('도시명 검색 중 오류 발생:', error);
+                    alert('도시명 검색 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            });
+        }
+
     // 공공데이터포털 API 키
-    const apiKey = 'GqsVgyYpktxrLRv1S%2FvX5a%2BU0How0aXThcAAfkLelSha90ZyXvuhuZYsF5T1A5btMEBpUyTq6Dj8UWEKKQ%2BVOQ%3D%3D';
+    const apiKey = 'q1y2LxDgfm2mCBSf2WsLlYxlAW6%2BQgPj%2FGN%2B5Evoojnqak2OLBFMZF2rTJRwyzUeOjghsPTvt%2BHZwdWk0iT%2BmA%3D%3D';
 
     // 탭 전환 함수
     function openCity(evt, cityName) {
@@ -248,18 +286,61 @@ $(document).ready(function() {
         $targetLi.find('.preview-image').attr('src', imageSrc);
     }
 
-    // 한글국가명 -> iso2자리 변환
-    function getCountryCode(countryName) {
-           const url = 'https://apis.data.go.kr/1262000/CountryCodeService2/getCountryCodeList2';
+    // Country 검색 버튼 클릭 이벤트 처리
+    $('#country_search_btn').click(function(event) {
+        event.preventDefault(); // 기본 이벤트 방지
 
+        var countryName = $('#country_input').val().trim();
+        if (countryName !== '') {
+            console.log('-------Country_search_btn ---:검색할 국가명:', countryName);
+
+            // AJAX 요청으로 DB에 국가 존재 여부 확인
+            checkCountryExistence(countryName);
+        } else {
+            console.log('----------Country_search_btn: 검색창에 아무것도 없을떄')
+            alert('국가명을 입력하세요.');
+        }
+    });
+
+    // 서버로 국가명 검색 요청을 보내는 함수
+    function checkCountryExistence(countryName) {
+        // CSRF 토큰 가져오기
+        var csrfToken = $('meta[name="_csrf"]').attr('content');
+        console.log('checkCountryExistence :', countryName);
+        $.ajax({
+            url: '/admin/checkCountry',
+            type: 'POST',
+            data: {
+                countryName: countryName
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // AJAX 요청 헤더에 CSRF 토큰 추가
+            },
+            success: function(response) {
+                if (response.exists) {
+                    alert('이미 존재하는 국가입니다.');
+                    console.log('db에 국가 있음: ',response)
+                } else {
+                    // 국가가 DB에 없으면 API로부터 국가 코드 가져오기
+                    console.log('db에 국가명 겹치는 것 없음')
+                    getCountryCode(countryName);
+                }
+            },
+            error: function(error) {
+                console.error('국가명 검색 중 오류 발생:', error);
+                alert('국가명 검색 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        });
+    }
+
+    //한글국가명 -> iso2자리 변환
+    function getCountryCode(countryName){
+                               const url = 'http://apis.data.go.kr/1262000/CountryCodeService2/getCountryCodeList2?'
+                                           +'serviceKey=' + apiKey
+                                           + '&returnType=JSON&cond[country_nm::EQ]='+countryName ;
            $.ajax({
                url: url,
                method: 'GET',
-               data: {
-                   serviceKey: apiKey,
-                   returnType: 'JSON',
-                   'cond[country_nm::EQ]': countryName
-               },
                dataType: 'json',
                success: function(data) {
                    console.log('API 응답 데이터:', data);
@@ -268,6 +349,7 @@ $(document).ready(function() {
                        $('#countryCode_input').val(countryCode);
                    } else {
                        console.error('국가 정보를 찾을 수 없습니다. 정확한 국가명인지 확인하세요.');
+                       alert('정확한 국가명을 입력해주세요.');
                    }
                },
              error: function(xhr, status, error) {
@@ -290,5 +372,41 @@ $(document).ready(function() {
               alert('국가명을 입력하세요.');
           }
       });
+ // 도시명 검색 버튼 클릭 이벤트 처리
+      $('#search_city_btn').click(function(event) {
+          event.preventDefault(); // 기본 이벤트 방지
 
+          var city = $('#city_input').val().trim();
+
+          // 입력된 도시명이 있는지 서버에 확인 요청
+          checkCityExistence(city);
+      });
+
+      // 서버로 도시명 검색 요청을 보내는 함수
+      function checkCityExistence(cityName) {
+          // CSRF 토큰 가져오기
+          var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+          $.ajax({
+              url: '/admin/checkCity',
+              type: 'POST',
+              data: {
+                  cityName: cityName
+              },
+              beforeSend: function(xhr) {
+                  xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // AJAX 요청 헤더에 CSRF 토큰 추가
+              },
+              success: function(response) {
+                  if (response.exists) {
+                      alert('이미 존재하는 도시입니다.');
+                  } else {
+                      alert('사용할 수 있는 도시입니다.');
+                  }
+              },
+              error: function(error) {
+                  console.error('도시명 검색 중 오류 발생:', error);
+                  alert('도시명 검색 중 오류가 발생했습니다. 다시 시도해주세요.');
+              }
+          });
+      }
 });
