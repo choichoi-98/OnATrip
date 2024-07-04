@@ -44,6 +44,7 @@ public class RouteRepository {
         }
     }
 
+    @Transactional
     //route 조회
     public List<RouteDto> findRouteByDetailPlanId(Long detailPlanId){
         logger.info("RouteRepository-findRouteByDetailPlanId:  ", detailPlanId);
@@ -58,6 +59,7 @@ public class RouteRepository {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     //routeSequence 최대값 반환
     public Optional<Integer> findMaxRouteSequence(Long detailPlanId, int dayNumber){
         Integer maxSequence = queryFactory
@@ -71,4 +73,13 @@ public class RouteRepository {
 
     }
 
+    @Transactional
+    public boolean deleteRouteById(Long routeId) {
+        long deletedCount = queryFactory
+                .delete(route)
+                .where(route.id.eq(routeId))
+                .execute();// 삭제된 행의 수 반환
+
+        return deletedCount > 0;
+    }
 }

@@ -17,49 +17,7 @@ $(document).ready(function() {
     const countryName = $('#countryHeading').text().trim();
     getCountryCode(countryName);
 
-
-    //drag and Drop으로 순서 바꾸기
-    $('.container').each(function() {
-            new Sortable(this, {
-                animation: 150,
-                ghostClass: 'sortable-ghost',
-                draggable: '.place-block',
-                onEnd: function (evt) {
-                    const itemEl = evt.item;  // dragged HTMLElement
-                    const trash = $('#trash');  // trash icon element
-                    const trashOffset = trash.offset();
-                    const trashWidth = trash.width();
-                    const trashHeight = trash.height();
-                    const itemOffset = $(itemEl).offset();
-                    const itemWidth = $(itemEl).width();
-                    const itemHeight = $(itemEl).height();
-
-                    // Check if the item is dropped within the trash icon area
-                    if (itemOffset.left + itemWidth / 2 > trashOffset.left &&
-                        itemOffset.left + itemWidth / 2 < trashOffset.left + trashWidth &&
-                        itemOffset.top + itemHeight / 2 > trashOffset.top &&
-                        itemOffset.top + itemHeight / 2 < trashOffset.top + trashHeight) {
-                        // Show the delete confirmation modal
-                        $('#deleteConfirmModal').modal('show');
-
-                        // Handle the delete confirmation
-                        $('#confirmDelete').off('click').on('click', function() {
-                            $(itemEl).remove();  // Remove the item if confirmed
-                            $('#deleteConfirmModal').modal('hide');
-                        });
-                    }
-
-                    evt.to;    // target list
-                    evt.from;  // previous list
-                    evt.oldIndex;  // element's old index within old parent
-                    evt.newIndex;  // element's new index within new parent
-                    console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
-                }
-            });
-    });
-
-
-    //addRoute('장소추가' -> '추가'_db에 데이터 삽입)
+    //------------------addRoute('장소추가' -> '추가'_db에 데이터 삽입)
     $(document).on('click', '.add-route', function(e) {
             category = 'PLACE';
             e.preventDefault();
@@ -76,7 +34,7 @@ $(document).ready(function() {
             addRoute(day, placeName, category,detailPlanId, lat, lng);
     });
 
-    //addMeMo
+    //-----------------------------addMeMo
    $(document).on('click', '#addMemo', function(e){
         category = 'MEMO';
         e.preventDefault();
@@ -92,6 +50,68 @@ $(document).ready(function() {
 
    });
 
+   //-------------------route 삭제
+   var routeIdToDelete = null;
+
+       $('.delete-icon').on('click', function() {
+           routeIdToDelete = $(this).data('routeid');
+           $('#deleteConfirmModal').modal('show');
+       });
+
+       $('#confirmDelete').on('click', function() {
+           if (routeIdToDelete) {
+
+               console.log(`Route ID ${routeIdToDelete} has been deleted.`);
+                deleteRoute(routeIdToDelete);
+
+               // 모달 닫기
+               $('#deleteConfirmModal').modal('hide');
+           }
+       });
+       //--------------
+
+// Drag and Drop으로 순서 바꾸기
+//    $('.container').each(function() {
+//        new Sortable(this, {
+//            animation: 150,
+//            ghostClass: 'sortable-ghost',
+//            draggable: '.place-block',
+//            onEnd: function(evt) {
+//                const itemEl = evt.item;  // dragged HTMLElement
+//                const trash = $('#trash-container');
+//                const trashOffset = trash.offset();
+//                const trashWidth = trash.width();
+//                const trashHeight = trash.height();
+//                const itemOffset = $(itemEl).offset();
+//                const itemWidth = $(itemEl).width();
+//                const itemHeight = $(itemEl).height();
+//
+//                // Log offsets and dimensions for debugging
+//                console.log('Trash offset:', trashOffset);
+//                console.log('Trash dimensions:', trashWidth, trashHeight);
+//                console.log('Item offset:', itemOffset);
+//                console.log('Item dimensions:', itemWidth, itemHeight);
+//
+//                // Check if the item is dropped within the trash icon area
+//                if (itemOffset.left + itemWidth / 2 > trashOffset.left &&
+//                    itemOffset.left + itemWidth / 2 < trashOffset.left + trashWidth &&
+//                    itemOffset.top + itemHeight / 2 > trashOffset.top &&
+//                    itemOffset.top + itemHeight / 2 < trashOffset.top + trashHeight) {
+//                    // Show the delete confirmation modal
+//                    $('#deleteConfirmModal').modal('show');
+//
+//                    // Handle the delete confirmation
+//                    $('#confirmDelete').off('click').on('click', function() {
+//                        $(itemEl).remove();  // Remove the item if confirmed
+//                        $('#deleteConfirmModal').modal('hide');
+//                    });
+//                }
+//
+//                // log the move event
+//                console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
+//            }
+//        });
+//    });//drag and drop
 
 });//$(document).ready(function() {
 
@@ -570,3 +590,22 @@ function addMarkersFromRoutes(routes) {
         map.fitBounds(bounds);
     }
 }
+//-----------------------deleteRoute 루트 삭제
+function deleteRoute(routeIdToDelete){
+    $.ajax({
+            url: '/deleteRoute',
+            method: 'POST',
+            data: { routeId: routeIdToDelete },
+            success: function(response) {
+                console.log('db route 데이터 삭제 성공')
+            },
+            beforeSend : function(xhr)
+                    { //데이터를 전송하기 전에 헤더에 csrf값을 설정
+                        xhr.setRequestHeader(header, token);
+            },
+            error: function(xhr, status, error) {
+                console.log('delete Route Error:', error);
+            }
+        });//$.ajax({
+
+}//detleteRoute(routeIdToDelete)

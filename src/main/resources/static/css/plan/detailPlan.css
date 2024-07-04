@@ -69,3 +69,25 @@
             max-height: 200px;
             overflow-y: auto;
         }
+
+.memo-block {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 8px; /* 작은 패딩 적용 */
+        margin-bottom: 8px; /* 작은 마진 적용 */
+        border-radius: 5px;
+        margin-left: 10px; /* 들여쓰기 적용 */
+    }
+
+.container {
+    position: relative;
+}
+
+.delete-icon {
+    position: absolute;
+    right: 10px; /* 오른쪽 여백 설정 */
+    top: 50%; /* 세로 중앙 정렬 */
+    transform: translateY(-50%); /* 세로 중앙 정렬을 위한 변환 */
+    display: block;
+
+}
