@@ -47,4 +47,6 @@ public class AdminController {
 
         return "redirect:/admin"; // 추가 성공 시 관리자 페이지로 리다이렉트
     }
+
+
 }
