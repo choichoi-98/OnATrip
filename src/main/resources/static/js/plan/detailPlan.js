@@ -18,6 +18,47 @@ $(document).ready(function() {
     getCountryCode(countryName);
 
 
+    //drag and Drop으로 순서 바꾸기
+    $('.container').each(function() {
+            new Sortable(this, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                draggable: '.place-block',
+                onEnd: function (evt) {
+                    const itemEl = evt.item;  // dragged HTMLElement
+                    const trash = $('#trash');  // trash icon element
+                    const trashOffset = trash.offset();
+                    const trashWidth = trash.width();
+                    const trashHeight = trash.height();
+                    const itemOffset = $(itemEl).offset();
+                    const itemWidth = $(itemEl).width();
+                    const itemHeight = $(itemEl).height();
+
+                    // Check if the item is dropped within the trash icon area
+                    if (itemOffset.left + itemWidth / 2 > trashOffset.left &&
+                        itemOffset.left + itemWidth / 2 < trashOffset.left + trashWidth &&
+                        itemOffset.top + itemHeight / 2 > trashOffset.top &&
+                        itemOffset.top + itemHeight / 2 < trashOffset.top + trashHeight) {
+                        // Show the delete confirmation modal
+                        $('#deleteConfirmModal').modal('show');
+
+                        // Handle the delete confirmation
+                        $('#confirmDelete').off('click').on('click', function() {
+                            $(itemEl).remove();  // Remove the item if confirmed
+                            $('#deleteConfirmModal').modal('hide');
+                        });
+                    }
+
+                    evt.to;    // target list
+                    evt.from;  // previous list
+                    evt.oldIndex;  // element's old index within old parent
+                    evt.newIndex;  // element's new index within new parent
+                    console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
+                }
+            });
+    });
+
+
     //addRoute('장소추가' -> '추가'_db에 데이터 삽입)
     $(document).on('click', '.add-route', function(e) {
             category = 'PLACE';
@@ -183,7 +224,7 @@ function initAutocomplete(countryCode){
 
 //----------------------지도에 검색된 장소 마킹 및 세부 정보 나타냄
 function showPlaceOnMap(place, dayNumber, detailPlanId){
-
+    //이름 ,장소 사진, 리뷰, 위경도
     //장소 검색 결과에 대한 마커 추가
     const marker = new google.maps.Marker({
         position: place.geometry.location,
@@ -325,13 +366,9 @@ function updateRoute(dayToUpdate, routes) {
 
     bindPlaceAddButtons();//버튼 이벤트 제어
 
-    //'장소추가'인 경우에만 마커 추가(지도)
-    if(routes.some(route => {
-        console.log('updateRoute-category: ', route.category);
-                return route.category =='PLACE'
-                })) {
-
-        addMarkersFromRoutes(routes); //마커 동적 추가
+    console.log('updateRoute-category: ', category);
+    if(category === 'PLACE'){
+        addMarkersFromRoutes(routes);
     }
 
 }
@@ -416,12 +453,17 @@ function addMarkersFromHTML(){
     markerIndex=1;
     // 모든 h6 태그에서 lat과 lng 값을 가져와서 마커 추가
     $('h6[data-lat][data-lng]').each(function() {
-        const lat = parseFloat($(this).attr('data-lat'));
-        const lng = parseFloat($(this).attr('data-lng'));
+        const lat = $(this).attr('data-lat');
+        const lng = $(this).attr('data-lng');
         const placeName = $(this).text();
-        const position = { lat: lat, lng: lng };
+        const category = $(this).attr('data-category');
         const sortKey = $(this).attr('data-sortkey');
 
+        //category = 'MEMO' 인 경우 건너 뜀
+        if(!lat || !lng || category === 'MEMO'){
+            return;
+        }
+        const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
         //마커
         const marker = new google.maps.Marker({
             position: position,
@@ -473,32 +515,36 @@ function addMarkersFromRoutes(routes) {
     markers.forEach(marker => marker.setMap(null));
     markers = [];
     markerIndex=1;
+        // 모든 h6 태그에서 lat과 lng 값을 가져와서 마커 추가
+        $('h6[data-lat][data-lng]').each(function() {
+            const lat = $(this).attr('data-lat');
+            const lng = $(this).attr('data-lng');
+            const placeName = $(this).text();
+            const category = $(this).attr('data-category');
+            const sortKey = $(this).attr('data-sortkey');
 
-
-    // 새로운 마커 추가
-    routes.forEach(route => {
-        const lat = parseFloat(route.lat);
-        const lng = parseFloat(route.lng);
-        const placeName = route.placeName;
-        const position = { lat: lat, lng: lng };
-        const sortKey = route.sortKey;
-
-        const marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: placeName,
-            sortKey: sortKey,
-            label: {
-                text: String(markerIndex),
-                color: 'white',
-                fontSize: '12px',
-                fontWeight: 'bold'
+            //category = 'MEMO' 인 경우 건너 뜀
+            if(!lat || !lng || category === 'MEMO'){
+                return;
             }
-        });
+            const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
+            //마커
+            const marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: placeName,
+                sortKey: sortKey,
+                label:{
+                    text: String(markerIndex),
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                }
+            });
 
-        markers.push(marker);
-        markerIndex++;
-    });
+            markers.push(marker);
+            markerIndex++;
+        });
 
     // 마커 sortKey 기준으로 정렬
     markers.sort((a,b) => {
