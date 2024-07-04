@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -37,9 +39,9 @@ public class MemberService implements UserDetailsService {
         return -100;
     }
 
-//    public boolean checkEmail(String email) {
-//        return memberRepository.existsByEmail(email);
-//    }
+    public boolean checkEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email){
