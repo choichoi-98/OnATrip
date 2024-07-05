@@ -55,14 +55,32 @@ $(document).ready(function() {
 
        $('.delete-icon').on('click', function() {
            routeIdToDelete = $(this).data('routeid');
+           console.log('delete-icon 클릭, routeId: ', routeIdToDelete);
            $('#deleteConfirmModal').modal('show');
+
+           dayNumber = $(this).data('daynum');
+           console.log('delete-icon 클릭, dayNumber: ', dayNumber);
+
+           detailPlanId = $(this).data('detailplanid');
+           console.log('detail-icon 클릭, detailPlanId: ', detailPlanId);
+
+//           var closestMemoBlock = $(this).closest('.memo-block');
+//           var closestPlaceBlock = $(this).closest('.place-block');
+//           if(closestMemoBlock.length > 0){
+//             console.log('this is memoblock');
+//           }else{
+//              console.log('this is placeBlock');
+//           }
+            var closestDiv = $(this).siblings('div').first();
+            var classNames = closestDiv.attr('class');
+            console.log('Closest div class:', classNames);
+
        });
 
        $('#confirmDelete').on('click', function() {
            if (routeIdToDelete) {
 
-               console.log(`Route ID ${routeIdToDelete} has been deleted.`);
-                deleteRoute(routeIdToDelete);
+                deleteRoute(routeIdToDelete, dayNumber, detailPlanId);
 
                // 모달 닫기
                $('#deleteConfirmModal').modal('hide');
@@ -379,8 +397,8 @@ function updateRoute(dayToUpdate, routes) {
 
     // 버튼 추가
     const btnSection = $('<div class="d-flex flex-row btn-section"></div>').html(
-        `<div class="btn"><button type="button" class="btn btn-outline-secondary place-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlanId}">장소추가</button></div>
-        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlanId}">메모추가</button></div>`
+        `<div class="btn"><button type="button" class="btn btn-outline-secondary place-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">장소추가</button></div>
+        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">메모추가</button></div>`
     );
     detailPlanElement.append(btnSection);
 
@@ -591,13 +609,19 @@ function addMarkersFromRoutes(routes) {
     }
 }
 //-----------------------deleteRoute 루트 삭제
-function deleteRoute(routeIdToDelete){
+function deleteRoute(routeIdToDelete, dayNumber, detailPlanId){
+    console.log("deleteRoute routeid- ", routeIdToDelete);
+    console.log("deleteRoute daynum- ", dayNumber);
+    console.log("deleteRoute detailPlanid - ", detailPlanId);
+
     $.ajax({
             url: '/deleteRoute',
             method: 'POST',
             data: { routeId: routeIdToDelete },
             success: function(response) {
                 console.log('db route 데이터 삭제 성공')
+                refreshDetailPlan(detailPlanId, dayNumber);
+
             },
             beforeSend : function(xhr)
                     { //데이터를 전송하기 전에 헤더에 csrf값을 설정

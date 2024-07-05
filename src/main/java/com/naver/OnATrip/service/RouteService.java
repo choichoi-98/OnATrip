@@ -55,6 +55,7 @@ public class RouteService {
     }
 
     public boolean deleteRoute(Long routeId) {
+        logger.info("RouteService-deleteRoute - routeId", routeId);
         return routeRepository.deleteRouteById(routeId);
     }
 }

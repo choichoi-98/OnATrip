@@ -55,7 +55,7 @@
                     </div>
                     <div class="container">
                         <div th:each="route : ${routesMap[detailPlan.id]}" th:switch="${route.category}" id="sortable-${iterStat.index + 1}"  class="container place-block">
-                            <div th:case="PLACE" class="d-flex align-items-center mb-2">
+                            <div th:case="PLACE" class="d-flex align-items-center mb-2 place-block">
                                 <span class="badge badge-primary mr-2" style="background-color: #007bff; color: #fff; border-radius: 50%; padding: 6px 10px;">
                                     <span th:text="${route.routeSequence}"></span>
                                 </span>
@@ -67,7 +67,7 @@
                             </div>
 
                             <!-- 원으로 감싸진 x 표시 -->
-                            <div class="delete-icon position-absolute" th:data-routeid="${route.id}" style="right: -15px;top: -3px; display: block;">
+                            <div class="delete-icon position-absolute" th:data-routeid="${route.id}" th:data-detailplanid="${route.detailPlan_id}" th:data-daynum="${route.day_number}" style="right: -15px;top: -3px; display: block;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#d3d3d3" class="bi bi-x-circle" viewBox="0 0 16 16">
                                     <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.646 4.646a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647a.5.5 0 1 1 .708.708L8.707 8l2.647 2.646a.5.5 0 1 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 1 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                                 </svg>

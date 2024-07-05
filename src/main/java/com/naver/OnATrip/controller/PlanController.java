@@ -12,6 +12,7 @@ import com.naver.OnATrip.web.dto.plan.RouteDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -104,7 +105,7 @@ public class PlanController {
         List<DetailPlan> detailPlans = detailPlanService.findDetailPlanByPlanId(planId);
         Map<Long, List <RouteDto>> routeMap = new HashMap<>();
         for (DetailPlan dp : detailPlans) {
-//            logger.info("DetailPlan ID: {}, Country: {}, PerDate: {}", dp.getId(), dp.getCountry(), dp.getPerDate());
+            logger.info("DetailPlan ID: {}, Country: {}, PerDate: {}", dp.getId(), dp.getCountry(), dp.getPerDate());
             List<RouteDto> routes = routeService.findRoutesByDetailPlanId(dp.getId());
             routeMap.put(dp.getId(),routes);
         }
@@ -140,9 +141,13 @@ public class PlanController {
 
     //routeDelete
     @PostMapping("/deleteRoute")
-    public boolean deleteRoute(@RequestParam ("routeId") Long routeId){
-
+    public ResponseEntity<Boolean> deleteRoute(@RequestParam ("routeId") Long routeId){
+        logger.info("deleteRoute-routeId", routeId);
         boolean result = routeService.deleteRoute(routeId);
-        return result;
+        if (result) {
+            return ResponseEntity.ok(result);  // 성공 시 200 OK 응답
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);  // 실패 시 500 응답
+        }
     }
 }
