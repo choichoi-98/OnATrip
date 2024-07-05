@@ -16,10 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,6 +43,22 @@ public class MemberController {
 //            return "member/login";
 //        }
 //    }
+
+    @PostMapping("/login")
+    public String loginProc(@ModelAttribute MemberDTO memberDTO, HttpSession session, Model model) {
+        MemberDTO loginResult = memberService.login(memberDTO);
+        if (loginResult != null) {
+            // login 성공
+            System.out.println("로그인 성공");
+            session.setAttribute("loginEmail", loginResult.getEmail());
+            return "main";
+        } else {
+            // login 실패
+            System.out.println("로그인 실패: 이메일이나 비밀번호가 잘못되었습니다.");
+            model.addAttribute("이메일이나 비밀번호가 잘못되었습니다.");
+            return "member/login";
+        }
+    }
 
     @GetMapping("/findPassword")
     public String findPassword() {
