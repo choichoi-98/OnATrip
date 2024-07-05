@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -69,12 +66,18 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<?> checkCountryExistence(@RequestParam("countryName") String countryName) {
 
-        logger.info("checkCountryExistence- controller");
-        logger.info("country name : ", countryName);
+     /*   logger.info("checkCountryExistence- controller");
+        logger.info("country name : ", countryName);*/
 
         boolean exists = locationService.existsbyName(countryName);
         return ResponseEntity.ok(Collections.singletonMap("exists", exists));
     }
 
+    // 여행지 목록
+    @GetMapping("/admin/getAllLocations")
+    @ResponseBody
+    public List<LocationDTO> getLocations() {
+        return locationService.getAllLocations();
+    }
 
 }
