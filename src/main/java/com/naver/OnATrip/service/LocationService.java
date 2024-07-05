@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LocationService {
@@ -34,7 +36,7 @@ public class LocationService {
 
         // 이미지 저장 경로 설정
         String fileName = file.getOriginalFilename();
-        Path uploadPath = Paths.get(UPLOAD_DIR + locationDTO.getCountryCode());
+        Path uploadPath = Paths.get("src/main/resources/static/images/location");
 
         // 디렉토리 존재하지 않으면 생성
         if (!Files.exists(uploadPath)) {
@@ -43,10 +45,11 @@ public class LocationService {
 
         // 이미지 파일 저장
         Path filePath = uploadPath.resolve(fileName);
-        Files.write(filePath, file.getBytes());
+        Files.write(filePath, locationDTO.getFile().getBytes());
 
         // 이미지 경로 설정
-        String imagePath = "/images/" + locationDTO.getCountryCode() + "/" + fileName;
+        String imagePath = "/images/location/" + fileName;
+        locationDTO.setImagePath(imagePath);
 
         // DTO를 엔티티로 변환
         Location location = new Location();
@@ -69,5 +72,24 @@ public class LocationService {
     // 국가 중복 검사
     public boolean existsbyName(String countryName) {
         return locationRepository.existsByCountryName(countryName);
+    }
+
+    // 여행지 목록
+    public List<LocationDTO> getAllLocations() {
+        List<Location> locations = locationRepository.findAll();
+        List<LocationDTO> locationDTOs = new ArrayList<>();
+
+        for (Location location : locations) {
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setCountryName(location.getCountryName());
+            locationDTO.setCountryCode(location.getCountryCode());
+            locationDTO.setCity(location.getCity());
+            locationDTO.setDescription(location.getDescription());
+            locationDTO.setLocationType(location.getLocationType());
+            locationDTO.setImagePath(location.getImage()); // 필드 이름 변경
+            locationDTOs.add(locationDTO);
+        }
+
+        return locationDTOs;
     }
 }

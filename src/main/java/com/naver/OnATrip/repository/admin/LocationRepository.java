@@ -1,8 +1,11 @@
 package com.naver.OnATrip.repository.admin;
 
 import com.naver.OnATrip.entity.Location;
+import com.naver.OnATrip.web.dto.location.LocationDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
@@ -12,4 +15,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     // 국가 중복검사
     boolean existsByCountryName(String countryName);
+
 }

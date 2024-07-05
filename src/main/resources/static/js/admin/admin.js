@@ -1,5 +1,45 @@
 $(document).ready(function() {
-    // 도시명 검색 버튼 클릭 이벤트 처리
+    // 페이지 로드 시 모든 여행지 목록을 불러오는 함수 호출
+       loadAllLocations();
+
+       // 모든 여행지 목록을 불러오는 함수
+       function loadAllLocations() {
+           $.ajax({
+               url: '/admin/getAllLocations',
+               type: 'GET',
+               dataType: 'json',
+               success: function(response) {
+                   response.forEach(function(location) {
+                       addToLocationList(
+                           location.locationType === 'domestic' ? 'domestic_list' : 'overseas_list',
+                           location.countryCode,
+                           location.city,
+                           location.description,
+                           location.imagePath  // 이미지 경로를 location.imagePath로 수정
+                       );
+                   });
+               },
+               error: function(error) {
+                   console.error('위치 불러오기 오류:', error);
+                   alert('위치를 불러오는 도중 오류가 발생했습니다. 다시 시도해주세요.');
+               }
+           });
+       }
+
+       // 여행지를 목록에 추가하는 함수
+       function addToLocationList(listType, countryCode, city, description, imagePath) {
+           // 이미지 경로를 절대 경로로 설정
+           var absoluteImagePath = 'http://localhost:9100' + imagePath;
+
+           // 여기에서 DOM을 조작하여 목록에 추가하는 로직을 구현할 수 있습니다.
+           console.log(absoluteImagePath);  // 절대 경로가 제대로 출력되는지 확인
+
+           // 예를 들어, DOM에 이미지를 추가하는 코드
+           var imageElement = $('<img>').attr('src', absoluteImagePath);
+           $('#imageContainer').append(imageElement);
+       }
+
+        // 도시명 검색 버튼 클릭 이벤트 처리
         $('#city_search_btn').click(function(event) {
             event.preventDefault(); // 기본 이벤트 방지
 
@@ -193,22 +233,22 @@ $(document).ready(function() {
     }
 
     // 여행지 목록에 추가하는 함수
-    function addToLocationList(tabId, country, countryCode, city, description, imageSrc) {
-        var $ul = $('#' + tabId + ' ul');
+    function addToLocationList(type, countryCode, city, description, image) {
+        var $ul = $('#' + type + ' ul');
         var $li = $('<li></li>');
 
         // 위치 정보 추가
-        var locationInfo = tabId === 'domestic_list' ? city + ' - ' + description : country + ' - ' + description;
+        var locationInfo = type === 'domestic_list' ? city + ' - ' + description : countryCode + ' - ' + city + ' - ' + description;
         $li.append($('<span class="location-info"></span>').text(locationInfo));
 
         // 이미지 추가
-        if (imageSrc !== '') {
-            $li.append($('<img class="preview-image">').attr('src', imageSrc).attr('alt', '여행지 이미지'));
+        if (image !== '') {
+            $li.append($('<img class="preview-image">').attr('src', image).attr('alt', '여행지 이미지'));
         }
 
         // 수정 버튼 추가
         $li.append($('<button>Edit</button>').click(function () {
-            editLocation(country, countryCode, city, description, imageSrc, $li);
+            editLocation(type, countryCode, city, description, image, $li);
         }));
 
         // 삭제 버튼 추가
@@ -221,14 +261,30 @@ $(document).ready(function() {
     }
 
     // 수정 폼 생성 및 처리 함수
-    function editLocation(country, countryCode, city, description, imageSrc, $targetLi) {
+    function editLocation(type, countryCode, city, description, imageSrc, $targetLi) {
         // 수정 폼 요소 생성
         var $editForm = $('<div class="edit-form"></div>');
-        var $countryInput = $('<input type="text">').val(country);
-        var $countryCodeInput = $('<input type="text">').val(countryCode);
+        var $countryInput = $('<input type="text">').val(type === 'domestic_list' ? countryCode : '');
+        var $countryCodeInput = $('<input type="text">').val(type === 'overseas_list' ? countryCode : '');
         var $cityInput = $('<input type="text">').val(city);
         var $descriptionInput = $('<textarea>').val(description);
         var $fileInput = $('<input type="file">');
+
+        // 필드 readonly 설정
+        if (type === 'domestic_list') {
+            $countryInput.prop('readonly', true);
+            $countryCodeInput.prop('readonly', true);
+        } else if (type === 'overseas_list') {
+            $cityInput.prop('readonly', true);
+            $countryCodeInput.prop('readonly', true);
+        }
+
+        // CSS 스타일 적용
+        $editForm.find('input[readonly]').css({
+                'background-color': '#f0f0f0',
+                'color': '#666'
+        });
+
 
         // 이미지 미리보기 엘리먼트
         var $previewImage = $('<img class="preview-image">').attr('src', imageSrc).attr('alt', '이미지 미리보기');
@@ -244,14 +300,13 @@ $(document).ready(function() {
 
         // 저장 버튼 클릭 이벤트 처리
         var $saveBtn = $('<button>Save</button>').click(function () {
-            country = $countryInput.val();
-            countryCode = $countryCodeInput.val();
+            countryCode = $countryInput.val();
             city = $cityInput.val();
             description = $descriptionInput.val();
             imageSrc = $previewImage.attr('src');
 
             // 여행지 정보 업데이트 함수 호출
-            updateLocationInfo($targetLi, country, countryCode, city, description, imageSrc);
+            updateLocationInfo($targetLi, countryCode, city, description, imageSrc);
 
             // 수정 폼 제거
             $editForm.remove();
@@ -264,12 +319,12 @@ $(document).ready(function() {
 
         // 수정 폼에 요소 추가
         $editForm.append(
-            $('<label>Country:</label>'), $countryInput, $('<br>'),
-            $('<label>Country Code:</label>'), $countryCodeInput, $('<br>'),
-            $('<label>City:</label>'), $cityInput, $('<br>'),
-            $('<label>Description:</label>'), $descriptionInput, $('<br>'),
-            $previewImage, $fileInput, $('<br>'),
-            $saveBtn, $cancelBtn
+                $('<label>Country:</label>'), $countryInput, $('<br>'),
+                $('<label>Country Code:</label>'), $countryCodeInput, $('<br>'),
+                $('<label>City:</label>'), $cityInput, $('<br>'),
+                $('<label>Description:</label>'), $descriptionInput, $('<br>'),
+                $previewImage, $fileInput, $('<br>'),
+                $('<div class="button-container"></div>').append($saveBtn, $cancelBtn) // 버튼 컨테이너 추가
         );
 
         // 수정 폼을 목록 요소 아래에 추가
