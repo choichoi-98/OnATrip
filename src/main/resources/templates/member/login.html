@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>로그인</title>
@@ -8,6 +10,7 @@
 </head>
 <script src="/js/jquery-3.7.0.js"></script>
 <script src="/js/bootstrap.js"></script>
+<script src="/js/member/login.js"></script>
 <body>
 
 <div id="wrap">
@@ -24,16 +27,16 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="group">
                     <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이메일</label>
-                    <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="Email">
+                    <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="email">
                 </div>
                 <div class="mt-4">
                     <div class="group">
                         <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호</label>
-                        <input type="password" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="Password">
+                        <input type="password" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="password">
                     </div>
                     <a class="text-xs text-gray-500 hover:underline" href="/findPassword">비밀번호를 잊으셨나요?</a>
                     <div class="mt-8">
-                        <button type="submit" class="relative w-full px-4 py-2 h-[48px] text-white bg-lightScheme-primary-focus rounded-md">로그인</button>
+                        <button type="submit" id="loginBtn" class="relative w-full px-4 py-2 h-[48px] text-white bg-lightScheme-primary-focus rounded-md">로그인</button>
                     </div>
                 </div>
             </form>

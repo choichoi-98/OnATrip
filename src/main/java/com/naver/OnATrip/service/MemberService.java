@@ -7,6 +7,7 @@ import com.naver.OnATrip.web.dto.member.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +46,32 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email){
-        Member member = memberRepository.findByEmail(email);
+        Optional<Member> member = memberRepository.findByEmail(email);
         if(member != null){
             return new MemberDetails(member);
         }
         return null;
     }
+
+    public MemberDTO login(MemberDTO memberDTO) {
+        Optional<Member> memberEmail = memberRepository.findByEmail(memberDTO.getEmail());
+
+        if (memberEmail.isPresent()) {
+            Member member = memberEmail.get(); // Optional에서 꺼냄
+
+            if (BCrypt.checkpw(memberDTO.getPassword(), member.getPassword())) {
+                MemberDTO dto = MemberDTO.fromEntity(member);
+                return dto;
+            } else {
+                System.out.println("비밀번호가 일치하지 않습니다.");
+                return null;
+            }
+        } else {
+            System.out.println("이메일로 사용자를 찾을 수 없습니다.");
+            return null;
+        }
+    }
+
 }
 
 

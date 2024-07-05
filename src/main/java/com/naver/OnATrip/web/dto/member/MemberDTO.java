@@ -40,6 +40,9 @@ public class MemberDTO {
     public MemberDTO() {
     }
 
+    public MemberDTO(String email, String password) {
+    }
+
     public Member toEntity() {
         Member member = Member.builder()
                 .name(name)
@@ -47,5 +50,13 @@ public class MemberDTO {
                 .email(email)
                 .build();
         return member;
+    }
+
+    // Member 엔티티를 MemberDTO로 변환하는 메서드
+    public static MemberDTO fromEntity(Member member) {
+        return new MemberDTO(
+                member.getEmail(),
+                member.getPassword()
+        );
     }
 }
