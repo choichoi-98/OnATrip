@@ -17,6 +17,8 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @ManyToOne
+//    @JoinColumn(name = "member_id")
     private Long memberId;//회원가입 기능 완료 시 수정필요
 
 //    @ManyToOne
