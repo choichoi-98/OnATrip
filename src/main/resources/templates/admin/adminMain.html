@@ -184,10 +184,12 @@
                         <button class="tablinks" onclick="openCity(event, 'Paris')">여행지</button>
                         <button class="tablinks" onclick="openCity(event, 'Tokyo')">구독권</button>
                     </div>
+                    <!-- 회원-->
                     <div id="London" class="tabcontent">
                         <h3>회원</h3>
                         <p>내용입력하시오.</p>
                     </div>
+                    <!-- 관리자 -->
                     <div id="Paris" class="tabcontent">
                         <form id="locationForm" th:action="@{/admin/addLocation}" method="post"
                               enctype="multipart/form-data" onsubmit="return false;">
@@ -259,6 +261,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 구독권 -->
                     <div id="Tokyo" class="tabcontent">
                         <h3>구독권</h3>
                         <form id="subscribeItemForm" th:action="@{/addItem}" method="post"
