@@ -85,14 +85,12 @@ public class AdminController {
                 locationDTO.getId(), locationDTO.getCountryName(), locationDTO.getCountryCode(), locationDTO.getCity(), locationDTO.getDescription(), locationDTO.getLocationType(), locationDTO.getImagePath());
 
         if (!locationDTO.getFile().isEmpty()) {
-            // 새로운 이미지 파일이 업로드된 경우 처리
             locationService.updateLocationWithImage(locationDTO);
         } else {
-            // 이미지 파일이 업로드되지 않은 경우 처리
             locationService.updateLocationWithoutImage(locationDTO);
         }
 
-        return "redirect:/admin"; // 수정 성공 시 관리자 페이지로 리다이렉트
+        return "redirect:/admin";
     }
 
 
