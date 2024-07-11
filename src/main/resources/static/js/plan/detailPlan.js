@@ -89,47 +89,47 @@ $(document).ready(function() {
        //--------------
 
 // Drag and Drop으로 순서 바꾸기
-//    $('.container').each(function() {
-//        new Sortable(this, {
-//            animation: 150,
-//            ghostClass: 'sortable-ghost',
-//            draggable: '.place-block',
-//            onEnd: function(evt) {
-//                const itemEl = evt.item;  // dragged HTMLElement
-//                const trash = $('#trash-container');
-//                const trashOffset = trash.offset();
-//                const trashWidth = trash.width();
-//                const trashHeight = trash.height();
-//                const itemOffset = $(itemEl).offset();
-//                const itemWidth = $(itemEl).width();
-//                const itemHeight = $(itemEl).height();
-//
-//                // Log offsets and dimensions for debugging
-//                console.log('Trash offset:', trashOffset);
-//                console.log('Trash dimensions:', trashWidth, trashHeight);
-//                console.log('Item offset:', itemOffset);
-//                console.log('Item dimensions:', itemWidth, itemHeight);
-//
-//                // Check if the item is dropped within the trash icon area
-//                if (itemOffset.left + itemWidth / 2 > trashOffset.left &&
-//                    itemOffset.left + itemWidth / 2 < trashOffset.left + trashWidth &&
-//                    itemOffset.top + itemHeight / 2 > trashOffset.top &&
-//                    itemOffset.top + itemHeight / 2 < trashOffset.top + trashHeight) {
-//                    // Show the delete confirmation modal
-//                    $('#deleteConfirmModal').modal('show');
-//
-//                    // Handle the delete confirmation
-//                    $('#confirmDelete').off('click').on('click', function() {
-//                        $(itemEl).remove();  // Remove the item if confirmed
-//                        $('#deleteConfirmModal').modal('hide');
-//                    });
-//                }
-//
-//                // log the move event
-//                console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
-//            }
-//        });
-//    });//drag and drop
+    $('.container').each(function() {
+        new Sortable(this, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            draggable: '.place-block',
+            onEnd: function(evt) {
+                const itemEl = evt.item;  // dragged HTMLElement
+                const trash = $('#trash-container');
+                const trashOffset = trash.offset();
+                const trashWidth = trash.width();
+                const trashHeight = trash.height();
+                const itemOffset = $(itemEl).offset();
+                const itemWidth = $(itemEl).width();
+                const itemHeight = $(itemEl).height();
+
+                // Log offsets and dimensions for debugging
+                console.log('Trash offset:', trashOffset);
+                console.log('Trash dimensions:', trashWidth, trashHeight);
+                console.log('Item offset:', itemOffset);
+                console.log('Item dimensions:', itemWidth, itemHeight);
+
+                // Check if the item is dropped within the trash icon area
+                if (itemOffset.left + itemWidth / 2 > trashOffset.left &&
+                    itemOffset.left + itemWidth / 2 < trashOffset.left + trashWidth &&
+                    itemOffset.top + itemHeight / 2 > trashOffset.top &&
+                    itemOffset.top + itemHeight / 2 < trashOffset.top + trashHeight) {
+                    // Show the delete confirmation modal
+                    $('#deleteConfirmModal').modal('show');
+
+                    // Handle the delete confirmation
+                    $('#confirmDelete').off('click').on('click', function() {
+                        $(itemEl).remove();  // Remove the item if confirmed
+                        $('#deleteConfirmModal').modal('hide');
+                    });
+                }
+
+                // log the move event
+                console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
+            }
+        });
+    });//drag and drop
 
 });//$(document).ready(function() {
 
@@ -398,7 +398,9 @@ function updateRoute(dayToUpdate, routes) {
     // 버튼 추가
     const btnSection = $('<div class="d-flex flex-row btn-section"></div>').html(
         `<div class="btn"><button type="button" class="btn btn-outline-secondary place-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">장소추가</button></div>
-        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">메모추가</button></div>`
+        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">메모추가</button></div>
+        <div class="btn"><button type="button" class="btn btn-outline-secondary modify" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">수정</button></div>
+        `
     );
     detailPlanElement.append(btnSection);
 
@@ -426,6 +428,7 @@ function bindPlaceAddButtons() {
     // 장소, 메모 추가 버튼
     const placeAddBtn = $('.place-add');
     const memoAddBtn = $('.memo-add');
+    const modifyBtn = $('.modify');
 
     //'장소추가'버튼
     placeAddBtn.off('click').on('click', function() {
@@ -433,6 +436,7 @@ function bindPlaceAddButtons() {
         placeAddBtn.removeClass('active');
         $(this).addClass('active');
         memoAddBtn.removeClass('active');
+        modifyBtn.removeClass('active');
 
         dayNumber = $(this).attr('data-day');
         console.log('placeAddBtn-dayNumber:', dayNumber);
@@ -453,6 +457,7 @@ function bindPlaceAddButtons() {
     //'메모추가'버튼
     memoAddBtn.off('click').on('click', function(){
         placeAddBtn.removeClass('active');
+        modifyBtn.removeClass('active');
         autocompleteInput.prop('disabled', true);
         autocompleteInput.val('');
 
@@ -483,6 +488,22 @@ function bindPlaceAddButtons() {
             $(memoInputSectionId).remove();
         }
     });//
+
+    //수정 버튼
+    modifyBtn.off('click').on('click', function(){
+        placeAddBtn.removeClass('active');
+        memoAddBtn.removeClass('active');
+
+        //
+        autocompleteInput.val('');
+        autocompleteInput.prop('disabled', true);
+        $('#placeInfo').css('display', 'none').html('');
+
+        modifyBtn.removeClass('active');
+        $(this).addClass('active');
+
+
+    });//modifyBtn
 }
 
 //------------------------------------------초기 마커 추가 함수
