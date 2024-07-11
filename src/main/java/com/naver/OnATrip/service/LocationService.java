@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationService {
@@ -81,6 +83,7 @@ public class LocationService {
 
         for (Location location : locations) {
             LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setId(location.getId());
             locationDTO.setCountryName(location.getCountryName());
             locationDTO.setCountryCode(location.getCountryCode());
             locationDTO.setCity(location.getCity());
@@ -93,40 +96,115 @@ public class LocationService {
         return locationDTOs;
     }
 
-    // 여행지 목록 수정(새로운 이미지 파일이 업로드된 경우 처리)
-    public void updateLocationWithImage(LocationDTO locationDTO) {
-        // 1. 파일 저장 로직 구현
-        String imagePath = saveFile(locationDTO.getFile());
-
-        // 2. 데이터베이스 업데이트 로직 구현
-        Location location = new Location();
-        location.setCountryName(locationDTO.getCountryName());
-        location.setCountryCode(locationDTO.getCountryCode());
-        location.setCity(locationDTO.getCity());
-        location.setDescription(locationDTO.getDescription());
-        location.setLocationType(locationDTO.getLocationType());
-        location.setImage(imagePath); // imagePath 설정
-        locationRepository.save(location);
+    // 여행지 수정
+    @Transactional
+    public void updateLocationWithImage(LocationDTO locationDTO) throws IOException {
+        MultipartFile file = locationDTO.getFile();
+        if (file != null && !file.isEmpty()) {
+            String imagePath = saveFile(file);
+            updateLocationWithNewImage(locationDTO, imagePath);
+        }
     }
 
-    // 여행지 목록 수정(이미지 파일이 업로드되지 않은 경우 처리)
+    // 여행지 수정 - 이미지가 없는 경우
+    @Transactional
     public void updateLocationWithoutImage(LocationDTO locationDTO) {
-        // 1. 데이터베이스 업데이트 로직 구현
+        Location existingLocation = locationRepository.findById(locationDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행지가 존재하지 않습니다."));
+
+        existingLocation.setCountryName(locationDTO.getCountryName());
+        existingLocation.setCountryCode(locationDTO.getCountryCode());
+        existingLocation.setCity(locationDTO.getCity());
+        existingLocation.setDescription(locationDTO.getDescription());
+        existingLocation.setLocationType(locationDTO.getLocationType());
+
+        locationRepository.save(existingLocation);
+    }
+
+
+    private void updateLocationWithNewImage(LocationDTO locationDTO, String imagePath) {
         Location location = new Location();
+        location.setId(locationDTO.getId());
         location.setCountryName(locationDTO.getCountryName());
         location.setCountryCode(locationDTO.getCountryCode());
         location.setCity(locationDTO.getCity());
         location.setDescription(locationDTO.getDescription());
         location.setLocationType(locationDTO.getLocationType());
-        location.setImage(locationDTO.getImagePath()); // 기존 이미지 경로 유지
+
+        // 이미지 경로 설정
+        if (imagePath != null) {
+            location.setImage(imagePath);
+        } else {
+            // 이미지가 업로드되지 않은 경우 - 기존 이미지 경로를 유지
+            location.setImage(locationDTO.getImagePath());
+        }
+
         locationRepository.save(location);
     }
 
-    private String saveFile(MultipartFile file) {
-        // 파일 저장 로직 구현
-        // 파일을 서버의 특정 디렉토리에 저장하고, 저장된 경로를 반환
-        String imagePath = "/uploads/" + file.getOriginalFilename();
-        // 파일 저장 코드 작성
-        return imagePath;
+
+    // 이미지 파일 저장
+    private String saveFile(MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Path filePath = uploadPath.resolve(fileName);
+        Files.write(filePath, file.getBytes());
+
+        return "/images/location/" + fileName;
+    }
+
+    // 여행지 ID로 조회
+    public LocationDTO getLocationById(long id) {
+        Optional<Location> locationOptional = locationRepository.findById(id);
+        if (locationOptional.isPresent()) {
+            Location location = locationOptional.get();
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setId(location.getId());
+            locationDTO.setCountryName(location.getCountryName());
+            locationDTO.setCountryCode(location.getCountryCode());
+            locationDTO.setCity(location.getCity());
+            locationDTO.setDescription(location.getDescription());
+            locationDTO.setLocationType(location.getLocationType());
+            locationDTO.setImagePath(location.getImage());
+            return locationDTO;
+        } else {
+            throw new IllegalArgumentException("해당 ID의 여행지가 존재하지 않습니다.");
+        }
+    }
+
+    public boolean deleteLocation(Long id) {
+        if (locationRepository.existsById(id)) {
+            locationRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+
+    // 이미지 파일 삭제
+    public boolean deleteImage(String imagePath) {
+        File imageFile = new File("src/main/resources/static" + imagePath);
+        if (imageFile.exists()) {
+            try {
+                boolean deleted = imageFile.delete();
+                if (deleted) {
+                    return true;
+                } else {
+                    // 실패한 경우에 대한 처리 로직 추가
+                    return false;
+                }
+            } catch (SecurityException e) {
+                // 예외 발생 시 처리 로직 추가
+                return false;
+            }
+        } else {
+            // 파일이 존재하지 않는 경우 처리 로직 추가
+            return false;
+        }
     }
 }

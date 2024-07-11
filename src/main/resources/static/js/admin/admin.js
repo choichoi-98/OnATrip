@@ -10,15 +10,20 @@ $(document).ready(function() {
                dataType: 'json',
                success: function(response) {
                    response.forEach(function(location) {
+                   console.log('location-id: ',location.id);
+                   console.log('location-country_name', location.countryName);
                        addToLocationList(
                            location.locationType === 'domestic' ? 'domestic_list' : 'overseas_list',
+                           location.id,  // ID 추가
                            location.countryName,
                            location.countryCode,
                            location.city,
                            location.description,
                            location.imagePath  // 이미지 경로를 location.imagePath로 수정
+
                        );
                    });
+
                },
                error: function(error) {
                    console.error('위치 불러오기 오류:', error);
@@ -186,12 +191,19 @@ $(document).ready(function() {
         formData.append('countryCode', countryCode);
         formData.append('city', city);
         formData.append('description', description);
+
+        // 파일이 있는 경우에만 formData에 추가
         if (file) {
             formData.append('file', file);
         }
-        formData.append('locationType', locationType); // 이 부분에서 locationType을 직접 사용
 
-        // CSRF 토큰 가져오기
+        // locationType이 null이면 반환
+        if (locationType === null) {
+            alert('여행지 타입을 선택하세요.');
+            return;
+        }
+        formData.append('locationType', locationType);
+
         var csrfToken = $('meta[name="_csrf"]').attr('content');
 
         $.ajax({
@@ -201,9 +213,9 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             beforeSend: function(xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // AJAX 요청 헤더에 CSRF 토큰 추가
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             },
-            success: function (response) {
+            success: function(response) {
                 console.log('여행지 추가 성공');
                 console.log('입력한 데이터:', {
                     locationType: locationType,
@@ -214,28 +226,29 @@ $(document).ready(function() {
                 });
 
                 // 여행지 추가 성공 시 추가적인 UI 업데이트 등의 작업 수행
-                addToLocationList(locationType === 'domestic' ? 'domestic_list' : 'overseas_list', countryName, countryCode, city, description, '');
-                            resetInputs();  // 입력 필드 초기화
-                            resetCheckboxes();  // 체크박스 초기화
-                        },
-                        error: function (error) {
-                            console.error('여행지 추가 실패:', error);
-                            // 실패 시 에러 처리
-                            // 적절한 오류 메시지 표시
-                        }
-                    });
-                }
+                addToLocationList(locationType === 'domestic' ? 'domestic_list' : 'overseas_list', response.id, countryName, countryCode, city, description, response.imagePath);
+                resetInputs();  // 입력 필드 초기화
+                resetCheckboxes();  // 체크박스 초기화
+            },
+            error: function(error) {
+                console.error('여행지 추가 실패:', error);
+                // 실패 시 에러 처리
+                // 적절한 오류 메시지 표시
+            }
+        });
+    }//sendLocationDataToServer
+
     // 체크박스 초기화 함수
     function resetCheckboxes() {
         $('#domestic_check, #overseas_check').prop('checked', false);
         toggleDomesticInputs();
     }
 
-    function addToLocationList(listType, countryName, countryCode, city, description, imagePath) {
+    // 여행지를 목록에 추가하는 함수
+    function addToLocationList(listType, id, countryName, countryCode, city, description, imagePath) {
         var $ul = $('#' + listType + ' ul');
-        var $li = $('<li></li>');
+        var $li = $('<li></li>').data('locationId', id);
 
-        // 위치 정보 추가
         var locationInfo = '';
         if (listType === 'domestic_list') {
             locationInfo = '도시: ' + city + '<br>설명: ' + description;
@@ -244,136 +257,151 @@ $(document).ready(function() {
         }
         $li.append($('<span class="location-info"></span>').html(locationInfo));
 
-        // 이미지 추가
         if (imagePath !== '') {
-            $li.append($('<img class="preview-image">').attr('src', imagePath).attr('alt', '여행지 이미지'));
+            $li.append($('<img class="preview-image">').attr('src', 'http://localhost:9100' + imagePath).attr('alt', '여행지 이미지'));
         }
 
-        // 수정 버튼 추가
         $li.append($('<button>Edit</button>').click(function () {
             editLocation(listType, countryName, countryCode, city, description, imagePath, $li);
         }));
 
-        // 삭제 버튼 추가
-        $li.append($('<button>Delete</button>').click(function () {
-            $li.remove();
-        }));
+         $li.append($('<button>Delete</button>').click(function () {
+                if (confirm('정말로 삭제하시겠습니까?')) {
+                    deleteLocation(id, $li);
+                }
+            }));
 
-        // 목록에 추가
-        $ul.append($li);
+            $ul.append($li);
+    }//addToLocationList
+
+
+    // Edit 버튼 클릭 시 호출되는 함수
+    function editLocation(type, countryName, countryCode, city, description, imageSrc, $targetLi) {
+        if ($targetLi.find('.edit-form').length > 0) {
+            return; // 이미 수정 폼이 열려 있으면 아무 작업도 하지 않음
+        }
+
+        var originalCountryName = countryName;
+        var originalCountryCode = countryCode;
+        var originalCity = city;
+        var originalDescription = description;
+        var originalImageSrc = imageSrc;
+
+        // 위치 타입을 $targetLi에 저장
+        $targetLi.data('locationType', type);
+
+        var $editForm = $('<div class="edit-form"></div>');
+
+        // 여행지 타입에 따라 입력 필드 설정
+        var $countryInput = $('<input type="text">').val(type === 'overseas_list' ? countryName : '');
+        var $countryCodeInput = $('<input type="text">').val(type === 'overseas_list' ? countryCode : '');
+        var $cityInput = $('<input type="text">').val(type === 'domestic_list' ? city : '');
+        var $descriptionInput = $('<textarea>').val(description);
+        var $fileInput = $('<input type="file">');
+
+        // 기존 데이터 readonly 처리
+        if (type === 'domestic_list') {
+            $countryInput.prop('readonly', true);
+            $countryCodeInput.prop('readonly', true);
+            $cityInput.prop('readonly', true);
+        } else if (type === 'overseas_list') {
+            $countryInput.prop('readonly', true);
+            $cityInput.prop('readonly', true);
+            $countryCodeInput.prop('readonly', true);
+        }
+
+        // CSS 스타일 적용
+        $editForm.find('input[readonly]').css({
+            'background-color': '#f0f0f0',
+            'color': '#666'
+        });
+
+        var $previewImage = $('<img class="preview-image">').attr('src', imageSrc).attr('alt', '이미지 미리보기');
+        $fileInput.change(function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $previewImage.attr('src', e.target.result);
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+
+        var $saveBtn = $('<button>Save</button>').click(function () {
+            var formData = new FormData();
+
+            var locationId = $targetLi.data('locationId'); // 여행지의 고유 ID 가져오기
+            formData.append('id', locationId); // 수정할 여행지의 ID 추가
+
+            if (type === 'domestic_list') {
+                formData.append('city', $cityInput.val());
+            } else if (type === 'overseas_list') {
+                formData.append('countryName', $countryInput.val());
+                formData.append('countryCode', $countryCodeInput.val());
+            }
+
+            formData.append('description', $descriptionInput.val());
+
+            var fileInput = $targetLi.find('input[type="file"]')[0];
+            if (fileInput.files.length > 0) {
+                formData.append('file', fileInput.files[0]);
+            }
+
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+            $.ajax({
+                url: '/admin/updateLocation',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                },
+                success: function(response) {
+                    console.log('여행지 정보 업데이트 성공:', response);
+
+                    // 수정된 데이터만 업데이트
+                    updateLocationInfo($targetLi, $countryInput.val(), $countryCodeInput.val(), $cityInput.val(), $descriptionInput.val(), '');
+
+                    $targetLi.find('.edit-form').remove();
+                    $targetLi.find('button:contains("Edit")').show();
+                    $targetLi.find('button:contains("Delete")').show();
+                },
+                error: function(error) {
+                    console.error('여행지 정보 업데이트 실패:', error);
+                    alert('여행지 정보를 업데이트하는 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            });
+        });
+
+        var $cancelBtn = $('<button>Cancel</button>').click(function () {
+            $countryInput.val(originalCountryName);
+            $countryCodeInput.val(originalCountryCode);
+            $cityInput.val(originalCity);
+            $descriptionInput.val(originalDescription);
+            $previewImage.attr('src', originalImageSrc);
+
+            $editForm.remove();
+
+            $targetLi.find('button:contains("Edit")').show();
+            $targetLi.find('button:contains("Delete")').show();
+        });
+
+        $editForm.append(
+            $('<label>Country:</label>'), $countryInput, $('<br>'),
+            $('<label>Country Code:</label>'), $countryCodeInput, $('<br>'),
+            $('<label>City:</label>'), $cityInput, $('<br>'),
+            $('<label>Description:</label>'), $descriptionInput, $('<br>'),
+            $previewImage, $fileInput, $('<br>'),
+            $('<div class="button-container"></div>').append($saveBtn, $cancelBtn)
+        );
+
+        $targetLi.append($editForm);
+
+        $targetLi.find('button:contains("Edit")').hide();
+        $targetLi.find('button:contains("Delete")').hide();
     }
 
-
-   function editLocation(type, countryName, countryCode, city, description, imageSrc, $targetLi) {
-       // 이미 수정 폼이 열려 있는지 확인
-       if ($targetLi.find('.edit-form').length > 0) {
-           return; // 이미 수정 폼이 열려 있으면 아무 작업도 하지 않음
-       }
-
-       // 현재 항목의 정보를 저장
-       var originalCountryName = countryName;
-       var originalCountryCode = countryCode;
-       var originalCity = city;
-       var originalDescription = description;
-       var originalImageSrc = imageSrc;
-
-       // 현재 항목의 정보를 기반으로 수정 폼 생성
-       var $editForm = $('<div class="edit-form"></div>');
-       var $countryInput = $('<input type="text">').val(type === 'overseas_list' ? countryName : '');
-       var $countryCodeInput = $('<input type="text">').val(type === 'overseas_list' ? countryCode : '');
-       var $cityInput = $('<input type="text">').val(city);
-       var $descriptionInput = $('<textarea>').val(description);
-       var $fileInput = $('<input type="file">');
-
-       // 필드 readonly 설정
-       if (type === 'domestic_list') {
-           $countryInput.prop('readonly', true);
-           $countryCodeInput.prop('readonly', true);
-       } else if (type === 'overseas_list') {
-           $countryInput.prop('readonly', true);
-           $cityInput.prop('readonly', true);
-           $countryCodeInput.prop('readonly', true);
-       }
-
-       // CSS 스타일 적용
-       $editForm.find('input[readonly]').css({
-           'background-color': '#f0f0f0',
-           'color': '#666'
-       });
-
-       // 이미지 미리보기 엘리먼트
-       var $previewImage = $('<img class="preview-image">').attr('src', imageSrc).attr('alt', '이미지 미리보기');
-
-       // 이미지 변경 시 미리보기 업데이트
-       $fileInput.change(function () {
-           var reader = new FileReader();
-           reader.onload = function (e) {
-               $previewImage.attr('src', e.target.result);
-           };
-           reader.readAsDataURL(this.files[0]);
-       });
-
-       // 저장 버튼 클릭 이벤트 처리
-       var $saveBtn = $('<button>Save</button>').click(function () {
-           countryName = originalCountryName;
-           countryCode = originalCountryCode; // 기존 countryCode 유지
-           city = originalCity; // 기존 city 유지
-           description = originalDescription; // 기존 description 유지
-           imageSrc = originalImageSrc; // 기존 imageSrc 유지
-
-           // 여행지 정보 업데이트 함수 호출
-           updateLocationInfo($targetLi, countryName, countryCode, city, description, imageSrc);
-
-           // 수정 폼 제거
-           $editForm.remove();
-
-           // Edit 버튼 다시 보이기
-           $targetLi.find('button:contains("Edit")').show();
-
-           // Delete 버튼 다시 보이기
-           $targetLi.find('button:contains("Delete")').show();
-       });
-
-       // 취소 버튼 클릭 이벤트 처리
-       var $cancelBtn = $('<button>Cancel</button>').click(function () {
-           // 폼을 초기 값으로 되돌림
-
-           $countryInput.val(originalCountryName);
-           $countryCodeInput.val(originalCountryCode)
-           $cityInput.val(originalCity);
-           $descriptionInput.val(originalDescription);
-           $previewImage.attr('src', originalImageSrc);
-
-           // 수정 폼 제거
-           $editForm.remove();
-
-           // Edit 버튼 다시 보이기
-           $targetLi.find('button:contains("Edit")').show();
-
-           // Delete 버튼 다시 보이기
-           $targetLi.find('button:contains("Delete")').show();
-       });
-
-       // 수정 폼에 요소 추가
-       $editForm.append(
-           $('<label>Country:</label>'), $countryInput, $('<br>'),
-           $('<label>Country Code:</label>'), $countryCodeInput, $('<br>'),
-           $('<label>City:</label>'), $cityInput, $('<br>'),
-           $('<label>Description:</label>'), $descriptionInput, $('<br>'),
-           $previewImage, $fileInput, $('<br>'),
-           $('<div class="button-container"></div>').append($saveBtn, $cancelBtn) // 버튼 컨테이너 추가
-       );
-
-       // 수정 폼을 목록 요소 아래에 추가
-       $targetLi.append($editForm);
-
-       // Edit 버튼 숨기기
-       $targetLi.find('button:contains("Edit")').hide();
-
-       // Delete 버튼 숨기기
-       $targetLi.find('button:contains("Delete")').hide();
-   }
-
+  // 여행지 정보 업데이트 함수
   function updateLocationInfo($targetLi, countryName, countryCode, city, description, imageSrc) {
       // 위치 정보 업데이트
       var locationInfo = '';
@@ -513,82 +541,82 @@ $(document).ready(function() {
           });
       }
 
-      // 여행지 목록 수정
-      // 수정 폼에서 저장 버튼 클릭 시 호출되는 함수
-      function updateLocationInfo($targetLi, countryName, countryCode, city, description, imageSrc) {
-          var originalCountryName = countryName;
-          var originalCountryCode = countryCode;
-          var originalCity = city;
-          var originalDescription = description;
-          var originalImageSrc = imageSrc;
+   // 여행지 목록 수정
+  // 여행지 정보 업데이트 함수
+  function updateLocationData($targetLi, countryName, countryCode, city, description, imageSrc) {
+      var formData = new FormData();
+      var locationId = $targetLi.data('locationId'); // 여행지의 고유 ID 가져오기
+      formData.append('id', locationId); // 수정할 여행지의 ID 추가
 
-          // 여행지 정보 업데이트 함수 호출
-          updateLocationData($targetLi, countryName, countryCode, city, description, imageSrc);
-      }
+      var locationType = $targetLi.data('locationType'); // 위치 타입 가져오기
 
-      function updateLocationData($targetLi, countryName, countryCode, city, description, imageSrc) {
-          // FormData 객체 생성
-          var formData = new FormData();
-
-          // id 필드를 숫자로 변환하여 추가
-          formData.append('id', $targetLi.data('locationId'));
-
-          formData.append('id', $targetLi.data('locationId'));
+      if (locationType === 'domestic') {
+          formData.append('city', city);
+      } else if (locationType === 'overseas') {
           formData.append('countryName', countryName);
           formData.append('countryCode', countryCode);
-          formData.append('city', city);
-          formData.append('description', description);
-
-          // 이미지 파일이 변경된 경우에만 추가
-          var fileInput = $targetLi.find('input[type="file"]')[0];
-          if (fileInput.files.length > 0) {
-              formData.append('file', fileInput.files[0]);
-          }
-
-          // CSRF 토큰 가져오기
-          var csrfToken = $('meta[name="_csrf"]').attr('content');
-
-          // AJAX 요청 전송
-          $.ajax({
-              url: '/updateLocation',
-              type: 'POST',
-              data: formData,
-              processData: false,
-              contentType: false,
-              beforeSend: function(xhr) {
-                  xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // AJAX 요청 헤더에 CSRF 토큰 추가
-              },
-              success: function(response) {
-                  console.log('여행지 정보 업데이트 성공:', response);
-
-                  // UI 업데이트 - 위치 정보
-                  var locationInfo = '';
-                  if (countryCode !== '') {
-                      locationInfo = '국가: ' + countryName + '<br>설명: ' + description;
-                  } else {
-                      locationInfo = '도시: ' + city + '<br>설명: ' + description;
-                  }
-                  $targetLi.find('.location-info').html(locationInfo);
-
-                  // UI 업데이트 - 이미지
-                  if (imageSrc !== '') {
-                      $targetLi.find('.preview-image').attr('src', imageSrc);
-                  }
-
-                  // 수정 폼 제거
-                  $targetLi.find('.edit-form').remove();
-
-                  // Edit 버튼 다시 보이기
-                  $targetLi.find('button:contains("Edit")').show();
-
-                  // Delete 버튼 다시 보이기
-                  $targetLi.find('button:contains("Delete")').show();
-              },
-              error: function(error) {
-                  console.error('여행지 정보 업데이트 실패:', error);
-                  alert('여행지 정보를 업데이트하는 중 오류가 발생했습니다. 다시 시도해주세요.');
-              }
-          });
       }
+
+      formData.append('description', description);
+
+      var fileInput = $targetLi.find('input[type="file"]')[0];
+      if (fileInput.files.length > 0) {
+          formData.append('file', fileInput.files[0]);
+      }
+
+      var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+      $.ajax({
+          url: '/admin/updateLocation',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+          },
+          success: function(response) {
+              console.log('여행지 정보 업데이트 성공:', response);
+
+              // 여행지 정보 업데이트 함수 호출
+              updateLocationInfo($targetLi, countryName, countryCode, city, description, imageSrc);
+
+              // 수정 폼 제거
+              $targetLi.find('.edit-form').remove();
+
+              // Edit 버튼 다시 보이기
+              $targetLi.find('button:contains("Edit")').show();
+
+              // Delete 버튼 다시 보이기
+              $targetLi.find('button:contains("Delete")').show();
+          },
+          error: function(error) {
+              console.error('여행지 정보 업데이트 실패:', error);
+              alert('여행지 정보를 업데이트하는 중 오류가 발생했습니다. 다시 시도해주세요.');
+          }
+      });
+  }
+
+  // 여행지 삭제
+  function deleteLocation(id, $li) {
+
+      var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+      $.ajax({
+          url: '/admin/deleteLocation/' + id,
+          type: 'DELETE',
+          beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+          },
+          success: function (response) {
+              console.log('여행지 삭제 성공');
+              $li.remove(); // Remove the li element from the DOM on successful deletion
+          },
+          error: function (error) {
+              console.error('여행지 삭제 실패:', error);
+              alert('여행지 삭제 실페'); // Show an alert in case of error
+          }
+      });
+  }
 
 });
