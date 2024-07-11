@@ -92,4 +92,41 @@ public class LocationService {
 
         return locationDTOs;
     }
+
+    // 여행지 목록 수정(새로운 이미지 파일이 업로드된 경우 처리)
+    public void updateLocationWithImage(LocationDTO locationDTO) {
+        // 1. 파일 저장 로직 구현
+        String imagePath = saveFile(locationDTO.getFile());
+
+        // 2. 데이터베이스 업데이트 로직 구현
+        Location location = new Location();
+        location.setCountryName(locationDTO.getCountryName());
+        location.setCountryCode(locationDTO.getCountryCode());
+        location.setCity(locationDTO.getCity());
+        location.setDescription(locationDTO.getDescription());
+        location.setLocationType(locationDTO.getLocationType());
+        location.setImage(imagePath); // imagePath 설정
+        locationRepository.save(location);
+    }
+
+    // 여행지 목록 수정(이미지 파일이 업로드되지 않은 경우 처리)
+    public void updateLocationWithoutImage(LocationDTO locationDTO) {
+        // 1. 데이터베이스 업데이트 로직 구현
+        Location location = new Location();
+        location.setCountryName(locationDTO.getCountryName());
+        location.setCountryCode(locationDTO.getCountryCode());
+        location.setCity(locationDTO.getCity());
+        location.setDescription(locationDTO.getDescription());
+        location.setLocationType(locationDTO.getLocationType());
+        location.setImage(locationDTO.getImagePath()); // 기존 이미지 경로 유지
+        locationRepository.save(location);
+    }
+
+    private String saveFile(MultipartFile file) {
+        // 파일 저장 로직 구현
+        // 파일을 서버의 특정 디렉토리에 저장하고, 저장된 경로를 반환
+        String imagePath = "/uploads/" + file.getOriginalFilename();
+        // 파일 저장 코드 작성
+        return imagePath;
+    }
 }

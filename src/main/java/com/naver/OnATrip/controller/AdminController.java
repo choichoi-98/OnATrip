@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -79,5 +76,22 @@ public class AdminController {
     public List<LocationDTO> getLocations() {
         return locationService.getAllLocations();
     }
+
+    // 여행지 수정
+    @PostMapping("/updateLocation")
+    @ResponseBody
+    public String updateLocation(@ModelAttribute("locationDTO") LocationDTO locationDTO) throws IOException {
+        logger.info("Received request to update location with id={}, country={}, countryCode={}, city={}, description={}, locationType={}, imagePath={}",
+                locationDTO.getId(), locationDTO.getCountryName(), locationDTO.getCountryCode(), locationDTO.getCity(), locationDTO.getDescription(), locationDTO.getLocationType(), locationDTO.getImagePath());
+
+        if (!locationDTO.getFile().isEmpty()) {
+            locationService.updateLocationWithImage(locationDTO);
+        } else {
+            locationService.updateLocationWithoutImage(locationDTO);
+        }
+
+        return "redirect:/admin";
+    }
+
 
 }

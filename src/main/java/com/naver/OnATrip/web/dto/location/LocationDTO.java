@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 public class LocationDTO {
+    private long id;
     private String countryName;
     private String countryCode;
     private String city;

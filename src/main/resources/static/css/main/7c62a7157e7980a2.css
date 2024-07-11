@@ -2238,7 +2238,7 @@ body {
     --tw-border-opacity: 1;
     border-color: rgb(19 107 240/var(--tw-border-opacity))
 }
-
+/*tab 밑줄*/
 .border-lightScheme-primary {
     --tw-border-opacity: 1;
     border-color: #C7C87A
@@ -3029,7 +3029,7 @@ body {
     --tw-text-opacity: 1;
     color: rgb(19 107 240/var(--tw-text-opacity))
 }
-
+/*탭 컬러*/
 .text-lightScheme-primary {
     --tw-text-opacity: 1;
     color: #C7C87A
