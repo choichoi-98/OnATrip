@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
       layout:decorate="layout/default_layout">
 <th:block th:fragment="headerFragment">
     <head>
@@ -122,22 +123,29 @@
                                 <img class="w-20" src="/images/common/OnATrip_Logo.png"></a>
                         </div>
                         <div>
+                            <p th:text="${#authentication.name}"></p>
+                            <p th:text="${#authentication.authorities}"></p>
+                            <p th:text="${#authentication.authenticated}"></p>
                             <!-- admin 버튼 -->
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               href="/admin">관리자</a>
+                               sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/admin">관리자</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               href="/">내 여행</a>
-                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm" href="/">공지사항</a>
+                               sec:authorize="isAuthenticated()" href="/">내 여행</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               href="/login">로그인</a></div>
+                                sec:authorize="isAnonymous()" href="/">공지사항</a>
+                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
+                                sec:authorize="isAnonymous()" href="/login">로그인</a>
+                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
+                                sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
+                        </div>
                     </div>
                 </div>
-                <div class="hidden absolute right-2 mt-1 w-48 rounded-md  bg-white shadow-md">
-                    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3"><a class="block px-4 py-2 text-sm hover:bg-gray-600"
-                                                                     href="https://www.myro.co.kr/my-info">마이페이지</a><a
-                            class="block px-4 py-2 text-sm hover:bg-gray-600" href="https://www.myro.co.kr/inquiry">1:1
-                        문의</a><a class="block px-4 py-2 text-sm cursor-pointer hover:bg-gray-600">로그아웃</a></div>
-                </div>
+<!--                <div class="hidden absolute right-2 mt-1 w-48 rounded-md  bg-white shadow-md">-->
+<!--                    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3"><a class="block px-4 py-2 text-sm hover:bg-gray-600"-->
+<!--                                                                     href="https://www.myro.co.kr/my-info">마이페이지</a><a-->
+<!--                            class="block px-4 py-2 text-sm hover:bg-gray-600" href="https://www.myro.co.kr/inquiry">1:1-->
+<!--                        문의</a><a class="block px-4 py-2 text-sm cursor-pointer hover:bg-gray-600">로그아웃</a></div>-->
+<!--                </div>-->
             </nav>
             <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
                  data-sidebartype="full"

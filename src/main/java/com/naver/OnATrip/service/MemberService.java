@@ -1,17 +1,24 @@
 package com.naver.OnATrip.service;
 
+import com.naver.OnATrip.constant.Role;
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
 import com.naver.OnATrip.web.dto.member.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,11 +33,11 @@ public class MemberService implements UserDetailsService {
     public int join(MemberDTO memberDTO) {
 
         try {
-            Member member = memberDTO.toEntity();  // MemberDTO를 Member 객체로 변환
+            Member member = memberDTO.createMember();  // MemberDTO를 Member 객체로 변환
             String rawPass = member.getPassword();
             String encPass = passwordEncoder.encode(rawPass);
             member.setPassword(encPass);
-            member.setRole("USER");
+            member.setRole(Role.valueOf("USER"));
             memberRepository.save(member);
             return 100;
         } catch (Exception e) {
@@ -45,13 +52,32 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email){
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if(member != null){
-            return new MemberDetails(member);
+    public UserDetails loadUserByUsername(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+//        if(member != null){
+//            return new MemberDetails(member);
+//        }
+//        return null;
+
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        return null;
+
+        Member member = optionalMember.get();
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if ("admin".equals(member.getRole())) {
+            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
+        } else {
+            authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
+        }
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .authorities(authorities)
+                .build();
     }
+
 
     public MemberDTO login(MemberDTO memberDTO) {
         Optional<Member> memberEmail = memberRepository.findByEmail(memberDTO.getEmail());
