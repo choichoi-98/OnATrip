@@ -1,6 +1,7 @@
 package com.naver.OnATrip.web.dto.member;
 
 
+import com.naver.OnATrip.constant.Role;
 import com.naver.OnATrip.entity.Member;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -28,13 +29,14 @@ public class MemberDTO {
     @Size(min = 2, max=10, message = "이름은 한글자 이상이어야 합니다.")
     private String name;
 
-    private String role;
+    private Role role;
 
-    public MemberDTO(String email, String password, String passwdCheck,String name) {
+    public MemberDTO(String email, String password, String passwdCheck,String name, Role role) {
         this.email = email;
         this.password = password;
         this.passwdCheck = passwdCheck;
         this.name = name;
+        this.role = role;
     }
 
     public MemberDTO() {
@@ -43,20 +45,24 @@ public class MemberDTO {
     public MemberDTO(String email, String password) {
     }
 
-    public Member toEntity() {
+    public Member createMember() {
         Member member = Member.builder()
                 .name(name)
                 .password(password)
                 .email(email)
+                .role(role)
                 .build();
         return member;
     }
 
     // Member 엔티티를 MemberDTO로 변환하는 메서드
     public static MemberDTO fromEntity(Member member) {
-        return new MemberDTO(
-                member.getEmail(),
-                member.getPassword()
-        );
+        MemberDTO dto = new MemberDTO();
+        dto.setId(member.getId());
+        dto.setEmail(member.getEmail());
+        dto.setName(member.getName());
+        dto.setRole(member.getRole()); // Member 엔티티에 role 필드가 있다면 가져와서 설정
+
+        return dto;
     }
 }

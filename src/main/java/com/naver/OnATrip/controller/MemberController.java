@@ -32,30 +32,18 @@ public class MemberController {
                 ;
     }
 
-//    @PostMapping("/login")
-//    public String login(String email, String password, HttpSession session,Model model) {
-//        UserDetails member = memberService.loadUserByUsername(email);
-//        if (member != null && MemberDTO.getPassword().equals(member.get)) {
-//            session.setAttribute("member", member);
-//            return "redirect:/main";
-//        } else {
-//            model.addAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
-//            return "member/login";
-//        }
-//    }
-
     @PostMapping("/login")
     public String loginProc(@ModelAttribute MemberDTO memberDTO, HttpSession session, Model model) {
         MemberDTO loginResult = memberService.login(memberDTO);
         if (loginResult != null) {
             // login 성공
-            System.out.println("로그인 성공");
-            session.setAttribute("loginEmail", loginResult.getEmail());
-            return "main";
+            System.out.println("로그인 성공" + loginResult.getEmail());
+            session.setAttribute("email", loginResult.getEmail());
+            return "redirect:/main";
         } else {
             // login 실패
             System.out.println("로그인 실패: 이메일이나 비밀번호가 잘못되었습니다.");
-            model.addAttribute("이메일이나 비밀번호가 잘못되었습니다.");
+            model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해주세요");
             return "member/login";
         }
     }

@@ -1,10 +1,15 @@
 package com.naver.OnATrip.entity;
 
+import com.naver.OnATrip.constant.Role;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -24,9 +29,10 @@ public class Member {
 
     private String name;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public Member(Long id, String email, String password, String name, String role) {
+    public Member(Long id, String email, String password, String name, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -43,11 +49,5 @@ public class Member {
         return this.password.equals(pass);
     }
 
-    public static Member toMember(MemberDTO memberDTO){
-        Member member = new Member();
-        member.setEmail(memberDTO.getEmail());
-        member.setName(memberDTO.getName());
-        member.setPassword(memberDTO.getPassword());
-        return member;
-    }
+
 }
