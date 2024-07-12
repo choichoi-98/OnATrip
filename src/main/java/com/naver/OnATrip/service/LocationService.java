@@ -207,4 +207,17 @@ public class LocationService {
             return false;
         }
     }
+
+
+    // 국내 여행지 목록 조회
+    public List<Location> getDomesticLocations() {
+        return locationRepository.findByLocationType("국내");
+    }
+
+    // 해외 여행지 목록 조회
+    public List<Location> getOverseasLocations() {
+        return locationRepository.findByLocationType("해외");
+    }
+
+
 }
