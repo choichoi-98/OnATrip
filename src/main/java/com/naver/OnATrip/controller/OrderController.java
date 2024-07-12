@@ -1,15 +1,20 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.pay.Orders;
+import com.naver.OnATrip.entity.pay.Pay;
 import com.naver.OnATrip.service.OrderService;
 import com.naver.OnATrip.web.dto.pay.OrderDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,8 +24,36 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderController {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+
     private final OrderService orderService;
     private final HttpSession httpSession;
+
+    @PostMapping("/save_buyerInfo") //결제 정보 저장
+    @ResponseBody
+    public void save_buyerInfo(@RequestBody Pay request) {
+        log.info("Saving buyer information: {}", request);
+        orderService.save_buyerInfo(request);
+        log.info("Buyer information saved successfully");
+    }
+
+    @PostMapping("/save_orderInfo") //주문 정보 저장
+    @ResponseBody
+    public String orderDone(@RequestBody OrderDto request, Model model) {
+        log.info("Saving order information: {}", request);
+
+        Orders orders = Orders.builder()
+                .merchantUid(request.getMerchantUid())
+                .totalPrice(request.getTotalPrice())
+                .build();
+
+        orderService.save_orderInfo(orders);
+        log.info("Order information saved successfully for merchantUid: {}", request.getMerchantUid());
+
+
+        return request.getMerchantUid();
+    }
 
 //    @PostMapping("/create")
 //    public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> payload){

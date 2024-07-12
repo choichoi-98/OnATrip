@@ -135,15 +135,30 @@
         let totalPrice =  $('#total_price').text();
 
         //** 결제정보 사전 검증 - 페이지 로드시 주문번호와 결제 예정금액을 전달 */
-        // $.ajax({
-        //     url: "pay/prepare",
-        //     method: "post",
-        //     contentType: "application/json",
-        //     data: JSON.stringify({
-        //         merchant_uid : merchant_uid,    //가맹점 주문번호
-        //         amount : totalPrice             //결제 예정 금액
-        //     })
-        // })
+        $.ajax({
+            url: "pay/prepare",
+            method: "post",
+            contentType: "application/json",
+            data: JSON.stringify({
+                merchant_uid : merchant_uid,    //가맹점 주문번호
+                amount : totalPrice             //결제 예정 금액
+            })
+            //로그 확인
+            ,
+            beforeSend: function(xhr) {
+                console.log("Sending data: ", {
+                    merchant_uid: merchant_uid,
+                    amount: totalPrice
+                });
+            },
+            success: function(response) {
+                console.log("Response received: ", response);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log("Error: ", textStatus, errorThrown);
+            }
+
+        })
     })
 
 
@@ -177,22 +192,63 @@
             merchant_uid: 'p' + new Date().getTime() + '_' /* +memberId-*/,   // 주문번호
             name: paymentGoods,          //상품명
             amount: totalPrice           //금액
-            // m_redirect_url: "{}"        //리디렉션 될 url
+            ,m_redirect_url: "{/main}"        //리디렉션 될 url
         }, function (rsp) {
             //결제 완료시
             if (rsp.success) {
-                var msg = '결제가 완료되었습니다.';
+               $.ajax({
+                   url: "pay/validate",
+                   method: "POST",
+                   contentType: "application/json",
+                   data: JSON.stringify({
+                       imp_uid: rsp.imp_uid,
+                       merchant_uid: rsp.merchant_uid,
+                   }),
+               }).done(function (data){
 
-                // //데이터를 ajax로 보낼 시 사용할 코드
-                // $.ajax({
-                //     type: "GET",
-                //     url: "",
-                //     data: {
-                //         "amount" : totalPrice
-                //     }
-                // });
-                //
-                // $().submit();
+                    var msg = '결제가 완료되었습니다.';
+                    var buyerInfo = {
+                        "merchant_uid": rsp.merchant_uid,
+                        "userid": rsp.buyer_name,
+                        "pay_method": rsp.pay_method,
+                        "name": rsp.name,
+                        "amount": rsp.paid_amount
+                    }
+
+                    var orderInfo = {
+                        "merchant_uid": rsp.merchant_uid,
+                        "userid": userid,
+                        "pay_method": rsp.pay_method,
+                        "name": rsp.name,
+                        "amount": rsp.paid_amount,
+                    }
+
+                   //결제 정보 저장
+                    $.ajax({
+                        type:"post",
+                        url:"save_buyerInfo",
+                        contentType: "application/json",
+                        data: JSON.stringify(buyerInfo),
+                        success: function (response){
+                            console.log("결제정보 저장 완료");
+                        }
+                    });
+
+                    //주문 정보 저장
+                   $.ajax({
+                       type: "post",
+                       url: "save_orderInfo",
+                       contentType: "application/json",
+                       data: JSON.stringify(orderInfo),
+                       success:function (resp){
+                           console.log("주문 완료");
+                           alert('주문이 완료되었습니다.');
+                           window.location.href = '/main';
+
+                       }
+                   });
+                });// done end
+
             } else {
                 //결제 실패시
                 var msg = '결제에 실패하였습니다.';

@@ -3,8 +3,10 @@ package com.naver.OnATrip.service;
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.pay.Item;
 import com.naver.OnATrip.entity.pay.Orders;
+import com.naver.OnATrip.entity.pay.Pay;
 import com.naver.OnATrip.repository.pay.ItemRepositoryCustom;
 import com.naver.OnATrip.repository.pay.OrderRepository;
+import com.naver.OnATrip.repository.pay.PayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,18 @@ public class OrderService {
 
     @Autowired
     private ItemRepositoryCustom itemRepository;
+
+    @Autowired
+    private PayRepository payRepository;
+
+    public void save_buyerInfo(Pay request) {
+        payRepository.save(request);
+    }
+
+    public void save_orderInfo(Orders request){
+        orderRepository.save(request);
+    }
+
 
 //    @Transactional
 //    public Orders creatOrder(int itemId) {
