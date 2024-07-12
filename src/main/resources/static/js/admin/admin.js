@@ -244,35 +244,39 @@ $(document).ready(function() {
         toggleDomesticInputs();
     }
 
-    // 여행지를 목록에 추가하는 함수
-    function addToLocationList(listType, id, countryName, countryCode, city, description, imagePath) {
-        var $ul = $('#' + listType + ' ul');
-        var $li = $('<li></li>').data('locationId', id);
+    // 여행지를 목록에 추가하는 함수 수정
+   function addToLocationList(listType, id, countryName, countryCode, city, description, imagePath) {
+       var $ul = $('#' + listType + ' ul');
+       var $li = $('<li></li>').data('locationId', id);
 
-        var locationInfo = '';
-        if (listType === 'domestic_list') {
-            locationInfo = '도시: ' + city + '<br>설명: ' + description;
-        } else if (listType === 'overseas_list') {
-            locationInfo = '국가: ' + countryName + '<br>설명: ' + description;
-        }
-        $li.append($('<span class="location-info"></span>').html(locationInfo));
+       var locationInfo = '';
 
-        if (imagePath !== '') {
-            $li.append($('<img class="preview-image">').attr('src', 'http://localhost:9100' + imagePath).attr('alt', '여행지 이미지'));
-        }
+       if (listType === 'domestic_list') {
+           locationInfo = '<span class="location-info-title">도시:</span> ' + city +
+                          '<br><span class="location-info-title">설명:</span> <span class="location-description">' + description + '</span>';
+       } else if (listType === 'overseas_list') {
+           locationInfo = '<span class="location-info-title">국가:</span> ' + countryName +
+                          '<br><span class="location-info-title">설명:</span> <span class="location-description">' + description + '</span>';
+       }
 
-        $li.append($('<button>Edit</button>').click(function () {
-            editLocation(listType, countryName, countryCode, city, description, imagePath, $li);
-        }));
+       $li.append($('<span class="location-info"></span>').html(locationInfo));
 
-         $li.append($('<button>Delete</button>').click(function () {
-                if (confirm('정말로 삭제하시겠습니까?')) {
-                    deleteLocation(id, $li);
-                }
-            }));
+       if (imagePath !== '') {
+           $li.append($('<img class="preview-image">').attr('src', 'http://localhost:9100' + imagePath).attr('alt', '여행지 이미지'));
+       }
 
-            $ul.append($li);
-    }//addToLocationList
+       $li.append($('<button>Edit</button>').click(function () {
+           editLocation(listType, countryName, countryCode, city, description, imagePath, $li);
+       }));
+
+       $li.append($('<button>Delete</button>').click(function () {
+           if (confirm('정말로 삭제하시겠습니까?')) {
+               deleteLocation(id, $li);
+           }
+       }));
+
+       $ul.append($li);
+   }//addToLocationList
 
 
     // Edit 버튼 클릭 시 호출되는 함수
@@ -296,7 +300,7 @@ $(document).ready(function() {
         var $countryInput = $('<input type="text">').val(type === 'overseas_list' ? countryName : '');
         var $countryCodeInput = $('<input type="text">').val(type === 'overseas_list' ? countryCode : '');
         var $cityInput = $('<input type="text">').val(type === 'domestic_list' ? city : '');
-        var $descriptionInput = $('<textarea>').val(description);
+        var $descriptionInput = $('<textarea>').val(description).css('width', '100%'); // DESCRIPTION 입력 폭 넓히기
         var $fileInput = $('<input type="file">');
 
         // 기존 데이터 readonly 처리
@@ -311,10 +315,23 @@ $(document).ready(function() {
         }
 
         // CSS 스타일 적용
-        $editForm.find('input[readonly]').css({
-            'background-color': '#f0f0f0',
-            'color': '#666'
-        });
+            $editForm.find('input[readonly]').css({
+                'background-color': '#f0f0f0',
+                'color': '#666',
+                'width': 'calc(100% - 20px)', // 너비 조정
+                'padding': '10px', // 내부 여백
+                'margin-bottom': '10px' // 하단 여백
+            });
+
+            $editForm.find('textarea').css({
+                'width': 'calc(100% - 20px)', // 너비 조정
+                'padding': '10px', // 내부 여백
+                'margin-bottom': '10px', // 하단 여백
+                'resize': 'none' // 수직 리사이징 비활성화
+            }).on('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
 
         var $previewImage = $('<img class="preview-image">').attr('src', imageSrc).attr('alt', '이미지 미리보기');
         $fileInput.change(function () {
@@ -400,6 +417,7 @@ $(document).ready(function() {
         $targetLi.find('button:contains("Edit")').hide();
         $targetLi.find('button:contains("Delete")').hide();
     }
+
 
   // 여행지 정보 업데이트 함수
   function updateLocationInfo($targetLi, countryName, countryCode, city, description, imageSrc) {

@@ -30,13 +30,12 @@
         <div class="w-screen pl-8 mb-8 md:pl-0">
             <div class="container relative mx-auto">
                 <div class="w-full mb-4 text-center" style="margin-top: 80px;"><h2
-                        class="text-3xl font-bold text-gray-100 ">어디로 여행을
-                    떠나시나요?</h2>
+                        class="text-3xl font-bold text-gray-100 ">어디로 여행을 떠나시나요?</h2>
                     <h1 style="color: #AAB1B8; margin-top: 13px; font-size: 1.1rem;">Tip. 떠나실 여행지를 선택해 주세요.</h1>
                 </div>
-                <div class="relative w-full p-8 mx-auto mb-8 text-gray-600 md:w-1/2"><input
-                        class="w-full h-16 px-5 pr-16 text-lg bg-white rounded-lg shadow-lg focus:outline-none placeholder:text-sm placeholder:text-gray-600"
-                        type="search" name="search" placeholder="국가명이나 도시명으로 검색해보세요." value="">
+                <div class="relative w-full p-8 mx-auto mb-8 text-gray-600 md:w-1/2">
+                    <input class="w-full h-16 px-5 pr-16 text-lg bg-white rounded-lg shadow-lg focus:outline-none placeholder:text-sm placeholder:text-gray-600"
+                           type="search" name="search" placeholder="국가명이나 도시명으로 검색해보세요." value="">
                     <button class="absolute top-0 bottom-0 right-0 mr-12">
                         <svg class="w-6 h-6 md:w-8 md:h-8" xmlns="http://www.w3.org/2000/svg" version="1.1"
                              id="Capa_1" viewBox="0 0 56.966 56.966">
@@ -80,34 +79,36 @@
                                 <div class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer">
                                     <div class="pt-2 md:pt-2 md:p-2">
                                         <div class="relative w-[120px] h-[120px] md:h-[14rem] xl:h-60 2xl:h-80 md:w-full shadow-md md:shadow-lg rounded-lg">
-                                <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-                                    <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg "
-                                         style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
-                                </span>
+                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
+                                <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg"
+                                     style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
+                            </span>
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat"
                                             th:text="${location.city}"></h1>
-                                        <h2 class="mb-2 text-xs font-thin truncate md:text-sm"
-                                            th:text="${location.countryName}"></h2>
+                                        <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat"
+                                            th:text="${location.countryName}"></h1>
+                                        <!--<h2 class="mb-2 text-xs font-thin truncate md:text-sm"
+                                                th:text="${location.countryName}"></h2> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- 국내 탭 -->
-                    <div id="tab-domestic" class="p-0 xl:p-4 md:w-1/2 lg:w-1/4" style="display:none;">
+                    <div id="tab-domestic" class="p-0 xl:p-4 md:w-1/2 lg:w-1/4" style="display: none;">
                         <div th:each="location : ${domesticLocations}">
                             <!-- Content for 국내 tab -->
                             <div class="w-full">
                                 <div class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer">
                                     <div class="pt-2 md:pt-2 md:p-2">
                                         <div class="relative w-[120px] h-[120px] md:h-[14rem] xl:h-60 2xl:h-80 md:w-full shadow-md md:shadow-lg rounded-lg">
-                                <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-                                    <img th:src="@{${location.image}}" alt="Image" class="object-center rounded-lg "
-                                         style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
-                                </span>
+                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
+                                <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg"
+                                     style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
+                            </span>
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
@@ -121,24 +122,26 @@
                         </div>
                     </div>
                     <!-- 해외 탭 -->
-                    <div id="tab-international" class="p-0 xl:p-4 md:w-1/2 lg:w-1/4" style="display:none;">
+                    <div id="tab-international" class="p-0 xl:p-4 md:w-1/2 lg:w-1/4" style="display: none;">
                         <div th:each="location : ${internationalLocations}">
                             <!-- Content for 해외 tab -->
                             <div class="w-full">
                                 <div class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer">
                                     <div class="pt-2 md:pt-2 md:p-2">
                                         <div class="relative w-[120px] h-[120px] md:h-[14rem] xl:h-60 2xl:h-80 md:w-full shadow-md md:shadow-lg rounded-lg">
-                                <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
-                                    <img th:src="@{${location.iamge}}" alt="Image" class="object-center rounded-lg "
-                                         style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
-                                </span>
+                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
+                                <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg"
+                                     style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
+                            </span>
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat"
                                             th:text="${location.city}"></h1>
-                                        <h2 class="mb-2 text-xs font-thin truncate md:text-sm"
-                                            th:text="${location.countryName}"></h2>
+                                        <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat"
+                                            th:text="${location.countryName}"></h1>
+                                        <!--  <h2 class="mb-2 text-xs font-thin truncate md:text-sm"
+                                                th:text="${location.countryName}"></h2> -->
                                     </div>
                                 </div>
                             </div>

@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
@@ -208,16 +209,16 @@ public class LocationService {
         }
     }
 
-
     // 국내 여행지 목록 조회
-    public List<Location> getDomesticLocations() {
-        return locationRepository.findByLocationType("국내");
+    public List<LocationDTO> getDomesticLocations() {
+        List<Location> domesticLocations = locationRepository.findByLocationType("domestic");
+        return domesticLocations.stream().map(LocationDTO::new).collect(Collectors.toList());
     }
 
     // 해외 여행지 목록 조회
-    public List<Location> getOverseasLocations() {
-        return locationRepository.findByLocationType("해외");
+    public List<LocationDTO> getOverseasLocations() {
+        List<Location> overseasLocations = locationRepository.findByLocationType("overseas");
+        return overseasLocations.stream().map(LocationDTO::new).collect(Collectors.toList());
     }
-
 
 }

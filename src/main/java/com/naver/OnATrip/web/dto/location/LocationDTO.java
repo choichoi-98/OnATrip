@@ -1,5 +1,6 @@
 package com.naver.OnATrip.web.dto.location;
 
+import com.naver.OnATrip.entity.Location;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,5 +21,16 @@ public class LocationDTO {
     // 기본 생성자
     public LocationDTO() {
         
+    }
+
+    // Location 엔티티를 받아들이는 생성자
+    public LocationDTO(Location location) {
+        this.id = location.getId();
+        this.countryName = location.getCountryName();
+        this.countryCode = location.getCountryCode();
+        this.city = location.getCity();
+        this.description = location.getDescription();
+        this.locationType = location.getLocationType();
+        this.imagePath = location.getImage();
     }
 }
