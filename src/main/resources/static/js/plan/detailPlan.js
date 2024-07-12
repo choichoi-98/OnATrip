@@ -51,9 +51,9 @@ $(document).ready(function() {
    });
 
    //-------------------route 삭제
-   var routeIdToDelete = null;
+        var routeIdToDelete = null;
 
-       $('.delete-icon').on('click', function() {
+       $(document).on('click', '.delete-icon', function() {
            routeIdToDelete = $(this).data('routeid');
            console.log('delete-icon 클릭, routeId: ', routeIdToDelete);
            $('#deleteConfirmModal').modal('show');
@@ -62,15 +62,8 @@ $(document).ready(function() {
            console.log('delete-icon 클릭, dayNumber: ', dayNumber);
 
            detailPlanId = $(this).data('detailplanid');
-           console.log('detail-icon 클릭, detailPlanId: ', detailPlanId);
+           console.log('delete-icon 클릭, detailPlanId: ', detailPlanId);
 
-//           var closestMemoBlock = $(this).closest('.memo-block');
-//           var closestPlaceBlock = $(this).closest('.place-block');
-//           if(closestMemoBlock.length > 0){
-//             console.log('this is memoblock');
-//           }else{
-//              console.log('this is placeBlock');
-//           }
             var closestDiv = $(this).siblings('div').first();
             var classNames = closestDiv.attr('class');
             console.log('Closest div class:', classNames);
@@ -79,57 +72,54 @@ $(document).ready(function() {
 
        $('#confirmDelete').on('click', function() {
            if (routeIdToDelete) {
-
                 deleteRoute(routeIdToDelete, dayNumber, detailPlanId);
-
-               // 모달 닫기
                $('#deleteConfirmModal').modal('hide');
            }
        });
-       //--------------
 
-// Drag and Drop으로 순서 바꾸기
-    $('.container').each(function() {
-        new Sortable(this, {
-            animation: 150,
-            ghostClass: 'sortable-ghost',
-            draggable: '.place-block',
-            onEnd: function(evt) {
-                const itemEl = evt.item;  // dragged HTMLElement
-                const trash = $('#trash-container');
-                const trashOffset = trash.offset();
-                const trashWidth = trash.width();
-                const trashHeight = trash.height();
-                const itemOffset = $(itemEl).offset();
-                const itemWidth = $(itemEl).width();
-                const itemHeight = $(itemEl).height();
 
-                // Log offsets and dimensions for debugging
-                console.log('Trash offset:', trashOffset);
-                console.log('Trash dimensions:', trashWidth, trashHeight);
-                console.log('Item offset:', itemOffset);
-                console.log('Item dimensions:', itemWidth, itemHeight);
+   //----------------메모 수정
+  $(document).on('click', '.memo-block .modify-icon', function() {
+        let memoContent = $(this).siblings('h6').text();
+        let modifyRouteId = $(this).data('routeid');
+        let dayNumber = $(this).data('daynum');
+        console.log('modify-icon 클릭, dayNumber: ', dayNumber);
 
-                // Check if the item is dropped within the trash icon area
-                if (itemOffset.left + itemWidth / 2 > trashOffset.left &&
-                    itemOffset.left + itemWidth / 2 < trashOffset.left + trashWidth &&
-                    itemOffset.top + itemHeight / 2 > trashOffset.top &&
-                    itemOffset.top + itemHeight / 2 < trashOffset.top + trashHeight) {
-                    // Show the delete confirmation modal
-                    $('#deleteConfirmModal').modal('show');
+        detailPlanId = $(this).data('detailplanid');
+        console.log('modify-icon 클릭, detailPlanId: ', detailPlanId);
 
-                    // Handle the delete confirmation
-                    $('#confirmDelete').off('click').on('click', function() {
-                        $(itemEl).remove();  // Remove the item if confirmed
-                        $('#deleteConfirmModal').modal('hide');
-                    });
-                }
+        $('#memoContent').val(memoContent);
 
-                // log the move event
-                console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
-            }
+        $('#modifyMemoModal').modal('show');
+
+        $('#modifyMemoModal').data('currentMemo', $(this).siblings('h6'));
+        $('#modifyMemoModal').data('modifyRouteId', modifyRouteId);
+        $('#modifyMemoModal').data('dayNumber', dayNumber);
+        $('#modifyMemoModal').data('detailPlanId', detailPlanId);
+   });//
+
+ // 수정 버튼 클릭 이벤트 처리
+        $('#saveChanges').on('click', function() {
+            // 모달에서 수정된 메모 내용 가져오기
+            let updatedMemoContent = $('#memoContent').val();
+
+            // 저장된 현재 메모 엘리먼트 가져오기
+             let currentMemo = $('#modifyMemoModal').data('currentMemo');
+             let modifyRouteId = $('#modifyMemoModal').data('modifyRouteId');
+             let dayNumber = $('#modifyMemoModal').data('dayNumber');
+             let detailPlanId = $('#modifyMemoModal').data('detailPlanId');
+             console.log('#saveChanges-, dayNumber, detailPlanId', dayNumber,detailPlanId );
+            // 현재 메모 내용 업데이트 //-> ajax 성공하면 실행되도록 수정
+            currentMemo.text(updatedMemoContent);
+
+            // 모달 닫기
+            $('#modifyMemoModal').modal('hide');
+
+            // db에 저장하는 update 메서드 호출
+            modifyMemo(modifyRouteId,updatedMemoContent, dayNumber, detailPlanId);
+
         });
-    });//drag and drop
+
 
 });//$(document).ready(function() {
 
@@ -366,6 +356,8 @@ function refreshDetailPlan(detailPlanId, dayToUpdate) {
         success: function(routes) {
             console.log('Route data:', routes);
             updateRoute(dayToUpdate, routes);
+
+            console.log('-----detailPlanId: ', routes[0].detailPlanId);
         },
         error: function(xhr, status, error) {
             console.log('Detail plan data fetching error:', error);
@@ -375,6 +367,14 @@ function refreshDetailPlan(detailPlanId, dayToUpdate) {
 
 function updateRoute(dayToUpdate, routes) {
     console.log(`Updating routes for day: ${dayToUpdate}`);
+    console.log('------------------updateRoute----------');
+    if (routes.length > 0) {
+            const firstDetailPlanId = routes[0].detailPlanId;
+            console.log('First detailPlanId:', firstDetailPlanId);
+        } else {
+            console.log('Routes array is empty.');
+        }
+
 
     // 해당 일차에 해당하는 컨테이너 선택
     const detailPlanElement = $(`#date-block-${dayToUpdate} .container`).first();
@@ -388,23 +388,51 @@ function updateRoute(dayToUpdate, routes) {
     detailPlanElement.empty();
 
     // Route 리스트 추가
-    routes.forEach(route => {
-        const routeElement = $('<div class="container place-block"></div>').html(
-            `<h6 data-lat="${route.lat}" data-lng="${route.lng}" data-sortkey="${route.sortKey}">${route.placeName}</h6>`
-        );
-        detailPlanElement.append(routeElement);
-    });
+    routes.forEach((route, index) => {
+        const routeElement = $('<div></div>', {
+            class: 'container place-block',
+            id: `sortable-${index + 1}`
+        });
+
+        if (route.category === 'PLACE') {
+            routeElement.html(
+                `<div class="d-flex align-items-center mb-2 place-block">
+                    <span class="badge badge-primary mr-2" style="background-color: #007bff; color: #fff; border-radius: 50%; padding: 6px 10px;">
+                        <span>${route.routeSequence}</span>
+                    </span>
+                    <h6 data-lat="${route.lat}" data-lng="${route.lng}" data-sortkey="${route.sortKey}" data-category="${route.category}"> data-detailplanid="${route.detailPlanId}"${route.placeName}</h6>
+                </div>`
+            );
+        } else if (route.category === 'MEMO') {
+                routeElement.html(
+                    `<div class="memo-block flex-container">
+                        <h6 data-lat="${route.lat}" data-lng="${route.lng}" data-sortkey="${route.sortKey}" data-category="${route.category}">${route.placeName}</h6>
+                        <img class="modify-icon" src="/images/plan/edit.png" data-routeid="${route.id}"  data-detailplanid="${route.detailPlanId}" data-daynum="${route.day}">
+                    </div>`
+                );
+            }
+
+            // Delete icon
+            routeElement.append(
+                `<div class="delete-icon position-absolute" data-routeid="${route.id}" data-detailplanid="${route.detailPlanId}" data-daynum="${route.day}" style="right: -15px;top: -3px; display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#d3d3d3" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.646 4.646a.5.5 0 1 1 .708-.708L8 7.293l2.646-2.647a.5.5 0 1 1 .708.708L8.707 8l2.647 2.646a.5.5 0 1 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 1 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>`
+            );
+                detailPlanElement.append(routeElement);
+     });//routes.forEach((route, index) => {
 
     // 버튼 추가
     const btnSection = $('<div class="d-flex flex-row btn-section"></div>').html(
-        `<div class="btn"><button type="button" class="btn btn-outline-secondary place-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">장소추가</button></div>
-        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">메모추가</button></div>
-        <div class="btn"><button type="button" class="btn btn-outline-secondary modify" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlan_id}">수정</button></div>
+        `<div class="btn"><button type="button" class="btn btn-outline-secondary place-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlanId}">장소추가</button></div>
+        <div class="btn"><button type="button" class="btn btn-outline-secondary memo-add" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlanId}">메모추가</button></div>
+        <div class="btn"><button type="button" class="btn btn-outline-secondary modify" data-day="${dayToUpdate}" data-detailplanid="${routes[0].detailPlanId}">수정</button></div>
         `
     );
     detailPlanElement.append(btnSection);
 
-    bindPlaceAddButtons();//버튼 이벤트 제어
+    bindPlaceAddButtons(routes);//버튼 이벤트 제어
 
     console.log('updateRoute-category: ', category);
     if(category === 'PLACE'){
@@ -422,21 +450,26 @@ function updateRoute(dayToUpdate, routes) {
      3) 검색창(autocomplete)활성화 (disabled를 false로)
      => 동적으로 추가된 버튼들에도 동일한 이벤트 핸들러 바인딩을 위함.
 */
-function bindPlaceAddButtons() {
+function bindPlaceAddButtons(routes) {
+
     const autocompleteInput = $('#autocomplete');
 
-    // 장소, 메모 추가 버튼
+    // 장소추가, 메모추가, 수정 버튼
     const placeAddBtn = $('.place-add');
     const memoAddBtn = $('.memo-add');
     const modifyBtn = $('.modify');
 
     //'장소추가'버튼
     placeAddBtn.off('click').on('click', function() {
+       $('.delete-icon').hide();
+       $('.modify-icon').hide();
+       $('.memoInput-section').remove();
 
         placeAddBtn.removeClass('active');
         $(this).addClass('active');
         memoAddBtn.removeClass('active');
         modifyBtn.removeClass('active');
+        modifyBtn.text('수정');
 
         dayNumber = $(this).attr('data-day');
         console.log('placeAddBtn-dayNumber:', dayNumber);
@@ -456,16 +489,18 @@ function bindPlaceAddButtons() {
 
     //'메모추가'버튼
     memoAddBtn.off('click').on('click', function(){
+        $('.delete-icon').hide();
+        $('.modify-icon').hide();
+
         placeAddBtn.removeClass('active');
         modifyBtn.removeClass('active');
+        modifyBtn.text('수정');
         autocompleteInput.prop('disabled', true);
         autocompleteInput.val('');
-
 
         const memoInputSectionId = '#memoInputSection-' + dayNumber;
         memoAddBtn.removeClass('active');
         $(this).addClass('active');
-
 
         dayNumber = $(this).attr('data-day');
         console.log('memoAddBtn-dayNumber: ', dayNumber);
@@ -479,32 +514,67 @@ function bindPlaceAddButtons() {
         //메모 입력 섹션 생성
         if($(memoInputSectionId).length == 0 ){
             let memoInputSection =
-                `<div id="memoInputSection-${dayNumber}" class="input-group mb-3">
+                `<div id="memoInputSection-${dayNumber}" class="input-group mb-3 memoInput-section">
                     <input type="text" class="form-control" placeholder="메모를 입력하세요" aria-label="Memo" aria-describedby="button-addon2">
                     <button class="btn btn-outline-secondary" type="button" id="addMemo" data-detailplanid=${detailPlanId}>추가</button>
                 </div>`;
             $(this).closest('.btn-section').before(memoInputSection);
         } else {
             $(memoInputSectionId).remove();
+            $(this).removeClass('active');
         }
     });//
 
     //수정 버튼
     modifyBtn.off('click').on('click', function(){
-        placeAddBtn.removeClass('active');
-        memoAddBtn.removeClass('active');
 
-        //
-        autocompleteInput.val('');
-        autocompleteInput.prop('disabled', true);
-        $('#placeInfo').css('display', 'none').html('');
+        const container = $(this).closest('.container');
+        const deleteIcons = container.find('.delete-icon');
+        const modifyIcons = container.find('.modify-icon');
+        $('.memoInput-section').remove();
 
-        modifyBtn.removeClass('active');
-        $(this).addClass('active');
+        let sortable = container.data('sortable-instance');
+
+        if($(this).hasClass('active')){//수정 끝
+            $(this).removeClass('active');
+            $(this).text('수정');
+            deleteIcons.hide();
+            modifyIcons.hide();
+
+            // drag and drop 비활성화
+            if (sortable) {
+                disableDragAndDrop(sortable);
+                container.removeData('sortable-instance');
+            }
+        } else {//수정 시작
+            $('.delete-icon').hide();
+            $('.modify-icon').hide();
+
+            placeAddBtn.removeClass('active');
+            memoAddBtn.removeClass('active');
+
+            autocompleteInput.val('');
+            autocompleteInput.prop('disabled', true);
+            $('#placeInfo').css('display', 'none').html('');
+
+            modifyBtn.removeClass('active');
+            modifyBtn.text('수정');
+            $(this).addClass('active');
+            $(this).text('완료');
+
+            deleteIcons.show();
+            modifyIcons.show();
+
+            // drag and drop 활성화
+            sortable = enableDragAndDrop(container.get(0));
+            container.data('sortable-instance', sortable);
 
 
+        }//else
     });//modifyBtn
-}
+
+}//function bindPlaceAddButtons() {
+
 
 //------------------------------------------초기 마커 추가 함수
 function addMarkersFromHTML(){
@@ -629,7 +699,7 @@ function addMarkersFromRoutes(routes) {
         map.fitBounds(bounds);
     }
 }
-//-----------------------deleteRoute 루트 삭제
+//--------------------------------deleteRoute 루트 삭제
 function deleteRoute(routeIdToDelete, dayNumber, detailPlanId){
     console.log("deleteRoute routeid- ", routeIdToDelete);
     console.log("deleteRoute daynum- ", dayNumber);
@@ -651,6 +721,57 @@ function deleteRoute(routeIdToDelete, dayNumber, detailPlanId){
             error: function(xhr, status, error) {
                 console.log('delete Route Error:', error);
             }
-        });//$.ajax({
+    });//$.ajax({
 
 }//detleteRoute(routeIdToDelete)
+
+//---------------------------modifyMemo 메모 수정
+function modifyMemo(modifyRouteId, updatedMemoContent, detailPlanId, dayNumber){
+    console.log('-------modifyMemo-detailPlanid, daynNumner', detailPlanId, dayNumber);
+    $.ajax({
+           url: '/modifyMemo',
+           method: 'POST',
+           data: { modifyRouteId: modifyRouteId, updatedMemoContent: updatedMemoContent},
+           success: function(response) {
+               if(response.status == 'success') {
+                    console.log('메모가 성공적으로 업데이트되었습니다.');
+                    refreshDetailPlan(detailPlanId, dayNumber);
+
+               }else{
+                    console.log('메모 업데이트에 실패했습니다.');
+               }
+           },
+           beforeSend : function(xhr)
+                { //데이터를 전송하기 전에 헤더에 csrf값을 설정
+                   xhr.setRequestHeader(header, token);
+           },
+           error: function(xhr, status, error) {
+                console.log('메모 업데이트 중 오류 발생:', error);
+           }
+    });//$.ajax({
+
+};//function modifyMemo(modifyRouteId, updatedMemoContent){
+
+
+//------------------------------------- Drag and Drop으로 일정 순서 바꾸기
+function enableDragAndDrop(container) {
+    let sortable = new Sortable(container, {
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        draggable: '.place-block',
+        onEnd: function(evt) {
+            const itemEl = evt.item;  // dragged HTMLElement
+            const itemOffset = $(itemEl).offset();
+            const itemWidth = $(itemEl).width();
+            const itemHeight = $(itemEl).height();
+
+            // log the move event
+            console.log(`Item ${itemEl.textContent.trim()} moved from ${evt.oldIndex} to ${evt.newIndex}`);
+        }
+    });
+    return sortable;
+}//function enableDragAndDrop() {
+
+function disableDragAndDrop(sortable) {
+    sortable.destroy();
+}//function disableDragAndDrop(sortables) {

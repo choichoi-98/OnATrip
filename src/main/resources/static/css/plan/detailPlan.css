@@ -91,3 +91,18 @@
     display: block;
 
 }
+
+.flex-container{
+    display:flex;
+    align-items: center;
+}
+
+.flex-container h6{
+    margin: 0;
+}
+
+.flex-container img {
+    width: 20px;
+    margin-left: auto;
+    display:none;
+}

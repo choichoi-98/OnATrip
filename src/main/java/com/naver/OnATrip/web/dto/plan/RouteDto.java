@@ -84,4 +84,21 @@ public class RouteDto {
         this.lng = route.getLng();
         this.sortKey = route.getSortKey();
     }
+
+    @Override
+    public String toString() {
+        return "RouteDto{" +
+                "id=" + id +
+                ", detailPlan_id=" + detailPlan_id +
+                ", day_number=" + day_number +
+                ", category='" + category + '\'' +
+                ", routeSequence=" + routeSequence +
+                ", placeName='" + placeName + '\'' +
+                ", memo='" + memo + '\'' +
+                ", address='" + address + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", sortKey='" + sortKey + '\'' +
+                '}';
+    }
 }

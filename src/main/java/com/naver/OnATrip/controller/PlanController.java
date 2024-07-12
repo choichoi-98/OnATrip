@@ -120,7 +120,7 @@ public class PlanController {
     @PostMapping("addRoute")
     public ResponseEntity<?> addRoute(@RequestBody RouteDto routeData){
         logger.info("planController-addRoute");
-
+        logger.info("Received route data: " + routeData.toString());
         RouteDto newRoute = routeService.addRoute(routeData);
 
         return ResponseEntity.ok(newRoute);
@@ -150,4 +150,19 @@ public class PlanController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);  // 실패 시 500 응답
         }
     }
+
+    //modifyMemo-메모 내용 수정
+    @PostMapping("/modifyMemo")
+    @ResponseBody
+    public Map<String, String> modifyMemo(@RequestParam("modifyRouteId") Long routeId,
+                           @RequestParam("updatedMemoContent") String memoContent){
+
+        boolean isUpdated = routeService.modifyMemo(routeId, memoContent);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", isUpdated ? "success": "fail");
+
+        return  response;
+    }
+
 }

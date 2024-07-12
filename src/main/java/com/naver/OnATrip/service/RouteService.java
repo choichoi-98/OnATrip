@@ -28,10 +28,12 @@ public class RouteService {
     }
 
     public RouteDto addRoute(RouteDto routeDto){
-        logger.info("RouteService-addRoute");
+        Long detailPlanId = routeDto.getDetailPlan_id();
+        int dayNumber = routeDto.getDay_number();
+        logger.info("findMaxRouteSequence 매개변수 - detailPlanId: {}, dayNumber: {}", detailPlanId, dayNumber);
 
         // 현재 day_number에 대한 routeSequence 최댓값
-        Optional<Integer> maxRouteSequence = routeRepository.findMaxRouteSequence(routeDto.getDetailPlan_id(), routeDto.getDay_number());
+        Optional<Integer> maxRouteSequence = routeRepository.findMaxRouteSequence( detailPlanId, dayNumber);
 
         // 새로운 routeSequence 값 설정
         int newRouteSequence = maxRouteSequence.orElse(0) + 1;
@@ -57,5 +59,10 @@ public class RouteService {
     public boolean deleteRoute(Long routeId) {
         logger.info("RouteService-deleteRoute - routeId", routeId);
         return routeRepository.deleteRouteById(routeId);
+    }
+
+    public boolean modifyMemo(Long routeId, String memoContent) {
+        logger.info("RouteService-modifyMemo- routeId ", routeId, memoContent);
+        return routeRepository.modifyMemo(routeId, memoContent);
     }
 }

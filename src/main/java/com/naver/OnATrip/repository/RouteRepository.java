@@ -62,6 +62,7 @@ public class RouteRepository {
     @Transactional
     //routeSequence 최대값 반환
     public Optional<Integer> findMaxRouteSequence(Long detailPlanId, int dayNumber){
+        logger.info("findMaxRouteSequence-detailPlanId, dayNumber", detailPlanId, dayNumber);
         Integer maxSequence = queryFactory
                 .select(route.routeSequence.max())
                 .from(route)
@@ -69,6 +70,7 @@ public class RouteRepository {
                         .and(route.day_number.eq(dayNumber)))
                 .fetchOne();
 
+        logger.info("max_sequence - ", maxSequence);
         return Optional.ofNullable(maxSequence);
 
     }
@@ -81,5 +83,15 @@ public class RouteRepository {
                 .execute();// 삭제된 행의 수 반환
 
         return deletedCount > 0;
+    }
+
+    @Transactional
+    public boolean modifyMemo(Long routeId, String memoContent) {
+        long updatedCount = queryFactory.update(route)
+                .set(route.place_name, memoContent)
+                .where(route.id.eq(routeId))
+                .execute();
+
+        return updatedCount > 0;
     }
 }
