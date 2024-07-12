@@ -1,11 +1,10 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.pay.Item;
-import com.naver.OnATrip.entity.pay.Pay;
+import com.naver.OnATrip.entity.pay.Payments;
 import com.naver.OnATrip.entity.pay.PrePaymentEntity;
 import com.naver.OnATrip.service.ItemService;
 import com.naver.OnATrip.service.PayService;
-import com.naver.OnATrip.web.dto.pay.ItemDto;
 import com.naver.OnATrip.web.dto.pay.PayInfoDto;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
@@ -13,16 +12,12 @@ import com.siot.IamportRestClient.response.Payment;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -30,7 +25,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PayController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PayController.class);
 
     private final PayService payService;
     private final ItemService itemService;
@@ -59,7 +53,6 @@ public class PayController {
         log.info("Preparing payment: {}", request);
         payService.postPrepare(request);
         log.info("Payment prepared successfully for merchant_uid: {}", request.getMerchantUid());
-
     }
 
     @PostMapping("/payPage")
@@ -74,6 +67,8 @@ public class PayController {
         return "pay/payPage";
     }
 
+    @PostMapping("/pay/validate")
+    @ResponseBody
     public Payment validatePayment(@RequestBody PayInfoDto request)
                     throws IamportResponseException, IOException{
         log.info("Validating payment: {}", request);
