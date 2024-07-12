@@ -1,7 +1,6 @@
 package com.naver.OnATrip.service;
 
 //import com.naver.OnATrip.entity.pay.PrePaymentEntity;
-import com.naver.OnATrip.entity.pay.Pay;
 import com.naver.OnATrip.entity.pay.PrePaymentEntity;
 import com.naver.OnATrip.repository.pay.PayRepository;
 import com.naver.OnATrip.repository.pay.PrePaymentRepository;

@@ -45,14 +45,17 @@ public class Orders {
 
     private BigDecimal totalPrice;  //총 가격
 
+    private String orderUid; // 주문 번호
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime orderDate;    //주문 시간
 
     private Boolean paymentStatus = false;  //결제상태
 
-    @OneToMany(mappedBy = "orders")
-    private List<Pay> payments = new ArrayList<>();  //결제 내역
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pay_id")
+    private Payments payments;  //결제 내역
 
 
     public void orderConfirm(String merchantUid, OrderDto orderDto) {
@@ -67,15 +70,15 @@ public class Orders {
     }
 
     @Builder
-    public Orders(Long id, Member member, List<Item> items, com.naver.OnATrip.entity.pay.payMethod payMethod, String merchantUid, BigDecimal totalPrice, LocalDateTime orderDate, Boolean paymentStatus, List<Pay> payments) {
+    public Orders(Long id, Member member, String orderUid, List<Item> items, com.naver.OnATrip.entity.pay.payMethod payMethod, String merchantUid, BigDecimal totalPrice, LocalDateTime orderDate, Boolean paymentStatus) {
         this.id = id;
         this.member = member;
+        this.orderUid = orderUid;
         this.items = items;
         this.payMethod = payMethod;
         this.merchantUid = merchantUid;
         this.totalPrice = totalPrice;
         this.orderDate = orderDate;
         this.paymentStatus = paymentStatus;
-        this.payments = payments;
     }
 }

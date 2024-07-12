@@ -59,21 +59,23 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>총 결제 금액</span>
-                        <strong id="total_price" th:text="${item.itemPrice}"></strong>    <!-- th:text="${totalPrice}"로 바꾸기 -->
+                        <strong id="total_price" th:text="${item.itemPrice}"></strong>
+                        <!-- th:text="${totalPrice}"로 바꾸기 -->
                     </li>
                 </ul>
-                <form class="card p-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="프로모션 코드">
-                        <button type="button" class="btn btn-secondary">적용</button>
-                    </div>
-                </form>
+                <!--                <form class="card p-2">-->
+                <!--                    <div class="input-group">-->
+                <!--                        <input type="text" class="form-control" placeholder="프로모션 코드">-->
+                <!--                        <button type="button" class="btn btn-secondary">적용</button>-->
+                <!--                    </div>-->
+                <!--                </form>-->
             </div>
 
             <div class="col-md-7 col-lg-8">
                 <h4 class="mb-3">구독 기간</h4>
                 <div class="my-3">
-                    <p class="font-weight-bolder" th:text="${item.period}" id="subscribe_period" style="display: none"></p>
+                    <p class="font-weight-bolder" th:text="${item.period}" id="subscribe_period"
+                       style="display: none"></p>
                     <p id="subscribe_date"></p>
                 </div>
                 <hr class="my-4">
@@ -93,7 +95,8 @@
 
                 <hr class="my-4">
 
-                <button id="submit" class="w-100 btn btn-primary btn-lg" type="submit">결제하기</button>
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                <button id="submit" class="w-100 btn btn-primary btn-lg" type="button">결제하기</button>
             </div>
         </div>
     </main>
@@ -132,7 +135,7 @@
         subscribeDate.text(formatCurrentDate + ' - ' + formatEndDate);
 
         let merchant_uid = 'p' + new Date().getTime() + '_';
-        let totalPrice =  $('#total_price').text();
+        let totalPrice = $('#total_price').text();
 
         //** 결제정보 사전 검증 - 페이지 로드시 주문번호와 결제 예정금액을 전달 */
         $.ajax({
@@ -140,21 +143,21 @@
             method: "post",
             contentType: "application/json",
             data: JSON.stringify({
-                merchant_uid : merchant_uid,    //가맹점 주문번호
-                amount : totalPrice             //결제 예정 금액
+                merchant_uid: merchant_uid,    //가맹점 주문번호
+                amount: totalPrice             //결제 예정 금액
             })
             //로그 확인
             ,
-            beforeSend: function(xhr) {
+            beforeSend: function (xhr) {
                 console.log("Sending data: ", {
                     merchant_uid: merchant_uid,
                     amount: totalPrice
                 });
             },
-            success: function(response) {
+            success: function (response) {
                 console.log("Response received: ", response);
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.log("Error: ", textStatus, errorThrown);
             }
 
@@ -162,17 +165,18 @@
     })
 
 
-    $('#submit').click(function () {    //결제 요청 스크립트
+    $('#submit').click(function (event) {    //결제 요청 스크립트
+        event.preventDefault(); // 기본 동작 막기
 
-        if (!$('#agree-services').is(':checked')){
+        if (!$('#agree-services').is(':checked')) {
             alert('구독 서비스 운영정책 이용약관 동의 사항에 체크 해야 합니다.');
             return;
         }
-        if (!$('#agree-condition').is(':checked')){
+        if (!$('#agree-condition').is(':checked')) {
             alert('구매 조건 확인 및 동의 사항에 체크해야 합니다.');
             return;
         }
-        if (!$('#agree-refund').is(':checked')){
+        if (!$('#agree-refund').is(':checked')) {
             alert('환불 안내 및 동의 사항에 체크해야 합니다.');
             return;
         }
@@ -192,61 +196,68 @@
             merchant_uid: 'p' + new Date().getTime() + '_' /* +memberId-*/,   // 주문번호
             name: paymentGoods,          //상품명
             amount: totalPrice           //금액
-            ,m_redirect_url: "{/main}"        //리디렉션 될 url
+            //,m_redirect_url: "{/main}"        //리디렉션 될 url
         }, function (rsp) {
             //결제 완료시
             if (rsp.success) {
-               $.ajax({
-                   url: "pay/validate",
-                   method: "POST",
-                   contentType: "application/json",
-                   data: JSON.stringify({
-                       imp_uid: rsp.imp_uid,
-                       merchant_uid: rsp.merchant_uid,
-                   }),
-               }).done(function (data){
+                $.ajax({
+                    url: "/pay/validate",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid,
+                    }),
+                }).done(function (data) {
 
                     var msg = '결제가 완료되었습니다.';
                     var buyerInfo = {
                         "merchant_uid": rsp.merchant_uid,
-                        "userid": rsp.buyer_name,
+                        // "userid": rsp.buyer_name,
                         "pay_method": rsp.pay_method,
-                        "name": rsp.name,
+                        //"name": rsp.name,
                         "amount": rsp.paid_amount
                     }
 
                     var orderInfo = {
                         "merchant_uid": rsp.merchant_uid,
-                        "userid": userid,
+                        // "userid": userid,
                         "pay_method": rsp.pay_method,
-                        "name": rsp.name,
+                        // "name": rsp.name,
                         "amount": rsp.paid_amount,
                     }
 
-                   //결제 정보 저장
+                    //결제 정보 저장
                     $.ajax({
-                        type:"post",
-                        url:"save_buyerInfo",
+                        method: "post",
+                        url: "/save_buyerInfo",
                         contentType: "application/json",
                         data: JSON.stringify(buyerInfo),
-                        success: function (response){
+                        success: function (response) {
                             console.log("결제정보 저장 완료");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("결제정보 저장 실패:", textStatus, errorThrown);
                         }
+
                     });
 
                     //주문 정보 저장
-                   $.ajax({
-                       type: "post",
-                       url: "save_orderInfo",
-                       contentType: "application/json",
-                       data: JSON.stringify(orderInfo),
-                       success:function (resp){
-                           console.log("주문 완료");
-                           alert('주문이 완료되었습니다.');
-                           window.location.href = '/main';
-
-                       }
-                   });
+                    $.ajax({
+                        method: "post",
+                        url: "/save_orderInfo",
+                        contentType: "application/json",
+                        data: JSON.stringify(orderInfo),
+                        success: function (resp) {
+                            console.log("주문 완료");
+                            alert('주문이 완료되었습니다.');
+                            window.location.href = '/main';
+                        }
+                        ,
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("주문 정보 저장 실패:", textStatus, errorThrown);
+                        }
+                    });
                 });// done end
 
             } else {
