@@ -1,21 +1,32 @@
 package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.entity.EmailMessage;
+import com.naver.OnATrip.entity.VerifyCode;
+import com.naver.OnATrip.repository.VerifyRepository;
+import com.naver.OnATrip.web.dto.member.VerifyCodeDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
+    private final VerifyRepository verifyRepository;
     private static int number;
 
     @Value("${spring.mail.username}")
@@ -77,4 +88,66 @@ public class EmailService {
 
         return number;
     }
+
+    public VerifyCode saveCode(VerifyCodeDto codeDto) {
+        // 이미 해당 이메일이 존재한다면 삭제
+        if (verifyRepository.existsByEmail(codeDto.getEmail())) {
+            verifyRepository.deleteByEmail(codeDto.getEmail());
+        }
+        // 새로운 VerifyCode 엔티티 생성 및 저장
+        VerifyCode verifyCode = new VerifyCode(codeDto);
+
+        return verifyRepository.save(verifyCode);
+    }
+
+    public boolean  changePassword(VerifyCode verifyCode) {
+        try {
+                MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+                helper.setFrom(from + "@naver.com");
+                helper.setTo(verifyCode.getEmail());
+                helper.setSubject("OnATrip 비밀번호 재설정 링크");
+                String body = "<p>비밀번호 재설정을 위해 아래 링크를 클릭하세요:</p>"
+                        + "<a href=\"http://localhost:9100/member/findPassword/" + verifyCode.getCode() + "\">"
+                        + "비밀번호 재설정 링크</a>";
+
+                helper.setText(body, true);
+
+                javaMailSender.send(mimeMessage);
+                return true;
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+//    @PostMapping(value = "/findPassword/{code}")
+//    public ResponseEntity<HashMap> changePassword(@RequestBody MemberDto.PasswordDto requestDto, @PathVariable String code){
+//
+//        VerifyCode verifyCode = verifyCodeService.findByCode(code);
+//
+//        HashMap<String, Object> responseMap = new HashMap<>();
+//
+//        if(verifyCode == null){
+//            responseMap.put("status", 401);
+//            responseMap.put("message", "만료되었거나 잘못된 링크");
+//            return new ResponseEntity<HashMap>(responseMap, HttpStatus.CONFLICT);
+//        }
+//
+//
+//        userService.updatePassword(verifyCode.getEmail(), requestDto);
+//
+//        if(true) {
+//            verifyCodeService.deleteByEmail(verifyCode.getEmail());
+//            responseMap.put("status", 200);
+//            responseMap.put("message", "비밀번호 변경 성공");
+//            return new ResponseEntity<HashMap> (responseMap, HttpStatus.OK);
+//        }
+//        else{
+//            responseMap.put("status", 500);
+//            responseMap.put("message", "비밀번호 변경 실패");
+//            return new ResponseEntity<HashMap> (responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }

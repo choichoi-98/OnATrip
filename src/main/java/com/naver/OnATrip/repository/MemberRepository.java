@@ -2,6 +2,7 @@ package com.naver.OnATrip.repository;
 
 
 import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.entity.VerifyCode;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
 
     Optional<Member> findByEmail(String email);
+
+    void deleteByEmail(String email);
+
 }

@@ -52,30 +52,17 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-//        if(member != null){
-//            return new MemberDetails(member);
-//        }
-//        return null;
-
-        if (!optionalMember.isPresent()) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
+        if (optionalMember==null){
+            throw new UsernameNotFoundException(email);
         }
 
         Member member = optionalMember.get();
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if ("admin".equals(member.getRole())) {
-            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
-        } else {
-            authorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
-        }
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
-                .authorities(authorities)
-                .build();
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + member.getRole().name()));
+
+        return new org.springframework.security.core.userdetails.User(member.getEmail(), member.getPassword(), authorities);
     }
 
 
