@@ -3,7 +3,9 @@ package com.naver.OnATrip.entity.pay;
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.web.dto.pay.OrderDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @Table(name = "orders")
+@NoArgsConstructor
 public class Orders {
 
     @Id
@@ -52,6 +54,7 @@ public class Orders {
     @OneToMany(mappedBy = "orders")
     private List<Pay> payments = new ArrayList<>();  //결제 내역
 
+
     public void orderConfirm(String merchantUid, OrderDto orderDto) {
         this.merchantUid = merchantUid;
         this.totalPrice = orderDto.getTotalPrice();
@@ -63,4 +66,16 @@ public class Orders {
         this.paymentStatus = paymentStatus;
     }
 
+    @Builder
+    public Orders(Long id, Member member, List<Item> items, com.naver.OnATrip.entity.pay.payMethod payMethod, String merchantUid, BigDecimal totalPrice, LocalDateTime orderDate, Boolean paymentStatus, List<Pay> payments) {
+        this.id = id;
+        this.member = member;
+        this.items = items;
+        this.payMethod = payMethod;
+        this.merchantUid = merchantUid;
+        this.totalPrice = totalPrice;
+        this.orderDate = orderDate;
+        this.paymentStatus = paymentStatus;
+        this.payments = payments;
+    }
 }

@@ -12,12 +12,12 @@ import java.util.List;
 
 @Getter
 public class OrderDto {
-    private Long id;
+    private Long id;    //주문 PK번호
 
-    private Member member;
+    private Long memberId;  //주문한 회원 ID
 
     private List<Item> items = new ArrayList<>();   //주문 상품 리스트
-    private String orderId;     //주문 아이디
+
     private int itemId;         //상품 번호
 
     payMethod payMethod;        //결제방식
