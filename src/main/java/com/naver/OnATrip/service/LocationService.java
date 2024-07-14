@@ -90,7 +90,7 @@ public class LocationService {
             locationDTO.setCity(location.getCity());
             locationDTO.setDescription(location.getDescription());
             locationDTO.setLocationType(location.getLocationType());
-            locationDTO.setImagePath(location.getImage()); // 필드 이름 변경
+            locationDTO.setImagePath(location.getImage());
             locationDTOs.add(locationDTO);
         }
 
@@ -220,5 +220,6 @@ public class LocationService {
         List<Location> overseasLocations = locationRepository.findByLocationType("overseas");
         return overseasLocations.stream().map(LocationDTO::new).collect(Collectors.toList());
     }
+
 
 }

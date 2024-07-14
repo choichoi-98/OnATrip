@@ -5,11 +5,14 @@ import com.naver.OnATrip.service.LocationService;
 import com.naver.OnATrip.web.dto.location.LocationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class MainController {
@@ -22,24 +25,33 @@ public class MainController {
     }
 
     @GetMapping("/")
+    // 메인 주의 여기 주의 주의 주의 주의
     public String main(Model model) {
+        logger.info("main---------------------------------------------------------");
         List<LocationDTO> allLocations = locationService.getAllLocations();
         model.addAttribute("allLocations", allLocations);
-        logger.debug("Printing all locations: {}", allLocations);
+        logger.info("Printing all locations: {}", allLocations);
 
         List<LocationDTO> domesticLocations = locationService.getDomesticLocations();
         model.addAttribute("domesticLocations", domesticLocations);
-        logger.debug("Printing domestic locations: {}", domesticLocations);
+        logger.info("Printing domestic locations: {}", domesticLocations);
 
         List<LocationDTO> internationalLocations = locationService.getOverseasLocations();
         model.addAttribute("internationalLocations", internationalLocations);
-        logger.debug("Printing international locations: {}", internationalLocations);
+        logger.info("Printing international locations: {}", internationalLocations);
 
-        logger.debug("All locations count: {}", allLocations.size());
-        logger.debug("Domestic locations count: {}", domesticLocations.size());
-        logger.debug("International locations count: {}", internationalLocations.size());
 
         return "main";
     }
+
+    // 여행지 모달 불러오기
+    @GetMapping("/api/location/{id}")
+    public ResponseEntity<LocationDTO> getLocationById(@PathVariable(value = "id") Long id) {
+        LocationDTO locationDTO = locationService.getLocationById(id);
+
+        logger.info("----------------------", id);
+        return ResponseEntity.ok(locationDTO);
+    }
+
 
 }

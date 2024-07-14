@@ -33,4 +33,7 @@ public class LocationDTO {
         this.locationType = location.getLocationType();
         this.imagePath = location.getImage();
     }
+
+    public LocationDTO(LocationDTO location) {
+    }
 }
