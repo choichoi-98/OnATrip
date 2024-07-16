@@ -45,13 +45,10 @@ public class MainController {
     }
 
     // 여행지 모달 불러오기
-    @GetMapping("/api/location/{id}")
-    public ResponseEntity<LocationDTO> getLocationById(@PathVariable(value = "id") Long id) {
-        LocationDTO locationDTO = locationService.getLocationById(id);
+    @GetMapping("/location/{id}")
+    public ResponseEntity<LocationDTO> getLocation(@PathVariable("id") Long locationId) {
+        LocationDTO location = locationService.getLocationById(locationId);
 
-        logger.info("----------------------", id);
-        return ResponseEntity.ok(locationDTO);
+        return ResponseEntity.ok(location);
     }
-
-
 }

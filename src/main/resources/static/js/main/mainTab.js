@@ -2,6 +2,20 @@ $(document).ready(function() {
     // 페이지 로드 시 모달 숨김 처리
     $('#modal-root').hide();
 
+    // 오늘 날짜 가져오기
+    var today = new Date();
+    today.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정하여 날짜만 비교
+
+    // 각 위치 항목에 대해 endDate 확인
+    $('[data-enddate]').each(function() {
+        var endDate = new Date($(this).data('enddate'));
+        endDate.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정하여 날짜만 비교
+
+        if (today.getTime() !== endDate.getTime()) {
+            $(this).find('.new-badge').show();
+        }
+    });
+
     // 검색 입력 처리
     $('input[name="search"]').on('input', function() {
         var searchText = $(this).val().toLowerCase(); // 입력된 검색어를 소문자로 변환
@@ -65,9 +79,8 @@ $(document).ready(function() {
     }
 
     // 목적지 클릭 시 모달 열기
-    $('#tab-all, #tab-domestic, #tab-international').on('click', 'div', function() {
-        var locationId = $(this).attr('data-location-id'); // 위치 ID 가져오기
-        console.log(locationId);
+    $('#tab-all, #tab-domestic, #tab-international').on('click', '.h-auto.overflow-hidden', function() {
+        var locationId = $(this).attr('data-location-id'); // 위치 ID 가져오기 (data- 속성 사용)
         showModal(locationId);
     });
 
@@ -78,13 +91,25 @@ $(document).ready(function() {
 
     // 모달 열기 함수 수정
     function showModal(locationId) {
-        // 선택된 위치의 세부 정보를 가져와서 모달에 표시하는 로직
-        // 여기서는 모달 컨테이너를 페이드인하여 보여주는 예시
-        $('#modal-root').fadeIn(); // 모달 컨테이너 표시
+        $.ajax({
+            url: '/location/' + locationId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Server에서 가져온 데이터를 모달에 표시
+                $('#location-city').text(data.city);
+                $('#location-country').text(data.countryName);
+                $('#location-image').attr('src', data.imagePath);
+                console.log('Image Path:', data.imagePath);  // 이미지 경로 콘솔 출력
+                $('#location-description').text(data.description);
 
-        // 선택된 위치의 세부 정보를 가져와서 모달 내용을 업데이트하는 로직 추가 필요
-        // 예를 들어 AJAX를 사용하여 서버에서 데이터를 가져오는 경우
-        // 이 예시에서는 고정된 컨텐츠를 보여주도록 구현되어 있습니다.
+                // 모달을 페이드인하여 보여줌
+                $('#modal-root').fadeIn();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching location data:', error);
+            }
+        });
     }
 
     // 모달 닫기 함수

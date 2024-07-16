@@ -191,6 +191,7 @@ $(document).ready(function() {
         formData.append('countryCode', countryCode);
         formData.append('city', city);
         formData.append('description', description);
+        formData.append('createDate', new Date()); // createDate 추가
 
         // 파일이 있는 경우에만 formData에 추가
         if (file) {
@@ -223,6 +224,7 @@ $(document).ready(function() {
                     countryCode: countryCode,
                     city: city,
                     description: description,
+                    createDate: formData.get('createDate') // 추가된 createDate 확인
                 });
 
                 // 여행지 추가 성공 시 추가적인 UI 업데이트 등의 작업 수행
