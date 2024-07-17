@@ -44,6 +44,10 @@ public class Member {
 
     }
 
+    public void updatePassword(MemberDTO.PasswordDto passwordDto) {
+        this.password = passwordDto.getNewPassword();
+    }
+
     //로그인시 비밀번호 확인
     public boolean passwdCheck(String pass){
         return this.password.equals(pass);

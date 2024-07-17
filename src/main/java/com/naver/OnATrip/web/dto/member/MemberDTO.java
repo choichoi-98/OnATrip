@@ -65,4 +65,16 @@ public class MemberDTO {
 
         return dto;
     }
+
+    // 비밀번호 변경을 위한 내부 클래스
+    @Getter
+    @Setter
+    public static class PasswordDto {
+        @NotBlank(message = "새 비밀번호를 입력해주세요")
+        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message= "비밀번호는 숫자,영문,특수문자 포함 8~16자리 입니다.")
+        private String newPassword;
+
+        @NotBlank(message = "새 비밀번호를 한번 더 입력해주세요")
+        private String newPasswordCheck;
+    }
 }

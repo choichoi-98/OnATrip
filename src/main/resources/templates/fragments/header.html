@@ -140,7 +140,9 @@
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="isAuthenticated()" href="#">마이페이지</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               sec:authorize="hasAnyAuthority('ROLE_USER')" href="#">1:1 문의</a>
+                               sec:authorize="hasAnyAuthority('ROLE_USER')" href="/myQNAList">문의내역</a>
+                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
+                               sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/memberQNA">문의내역</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                id="logoutBtn" sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
                         </div>

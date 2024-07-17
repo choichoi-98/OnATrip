@@ -85,6 +85,13 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    public String updatePassword(String email, MemberDTO.PasswordDto passwordDto) {
+        Member member = memberRepository.findByEmail(email).orElseGet(()-> null);
+            passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+            member.updatePassword(passwordDto);
+            return email;
+    }
+
 }
 
 
