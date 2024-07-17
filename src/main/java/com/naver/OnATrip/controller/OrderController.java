@@ -1,8 +1,9 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.pay.Orders;
-import com.naver.OnATrip.entity.pay.Payments;
+import com.naver.OnATrip.entity.pay.Payment;
 import com.naver.OnATrip.service.OrderService;
+import com.naver.OnATrip.service.PaymentService;
 import com.naver.OnATrip.web.dto.pay.OrderDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +20,61 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class OrderController {
 
     private final OrderService orderService;
+    private final PaymentService paymentService;
     private final HttpSession httpSession;
 
     @PostMapping("/save_buyerInfo") //결제 정보 저장
     @ResponseBody
-    public void save_buyerInfo(@RequestBody Payments request) {
-        log.info("Saving buyer information: {}", request);
+    public void save_buyerInfo(@RequestBody Payment request) {
+        System.out.println("Saving buyer information: {}");
         orderService.save_buyerInfo(request);
-        log.info("Buyer information saved successfully");
+        System.out.println("Buyer information saved successfully");
+//        log.info("Buyer information saved successfully");
     }
 
     @PostMapping("/save_orderInfo") //주문 정보 저장
     @ResponseBody
     public String orderDone(@RequestBody OrderDto request, Model model) {
-        log.info("Saving order information: {}", request);
+        System.out.println("Saving order information: {}");
 
         Orders orders = Orders.builder()
                 .merchantUid(request.getMerchantUid())
-                .totalPrice(request.getTotalPrice())
+                .amount(request.getAmount())
                 .build();
 
         orderService.save_orderInfo(orders);
-        log.info("Order information saved successfully for merchantUid: {}", request.getMerchantUid());
+        System.out.println("Order information saved successfully for merchantUid: {}");
 
 
         return request.getMerchantUid();
     }
+
+
+//    @PostMapping("/save_buyerInfo") //결제 정보 저장
+//    @ResponseBody
+//    public void save_buyerInfo(@RequestBody Payments request) {
+//        System.out.println("Saving buyer information: {}");
+//        orderService.save_buyerInfo(request);
+//        System.out.println("Buyer information saved successfully");
+////        log.info("Buyer information saved successfully");
+//    }
+
+//    @PostMapping("/save_orderInfo") //주문 정보 저장
+//    @ResponseBody
+//    public String orderDone(@RequestBody OrderDto request, Model model) {
+//        log.info("Saving order information: {}", request);
+//
+//        Orders orders = Orders.builder()
+//                .merchantUid(request.getMerchantUid())
+//                .totalPrice(request.getTotalPrice())
+//                .build();
+//
+//        orderService.save_orderInfo(orders);
+//        log.info("Order information saved successfully for merchantUid: {}", request.getMerchantUid());
+//
+//
+//        return request.getMerchantUid();
+//    }
 
 //    @PostMapping("/create")
 //    public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> payload){

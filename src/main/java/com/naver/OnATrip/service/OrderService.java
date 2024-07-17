@@ -1,10 +1,11 @@
 package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.entity.pay.Orders;
-import com.naver.OnATrip.entity.pay.Payments;
+import com.naver.OnATrip.entity.pay.Payment;
 import com.naver.OnATrip.repository.pay.ItemRepositoryCustom;
 import com.naver.OnATrip.repository.pay.OrderRepository;
 import com.naver.OnATrip.repository.pay.PayRepository;
+import com.naver.OnATrip.web.dto.pay.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,26 @@ public class OrderService {
     @Autowired
     private PayRepository payRepository;
 
-    public void save_buyerInfo(Payments request) {
+//    public  PaymentDto orderDone(String merchantUid) {
+//       Payment payment = payRepository.findByMerchantUid(merchantUid);
+//
+//       return paymentDto;
+//    }
+
+
+    @Transactional
+    public void save_buyerInfo(Payment request) {
         payRepository.save(request);
     }
 
-    public void save_orderInfo(Orders request){
+    @Transactional
+    public void save_orderInfo(Orders request) {
         orderRepository.save(request);
     }
+
+//    public void save_orderInfo(Orders request){
+//        orderRepository.save(request);
+//    }
 
 
 //    @Transactional
