@@ -23,9 +23,9 @@ public class DetailPlan {
 
     private Long memberId;//회원가입 기능 완료 시 수정필요
 
-    private String country;//->임시
-    //추후에 국가 및 나라 코드 google api에 맞춰서 수정 필요!
-    //locationId로 바꿔야 함.
+    private String countryName;
+
+    private String countryCode;
 
     private LocalDate perDate; //날짜별
 
@@ -36,11 +36,12 @@ public class DetailPlan {
     }
 
     @Builder
-    public DetailPlan( Long id,Plan plan, Long memberId, String country, LocalDate perDate) {
+    public DetailPlan( Long id,Plan plan, Long memberId, String countryName, String countryCode,  LocalDate perDate) {
         this.id = id;
         this.plan = plan;
         this.memberId = memberId;
-        this.country = country;
+        this.countryName = countryName;
+        this.countryCode = countryCode;
         this.perDate = perDate;
     }
 }

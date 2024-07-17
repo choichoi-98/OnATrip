@@ -43,6 +43,8 @@ $(document).ready(function(){
     //---완료 버튼 클릭 시
     $('.btn-get-started').on('click', function(){
         var dateRange = $('#datepicker-container').val();
+        var locationId = $(this).data('location-id');
+
         console.log(dateRange);
 
         if(!dateRange){
@@ -53,7 +55,7 @@ $(document).ready(function(){
             var endDate = dates[1];
             console.log(startDate);
             console.log(endDate);
-
+            console.log('location-id : ', locationId);
             $.ajax({
                 url: '/createPlan',
                 type: 'POST',
@@ -62,7 +64,8 @@ $(document).ready(function(){
                     startDate: startDate,
                     endDate: endDate,
                     memberId: 1, //-----임시, 추후 수정 필요
-                    country: '태국' //----임시, 추후 수정 필요
+                    locationId: locationId // 위치 ID 추가
+
                 }),
                 beforeSend: function(xhr) {
                     // 데이터를 전송하기 전에 헤더에 csrf값을 설정
@@ -70,7 +73,7 @@ $(document).ready(function(){
                 },
                 success: function(planId) {
                     console.log("Plan db삽입 성공");
-
+                    console.log('planId for createDetailPlan', planId);
                     createDetailPlan(dateRange, planId, header, token);
                 },
                 error: function(xhr, status, error) {

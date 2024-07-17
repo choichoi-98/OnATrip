@@ -1,5 +1,6 @@
 package com.naver.OnATrip.service;
 
+import com.naver.OnATrip.constant.RouteCategory;
 import com.naver.OnATrip.entity.plan.Route;
 import com.naver.OnATrip.repository.RouteRepository;
 import com.naver.OnATrip.web.dto.plan.RouteDto;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,16 +41,26 @@ public class RouteService {
         int newRouteSequence = maxRouteSequence.orElse(0) + 1;
         routeDto.setRouteSequence(newRouteSequence);
 
+        //calMaxSeq
+        int newMarkSeq = calMaxMarkSeq(detailPlanId);
+        routeDto.setMarkSeq(newMarkSeq);
+
         logger.info("RouteService-addRoute - DTO: {}", routeDto);
         Route route = routeDto.toEntity();//dto-> entity로 변환
 
-
-        Route saveRoute = routeRepository.addRoute(route);
+        Route saveRoute = routeRepository.save(route);
         logger.info("RouteService-addRoute - Saved Route: {}", saveRoute);
 
         return new RouteDto(saveRoute);
     }
 
+    public int calMaxMarkSeq(Long detailPlanId){
+        int placeBlockCount = routeRepository.countByDetailPlanIdAndCategory(detailPlanId, RouteCategory.PLACE);
+        logger.info("calMaxMarkSeq",String.valueOf(placeBlockCount));
+        int newMarkSeq = placeBlockCount + 1;
+
+        return  newMarkSeq;
+    }
 
 
     public List<RouteDto> findRoutesByDetailPlanId(Long detailPlanId){
@@ -65,4 +77,22 @@ public class RouteService {
         logger.info("RouteService-modifyMemo- routeId ", routeId, memoContent);
         return routeRepository.modifyMemo(routeId, memoContent);
     }
+
+    public boolean updateRouteSequence(List<RouteDto> routeDtos) {
+        try {
+            for (RouteDto routeDto : routeDtos) {
+                Route route = routeRepository.findById(routeDto.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid route ID: " + routeDto.getId()));
+                route.updateRouteSequence(routeDto.getRouteSequence());
+                routeRepository.save(route); // Save the updated entity
+            }
+            return true;
+        } catch (Exception e) {
+            logger.error("Error updating route sequences", e);
+            return false;
+        }
+    }
+
+
+
 }

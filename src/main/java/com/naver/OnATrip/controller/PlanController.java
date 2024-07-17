@@ -1,8 +1,8 @@
 package com.naver.OnATrip.controller;
 
+import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
 import com.naver.OnATrip.entity.plan.DetailPlan;
-import com.naver.OnATrip.entity.plan.Route;
 import com.naver.OnATrip.service.DetailPlanService;
 import com.naver.OnATrip.service.PlanService;
 import com.naver.OnATrip.service.RouteService;
@@ -14,10 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -25,16 +29,14 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-//@RequiredArgsConstructor
 public class PlanController {
     private final PlanService planService;
     private final DetailPlanService detailPlanService;
-    private RouteService routeService;
+    private final RouteService routeService;
     private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
     @Autowired
     public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService) {
-
         this.planService = planService;
         this.detailPlanService = detailPlanService;
         this.routeService = routeService;
@@ -43,19 +45,27 @@ public class PlanController {
     // GET 요청 처리 메서드
     //이용자 날짜 선택
     @GetMapping("/selectDate")
-    public String selectDate(){
+    public String selectDate(Model model){
+        Long locationId = 1L; // 예시로 1L로 설정
+        //-> 이거 나중에 연결하면 ok~
+
         logger.info("PlanController-selectDate");
-        return "plan/selectDate";
+
+        // Model 객체에 데이터 추가
+        model.addAttribute("locationId", locationId);
+
+        return "plan/selectDate"; // 해당하는 HTML 파일의 경로와 파일명을 반환
     }
 
     //Plan 생성
     @PostMapping("/createPlan")
     @ResponseBody
-    public String createPlan(@RequestBody PlanDto planDto){
+    public String createPlan(@RequestBody PlanDto planDto) {
         logger.info("PlanController-createPlan");
-        //planDto -> Plan entity
-        Plan plan = planDto.toEntity();
-        Long planId = planService.createPlan(plan);
+
+
+        // Plan 생성
+        Long planId = planService.createPlan(planDto);
 
         return String.valueOf(planId);
     }
@@ -68,6 +78,7 @@ public class PlanController {
         Long planId = Long.parseLong(request.get("planId"));
 
         Plan plan = planService.findPlanById(planId);
+
         PlanDto planDto = new PlanDto(plan);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -77,13 +88,18 @@ public class PlanController {
         LocalDate startDate = LocalDate.parse(dates[0].trim(), formatter);
         LocalDate endDate = LocalDate.parse(dates[1].trim(), formatter);
 
+        //여행 일자 계산
         List<LocalDate> datesList = planService.calculateDates(startDate, endDate);
+
+        //필요한 location 객체의 정보 저장
+        LocationProjection location = planService.findLocationById(plan.getLocation().getId());
 
         for (LocalDate date : datesList) {
             DetailPlanDto detailPlanDto = DetailPlanDto.builder()
                     .planId(planDto.getId())
                     .memberId(planDto.getMemberId())
-                    .country(planDto.getCountry())
+                    .countryName(location.getCountryName())
+                    .countryCode(location.getCountryCode())
                     .perDate(date)
                     .build();
 
@@ -101,12 +117,15 @@ public class PlanController {
     public ModelAndView detailPlan(ModelAndView mv,
                                    @RequestParam("planId") Long planId
                                    ) {
-
+        logger.info("Controller------------viewDetailPlan 0----------------");
         List<DetailPlan> detailPlans = detailPlanService.findDetailPlanByPlanId(planId);
         Map<Long, List <RouteDto>> routeMap = new HashMap<>();
         for (DetailPlan dp : detailPlans) {
-            logger.info("DetailPlan ID: {}, Country: {}, PerDate: {}", dp.getId(), dp.getCountry(), dp.getPerDate());
+            logger.info("DetailPlan ID: {}, Country: {}, PerDate: {}", dp.getId(), dp.getCountryName(), dp.getCountryCode() , dp.getPerDate());
             List<RouteDto> routes = routeService.findRoutesByDetailPlanId(dp.getId());
+            for (RouteDto route : routes) {
+                logger.info("RouteDto Id: {}, category: {}, day_number: {}, place_name: {}, sort_key: {}, mark_seq: {}", route.getId(), route.getCategory(), route.getDay_number(), route.getPlaceName(), route.getSortKey(), route.getMarkSeq());
+            }
             routeMap.put(dp.getId(),routes);
         }
 
@@ -165,4 +184,35 @@ public class PlanController {
         return  response;
     }
 
-}
+//    routeSequence update
+    @PostMapping("/updateRouteSequence")
+    @ResponseBody
+    public ResponseEntity<String> updateRouteSequence(@RequestBody List<RouteDto> routeDtos) {
+        logger.info("controller - updateRouteSequence---------------------");
+
+        for (RouteDto routeDto : routeDtos) {
+            logger.info("RouteDto: {}", routeDto.toString());
+        }
+
+        boolean result = routeService.updateRouteSequence(routeDtos);
+
+        if (result) {
+            return ResponseEntity.ok("Route sequence updated successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update route sequence");
+        }
+    }
+
+    //myPage 이동
+    @GetMapping("/myPage")
+    public String myPage(@AuthenticationPrincipal Principal principal){
+
+        logger.info("Principal Object: {}", principal);
+
+//        logger.info("Principal",principal.getName());
+
+        return "/myPage";
+    }
+
+}//public class PlanController {
+
