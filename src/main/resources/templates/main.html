@@ -85,21 +85,29 @@
                                 <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg"
                                      style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
                             </span>
+                                            <div class="absolute px-2 py-1 text-white bg-red-600 rounded md:px-3 top-2 -right-1 font-Montserrat new-badge"
+                                                 style="display:none;">
+                                                <div class="text-[10px] md:text-xs font-medium">NEW</div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
                                             <span class="location-city" th:text="${location.city}"></span>
-                                            <span class="new-badge text-[9px] md:text-xs font-medium text-red-600 ml-1 align-top"
-                                                  style="display:none;">NEW</span>
                                         </h1>
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
                                             <span class="location-country" th:text="${location.countryName}"></span>
-                                            <span class="new-badge text-[9px] md:text-xs font-medium text-red-600 ml-1 align-top"
-                                                  style="display:none;">NEW</span>
                                         </h1>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div id="no-results-all"
+                             class="w-full bg-[#fafafa] min-h-[20vh] rounded-md flex items-center justify-center my-8"
+                             style="display:none;">
+                            <div class="flex flex-col items-center justify-center w-full h-full p-8">
+                                <h2 class="font-semibold">검색 결과가 없습니다.</h2>
+                                <p class="text-sm leading-relaxed text-gray-200">검색 결과가 없습니다.</p>
                             </div>
                         </div>
                     </div>
@@ -116,27 +124,66 @@
                                 <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg"
                                      style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
                             </span>
+                                            <div class="absolute px-2 py-1 text-white bg-red-600 rounded md:px-3 top-2 -right-1 font-Montserrat new-badge"
+                                                 style="display:none;">
+                                                <div class="text-[10px] md:text-xs font-medium">NEW</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div data-location-id="${location.id}"
-                                         class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
+                                    <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
                                             <span class="location-city" th:text="${location.city}"></span>
-                                            <span class="new-badge text-[9px] md:text-xs font-medium text-red-600 ml-1 align-top"
-                                                  style="display:none;">NEW</span>
-                                        </h1>
-                                        <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
-                                            <span class="location-country" th:text="${location.countryName}"></span>
-                                            <span class="new-badge text-[9px] md:text-xs font-medium text-red-600 ml-1 align-top"
-                                                  style="display:none;">NEW</span>
                                         </h1>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div id="no-results-domestic"
+                             class="w-full bg-[#fafafa] min-h-[20vh] rounded-md flex items-center justify-center my-8"
+                             style="display:none;">
+                            <div class="flex flex-col items-center justify-center w-full h-full p-8">
+                                <h2 class="font-semibold">검색 결과가 없습니다.</h2>
+                                <p class="text-sm leading-relaxed text-gray-200">검색 결과가 없습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 해외 탭 -->
+                    <div id="tab-international" class="p-0 xl:p-4 md:w-1/2 lg:w-1/4" style="display: none;">
+                        <div th:each="location : ${internationalLocations}">
+                            <!-- Content for 해외 tab -->
+                            <div class="w-full" data-enddate="${location.endDate}">
+                                <div th:attr="data-location-id=${location.id}"
+                                     class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer">
+                                    <div class="pt-2 md:pt-2 md:p-2">
+                                        <div class="relative w-[120px] h-[120px] md:h-[14rem] xl:h-60 2xl:h-80 md:w-full shadow-md md:shadow-lg rounded-lg">
+                            <span style="box-sizing: border-box; display: block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: absolute; inset: 0px;">
+                                <img th:src="@{${location.imagePath}}" alt="Image" class="object-center rounded-lg"
+                                     style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%; object-fit: cover;">
+                            </span>
+                                            <div class="absolute px-2 py-1 text-white bg-red-600 rounded md:px-3 top-2 -right-1 font-Montserrat new-badge"
+                                                 style="display:none;">
+                                                <div class="text-[10px] md:text-xs font-medium">NEW</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
+                                        <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
+                                            <span class="location-country" th:text="${location.countryName}"></span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="no-results-international"
+                             class="w-full bg-[#fafafa] min-h-[20vh] rounded-md flex items-center justify-center my-8"
+                             style="display:none;">
+                            <div class="flex flex-col items-center justify-center w-full h-full p-8">
+                                <h2 class="font-semibold">검색 결과가 없습니다.</h2>
+                                <p class="text-sm leading-relaxed text-gray-200">검색 결과가 없습니다.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -175,11 +222,13 @@
 
                             <div class="grid w-full grid-cols-2 gap-2 mt-4 md:hidden">
                                 <button class="flex items-center justify-center w-full">
-                                    <a class="flex items-center justify-center w-full px-1.5 text-xs md:text-base bg-gray-800 hover:bg-lightScheme-confirm text-lightScheme-confirm hover:text-white rounded-lg font-bold duration-200 py-2">항공권
+                                    <a href="https://www.skyscanner.co.kr/"
+                                       class="flex items-center justify-center w-full px-1.5 text-xs md:text-base bg-gray-800 hover:bg-lightScheme-confirm text-lightScheme-confirm hover:text-white rounded-lg font-bold duration-200 py-2">항공권
                                         예매</a>
                                 </button>
                                 <button class="flex items-center justify-center w-full">
-                                    <a class="flex items-center justify-center w-full px-1.5 text-xs md:text-base bg-gray-800 hover:bg-lightScheme-confirm text-lightScheme-confirm hover:text-white rounded-lg font-bold duration-200 py-2">숙박
+                                    <a href="https://kr.trip.com/"
+                                       class="flex items-center justify-center w-full px-1.5 text-xs md:text-base bg-gray-800 hover:bg-lightScheme-confirm text-lightScheme-confirm hover:text-white rounded-lg font-bold duration-200 py-2">숙박
                                         예약</a>
                                 </button>
                             </div>
@@ -191,7 +240,8 @@
                         </div>
                         <div class="flex items-center justify-center mt-4">
                             <div class="w-full cursor-pointer">
-                                <a class="flex items-center justify-center text-base bg-black w-full md:w-[180px] py-2 text-white rounded-md border-2 border-black">
+                                <a id="create-itinerary" th:data-location-id="${locationId}"
+                                   class="flex items-center justify-center text-base bg-black w-full md:w-[180px] py-2 text-white rounded-md border-2 border-black">
                                     <div class="font-bold">일정만들기</div>
                                     <!--<i class="hidden ml-2 text-lg fa-solid fa-chevron-right md:block"></i>-->
                                     <i class="ml-2 text-lg fas fa-chevron-right md:block"></i>

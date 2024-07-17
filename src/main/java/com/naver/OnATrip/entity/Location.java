@@ -1,14 +1,16 @@
 package com.naver.OnATrip.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor //추가한 부분
+@AllArgsConstructor //추가한 부분
+@Builder //추가한 부분
 public class Location {
 
 

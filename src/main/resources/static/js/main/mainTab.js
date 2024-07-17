@@ -26,29 +26,55 @@ $(document).ready(function() {
         $('#tab-international > div').hide();
 
         // 검색어와 일치하는 위치 항목 표시
+        var allResults = 0;
+        var domesticResults = 0;
+        var internationalResults = 0;
+
         $('#tab-all > div').each(function() {
-            var locationCity = $(this).find('.font-Montserrat:nth-child(1)').text().toLowerCase();
-            var locationCountry = $(this).find('.text-sm').text().toLowerCase();
+            var locationCity = $(this).find('.location-city').text().toLowerCase();
+            var locationCountry = $(this).find('.location-country').text().toLowerCase();
             if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
                 $(this).show();
+                allResults++;
             }
         });
 
         $('#tab-domestic > div').each(function() {
-            var locationCity = $(this).find('.font-Montserrat:nth-child(1)').text().toLowerCase();
-            var locationCountry = $(this).find('.text-sm').text().toLowerCase();
+            var locationCity = $(this).find('.location-city').text().toLowerCase();
+            var locationCountry = $(this).find('.location-country').text().toLowerCase();
             if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
                 $(this).show();
+                domesticResults++;
             }
         });
 
         $('#tab-international > div').each(function() {
-            var locationCity = $(this).find('.font-Montserrat:nth-child(1)').text().toLowerCase();
-            var locationCountry = $(this).find('.font-Montserrat:nth-child(2)').text().toLowerCase();
+            var locationCity = $(this).find('.location-city').text().toLowerCase();
+            var locationCountry = $(this).find('.location-country').text().toLowerCase();
             if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
                 $(this).show();
+                internationalResults++;
             }
         });
+
+        // 검색 결과가 없을 경우 메시지 표시
+        if (allResults === 0) {
+            $('#no-results-all').show();
+        } else {
+            $('#no-results-all').hide();
+        }
+
+        if (domesticResults === 0) {
+            $('#no-results-domestic').show();
+        } else {
+            $('#no-results-domestic').hide();
+        }
+
+        if (internationalResults === 0) {
+            $('#no-results-international').show();
+        } else {
+            $('#no-results-international').hide();
+        }
     });
 
     // 탭 클릭 처리
@@ -102,6 +128,9 @@ $(document).ready(function() {
                 $('#location-image').attr('src', data.imagePath);
                 console.log('Image Path:', data.imagePath);  // 이미지 경로 콘솔 출력
                 $('#location-description').text(data.description);
+
+                // 일정 만들기 버튼에 locationId 숨기기
+                $('#create-itinerary').attr('data-location-id', locationId);
 
                 // 모달을 페이드인하여 보여줌
                 $('#modal-root').fadeIn();
