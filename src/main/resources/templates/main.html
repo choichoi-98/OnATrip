@@ -5,7 +5,12 @@
       layout:decorate="layout/default_layout">
 
 <head th:replace="fragments/header :: headerFragment">
-
+    <style>
+        /* 페이지 로드 시 모달 숨김 처리 */
+        #modal-root {
+            display: none;
+        }
+    </style>
 </head>
 
 <!-- main.js 부분-->
