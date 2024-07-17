@@ -25,7 +25,6 @@ public class RouteDto {
     @NotNull(message = "Category cannot be null")
     private String category;
 
-
     private int routeSequence;//정렬 순서(day_number별 정렬)
 
     private String placeName;
@@ -40,8 +39,10 @@ public class RouteDto {
 
     private String sortKey; // 정렬 키
 
+    private int markSeq;
+
     @Builder
-    public RouteDto(int day_number, String category, Long detailPlan_id, int routeSequence, String placeName, String memo, String address, BigDecimal lat, BigDecimal lng) {
+    public RouteDto(int day_number, String category, Long detailPlan_id, int routeSequence, String placeName, String memo, String address, BigDecimal lat, BigDecimal lng, int markSeq) {
         this.day_number = day_number;
         this.category = category;
         this.detailPlan_id = detailPlan_id;
@@ -51,6 +52,7 @@ public class RouteDto {
         this.address = address;
         this.lat = lat;
         this.lng = lng;
+        this.markSeq = markSeq;
     }
 
 
@@ -67,6 +69,7 @@ public class RouteDto {
                 .routeSequence(routeSequence)
                 .lat(lat)
                 .lng(lng)
+                .markSeq(markSeq)
                 .build();
     }
 
@@ -83,6 +86,7 @@ public class RouteDto {
         this.lat = route.getLat();
         this.lng = route.getLng();
         this.sortKey = route.getSortKey();
+        this.markSeq = route.getMarkSeq();
     }
 
     @Override
@@ -99,6 +103,7 @@ public class RouteDto {
                 ", lat=" + lat +
                 ", lng=" + lng +
                 ", sortKey='" + sortKey + '\'' +
+                ", markSeq=" + markSeq +
                 '}';
     }
 }
