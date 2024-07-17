@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                         // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .requestMatchers("/", "/member/**", "/item/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADM…
                         .anyRequest().authenticated() //// 나머지 요청은 인증 필요
 
                 )
@@ -52,11 +53,12 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                 )
-                .exceptionHandling((exceptions) -> exceptions
-                        .accessDeniedHandler(accessDeniedHandler())
-                )
+//                .exceptionHandling((exceptions) -> exceptions
+//                        .accessDeniedHandler(accessDeniedHandler())
+//                )
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers("/payment/**")
+//                        .disable()
+                        .ignoringRequestMatchers("/payment/**","/admin/**","/member/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 );
 
@@ -73,10 +75,10 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
-    }
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler() {
+//        return new CustomAccessDeniedHandler();
+//    }
 
 
 }
