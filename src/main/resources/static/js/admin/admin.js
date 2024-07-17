@@ -191,6 +191,7 @@ $(document).ready(function() {
         formData.append('countryCode', countryCode);
         formData.append('city', city);
         formData.append('description', description);
+        formData.append('createDate', new Date()); // createDate 추가
 
         // 파일이 있는 경우에만 formData에 추가
         if (file) {
@@ -223,6 +224,7 @@ $(document).ready(function() {
                     countryCode: countryCode,
                     city: city,
                     description: description,
+                    createDate: formData.get('createDate') // 추가된 createDate 확인
                 });
 
                 // 여행지 추가 성공 시 추가적인 UI 업데이트 등의 작업 수행
@@ -245,9 +247,9 @@ $(document).ready(function() {
     }
 
     // 여행지를 목록에 추가하는 함수 수정
-   function addToLocationList(listType, id, countryName, countryCode, city, description, imagePath) {
+    function addToLocationList(listType, id, countryName, countryCode, city, description, imagePath) {
        var $ul = $('#' + listType + ' ul');
-       var $li = $('<li></li>').data('locationId', id);
+       var $li = $('<li></li>').data('locationId', id).addClass('location-item'); // location-item 클래스 추가
 
        var locationInfo = '';
 
@@ -276,7 +278,7 @@ $(document).ready(function() {
        }));
 
        $ul.append($li);
-   }//addToLocationList
+    }//addToLocationList
 
 
     // Edit 버튼 클릭 시 호출되는 함수
@@ -300,7 +302,7 @@ $(document).ready(function() {
         var $countryInput = $('<input type="text">').val(type === 'overseas_list' ? countryName : '');
         var $countryCodeInput = $('<input type="text">').val(type === 'overseas_list' ? countryCode : '');
         var $cityInput = $('<input type="text">').val(type === 'domestic_list' ? city : '');
-        var $descriptionInput = $('<textarea>').val(description).css('width', '100%'); // DESCRIPTION 입력 폭 넓히기
+        var $descriptionInput = $('<textarea>').val(description).css('width', '100%').css('height','200px'); // DESCRIPTION 입력 폭 넓히기
         var $fileInput = $('<input type="file">');
 
         // 기존 데이터 readonly 처리
@@ -314,24 +316,7 @@ $(document).ready(function() {
             $countryCodeInput.prop('readonly', true);
         }
 
-        // CSS 스타일 적용
-            $editForm.find('input[readonly]').css({
-                'background-color': '#f0f0f0',
-                'color': '#666',
-                'width': 'calc(100% - 20px)', // 너비 조정
-                'padding': '10px', // 내부 여백
-                'margin-bottom': '10px' // 하단 여백
-            });
 
-            $editForm.find('textarea').css({
-                'width': 'calc(100% - 20px)', // 너비 조정
-                'padding': '10px', // 내부 여백
-                'margin-bottom': '10px', // 하단 여백
-                'resize': 'none' // 수직 리사이징 비활성화
-            }).on('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
 
         var $previewImage = $('<img class="preview-image">').attr('src', imageSrc).attr('alt', '이미지 미리보기');
         $fileInput.change(function () {

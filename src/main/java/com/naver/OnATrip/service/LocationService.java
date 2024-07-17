@@ -3,6 +3,8 @@ package com.naver.OnATrip.service;
 import com.naver.OnATrip.entity.Location;
 import com.naver.OnATrip.repository.admin.LocationRepository;
 import com.naver.OnATrip.web.dto.location.LocationDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
 
     private final LocationRepository locationRepository;
     private static final String UPLOAD_DIR = "src/main/resources/static/images/location";
@@ -61,6 +65,8 @@ public class LocationService {
         location.setCity(locationDTO.getCity());
         location.setDescription(locationDTO.getDescription());
         location.setLocationType(locationDTO.getLocationType());
+        location.setCreatedDate(locationDTO.getCreatedDate());
+        location.setEndDate(locationDTO.getEndDate());
         location.setImage(imagePath);
 
         // 여행지 저장
@@ -83,6 +89,7 @@ public class LocationService {
         List<LocationDTO> locationDTOs = new ArrayList<>();
 
         for (Location location : locations) {
+
             LocationDTO locationDTO = new LocationDTO();
             locationDTO.setId(location.getId());
             locationDTO.setCountryName(location.getCountryName());
@@ -90,9 +97,10 @@ public class LocationService {
             locationDTO.setCity(location.getCity());
             locationDTO.setDescription(location.getDescription());
             locationDTO.setLocationType(location.getLocationType());
-            locationDTO.setImagePath(location.getImage()); // 필드 이름 변경
+            locationDTO.setImagePath(location.getImage());
             locationDTOs.add(locationDTO);
         }
+
 
         return locationDTOs;
     }
@@ -118,6 +126,7 @@ public class LocationService {
         existingLocation.setCity(locationDTO.getCity());
         existingLocation.setDescription(locationDTO.getDescription());
         existingLocation.setLocationType(locationDTO.getLocationType());
+        existingLocation.setCreatedDate(locationDTO.getCreatedDate());
 
         locationRepository.save(existingLocation);
     }
@@ -131,6 +140,7 @@ public class LocationService {
         location.setCity(locationDTO.getCity());
         location.setDescription(locationDTO.getDescription());
         location.setLocationType(locationDTO.getLocationType());
+        location.setCreatedDate(locationDTO.getCreatedDate());
 
         // 이미지 경로 설정
         if (imagePath != null) {
@@ -166,6 +176,7 @@ public class LocationService {
             Location location = locationOptional.get();
             LocationDTO locationDTO = new LocationDTO();
             locationDTO.setId(location.getId());
+            locationDTO.setCreatedDate(location.getCreatedDate());
             locationDTO.setCountryName(location.getCountryName());
             locationDTO.setCountryCode(location.getCountryCode());
             locationDTO.setCity(location.getCity());
@@ -220,5 +231,6 @@ public class LocationService {
         List<Location> overseasLocations = locationRepository.findByLocationType("overseas");
         return overseasLocations.stream().map(LocationDTO::new).collect(Collectors.toList());
     }
+
 
 }
