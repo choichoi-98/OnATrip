@@ -12,5 +12,7 @@ public interface VerifyRepository extends JpaRepository<VerifyCode, Long> {
     public boolean existsByEmail(String email);
     @Transactional
     public void deleteByEmail(String email);
+    @Transactional
+    public void deleteByCode(String code);
 
 }

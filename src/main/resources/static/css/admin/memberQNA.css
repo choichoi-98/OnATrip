@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+body{
+    font-family: Montserrat, Noto Sans KR, sans-serif;
+}
+
+.main {
+    margin-top: 5%;
+    margin-bottom: 3%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.containerWrapped {
+    margin: 0% 15% 10% 15% ;
+}
+
+.memberQNA{
+    font-size:bold;
+}
+
+.table {
+     table-layout: fixed;
+     width: 100%;
+}
+
+tr {
+    text-align: center;
+}

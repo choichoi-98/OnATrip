@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.main {
+    margin-top: 5%;
+    margin-bottom: 3%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.containerWrapped {
+    margin: 0% 15% 10% 15% ;
+}
+
+.question {
+     background-color: #128D47;
+     border-radius: .375rem;
+     color: white;
+     width: 80px;
+}
+
+.table {
+     table-layout: fixed;
+     width: 100%;
+}
+
+tr {
+    text-align: center;
+}
+/* 각 열의 너비 설정 */
+th:nth-child(1), td:nth-child(1) {
+     width: 50%; /* 제목 열 */
+}
+
+th:nth-child(2), td:nth-child(2) {
+     width: 30%; /* 작성일 열 */
+}
+
+th:nth-child(3), td:nth-child(3) {
+     width: 20%; /* 답변상황 열 */
+}

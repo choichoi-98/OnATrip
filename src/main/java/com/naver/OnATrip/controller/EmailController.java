@@ -6,6 +6,7 @@ import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.VerifyCode;
 import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.service.EmailService;
+import com.naver.OnATrip.service.VerifyCodeService;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
 import com.naver.OnATrip.web.dto.member.VerifyCodeDto;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class EmailController {
 
+    private final VerifyCodeService verifyCodeService;
     private final EmailService emailService;
     private final MemberRepository memberRepository;
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -59,8 +61,7 @@ public class EmailController {
     @PostMapping(value = "/sendEmail")
     public ResponseEntity<HashMap> mailCheck(VerifyCodeDto codeDto){
 
-        VerifyCode verifyCode = emailService.saveCode(codeDto);
-        logger.info("이메일이 존재하지 않음: " + verifyCode);
+        VerifyCode verifyCode = verifyCodeService.saveCode(codeDto);
 
         boolean success = emailService.changePassword(verifyCode);
 

@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+.main {
+    margin-top: 5%;
+    margin-bottom: 3%;
+    display: flex;
+    flex-direction: column;
+}
+
+.containerWrapped {
+    margin: 0% 15% 10% 15% ;
+}
+
+.question {
+     background-color: #128D47;
+     border-radius: .375rem;
+     color: white;
+     width: 80px;
+}
+
+.table {
+     table-layout: fixed;
+     width: 100%;
+}
+
+tr {
+    text-align: center;
+}
