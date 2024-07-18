@@ -21,6 +21,8 @@ public class OrderDto {
 
     private int itemId;         //상품 번호
 
+    private int itemPeriod;
+
     private String payMethod;        //결제방식
 
     private String merchantUid; //주문 번호
@@ -32,6 +34,8 @@ public class OrderDto {
     private Boolean paymentStatus = false;  //결제상태
 
     private String impUid;
+
+
 
 
 

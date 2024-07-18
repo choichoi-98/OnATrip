@@ -2,6 +2,7 @@ package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.pay.Orders;
 import com.naver.OnATrip.entity.pay.Payment;
+import com.naver.OnATrip.entity.pay.payMethod;
 import com.naver.OnATrip.service.OrderService;
 import com.naver.OnATrip.service.PaymentService;
 import com.naver.OnATrip.web.dto.pay.OrderDto;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class OrderController {
 
@@ -23,7 +23,7 @@ public class OrderController {
     private final PaymentService paymentService;
     private final HttpSession httpSession;
 
-    @PostMapping("/save_buyerInfo") //결제 정보 저장
+    @PostMapping("/payment/save_buyerInfo") //결제 정보 저장
     @ResponseBody
     public void save_buyerInfo(@RequestBody Payment request) {
         System.out.println("Saving buyer information: {}");
@@ -32,7 +32,7 @@ public class OrderController {
 //        log.info("Buyer information saved successfully");
     }
 
-    @PostMapping("/save_orderInfo") //주문 정보 저장
+    @PostMapping("/payment/save_orderInfo") //주문 정보 저장
     @ResponseBody
     public String orderDone(@RequestBody OrderDto request, Model model) {
         System.out.println("Saving order information: {}");
@@ -40,11 +40,13 @@ public class OrderController {
         Orders orders = Orders.builder()
                 .merchantUid(request.getMerchantUid())
                 .amount(request.getAmount())
+                .payMethod(request.getPayMethod())
+                .itemId(request.getItemId())
+                .itemPeriod((int) request.getItemPeriod())
                 .build();
 
         orderService.save_orderInfo(orders);
         System.out.println("Order information saved successfully for merchantUid: {}");
-
 
         return request.getMerchantUid();
     }

@@ -34,11 +34,15 @@ public class PaymentService {
     private PrePaymentRepository prePaymentRepository;
 
 
-    @Value("${imp.api.key}")    //application.yml에서 값을 불러와서 사용
-    private String impKey;
+//    @Value("${imp.api.key}")    //application.yml에서 값을 불러와서 사용
+//    private String impKey;
+//
+//    @Value("${imp.api.secretKey}")
+//    private String impSecret;
 
-    @Value("${imp.api.secretKey}")
-    private String impSecret;
+    private String impKey = "5567300760752543";
+    private String impSecret = "akexds3WZwtp2HRTUZtWHI7Nk1SFMg4ZT6IQtTKWM7O8xOaeZqDZsWyHwaEnqj7qwAf1TzyadBK4ouUv";
+
 
     public PaymentService(){
         this.iamportClient = new IamportClient(impKey, impSecret);
@@ -62,11 +66,11 @@ public class PaymentService {
     }
 
 
-    @PostConstruct
-    public void init(){
-        System.out.println("impKey = " + impKey);
-        System.out.println("impSecret = " + impSecret);
-    }
+//    @PostConstruct
+//    public void init(){
+//        System.out.println("impKey = " + impKey);
+//        System.out.println("impSecret = " + impSecret);
+//    }
 
 //    @Transactional
 //    public Orders insertPay(OrderDto request /*, Long memberId */ ) {
