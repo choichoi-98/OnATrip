@@ -3,6 +3,8 @@ package com.naver.OnATrip.entity.plan;
 import com.naver.OnATrip.constant.RouteCategory;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -22,6 +24,7 @@ public class Route {
 
     @ManyToOne
     @JoinColumn(name = "detailPlan_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private DetailPlan detailPlan;
 
     @Enumerated(EnumType.STRING)

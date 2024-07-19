@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class PlanDto {
 
     private Long id;
-    private Long memberId;
+    private String email;
     @JsonProperty("locationId")
     private Long locationId;
     private String startDate;
@@ -27,7 +27,7 @@ public class PlanDto {
     @Builder
     public PlanDto(Plan plan) {
         this.id = plan.getId();
-        this.memberId = plan.getMemberId();
+        this.email = plan.getEmail();
         this.locationId = plan.getLocation().getId();
         this.startDate = plan.getStartDate();
         this.endDate = plan.getEndDate();

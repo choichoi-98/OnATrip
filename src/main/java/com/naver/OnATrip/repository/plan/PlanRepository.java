@@ -1,4 +1,4 @@
-package com.naver.OnATrip.repository;
+package com.naver.OnATrip.repository.plan;
 
 import com.naver.OnATrip.entity.plan.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;

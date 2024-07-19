@@ -2,6 +2,8 @@ package com.naver.OnATrip.entity.plan;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,9 +21,10 @@ public class DetailPlan {
 
     @ManyToOne
     @JoinColumn(name = "plan_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Plan plan;
 
-    private Long memberId;//회원가입 기능 완료 시 수정필요
+    private String email;//회원가입 기능 완료 시 수정필요
 
     private String countryName;
 
@@ -29,17 +32,17 @@ public class DetailPlan {
 
     private LocalDate perDate; //날짜별
 
-    @OneToMany(mappedBy = "detailPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "detailPlan", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Route> routes = new ArrayList<>();
 
     protected DetailPlan() {
     }
 
     @Builder
-    public DetailPlan( Long id,Plan plan, Long memberId, String countryName, String countryCode,  LocalDate perDate) {
+    public DetailPlan( Long id,Plan plan, String email, String countryName, String countryCode,  LocalDate perDate) {
         this.id = id;
         this.plan = plan;
-        this.memberId = memberId;
+        this.email = email;
         this.countryName = countryName;
         this.countryCode = countryCode;
         this.perDate = perDate;

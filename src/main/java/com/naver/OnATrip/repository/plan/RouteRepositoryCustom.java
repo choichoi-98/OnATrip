@@ -1,4 +1,4 @@
-package com.naver.OnATrip.repository;
+package com.naver.OnATrip.repository.plan;
 
 import com.naver.OnATrip.constant.RouteCategory;
 import com.naver.OnATrip.web.dto.plan.RouteDto;

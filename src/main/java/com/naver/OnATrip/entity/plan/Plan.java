@@ -18,7 +18,7 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
+    private String email;
 
     @ManyToOne
     @JoinColumn(name = "location_id")
@@ -30,16 +30,16 @@ public class Plan {
 
     private Long mateId;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "plan",cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<DetailPlan> detailPlans = new ArrayList<>();
 
     protected Plan() {
     }
 
     @Builder
-    public Plan(Long id, Long memberId, Location location, String startDate, String endDate, Long mateId) {
+    public Plan(Long id, String email, Location location, String startDate, String endDate, Long mateId) {
         this.id = id;
-        this.memberId = memberId;
+        this.email = email;
         this.location = location;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -55,7 +55,7 @@ public class Plan {
 
         return Plan.builder()
                 .id(requestDto.getId())
-                .memberId(requestDto.getMemberId())
+                .email(requestDto.getEmail())
                 .location(location)
                 .startDate(requestDto.getStartDate())
                 .endDate(requestDto.getEndDate())
