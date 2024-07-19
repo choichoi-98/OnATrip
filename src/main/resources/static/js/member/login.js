@@ -4,32 +4,21 @@
 //     console.log(token);
 //     console.log(header);
 //
-//    var loginBtn = $("#loginBtn");
+//    $('#form_login').submit(function(event) {
+//        event.preventDefault(); // 폼 기본 제출 동작 방지
 //
-//    loginBtn.submit(function(event) {
-//     var email = $("input[name='email']").val();
-//     var password = $("input[name='password']").val();
+//        var email = $('#email').val();
+//        var password = $('#password').val();
+//        var match = $('#checkMember');
 //
-//      // 비밀번호가 일치하지 않는 경우
-//      $.ajax({
-//          type: "POST",
-//          url: "/checkPassword",
-//           data: {
-//               email: email,
-//               password: password
-//           },
-//           success: function(response) {
-//               if (!response) {
-//                   errorMessage = "비밀번호가 일치하지 않습니다.";
-//                   alert(errorMessage);
-//                   event.preventDefault(); // 폼 제출을 막음
-//               } else {
-//                   // 비밀번호가 일치할 경우 폼 제출 진행
-//               }
-//           },
-//           error: function(xhr, status, error) {
-//           console.error("서버 오류:", error);
-//           }
-//      });
-//    }
+//        // 간단한 예시로 이메일과 비밀번호가 존재하고 비밀번호가 'password'일 때만 로그인 성공으로 가정합니다.
+//        if (email && password === 'password') {
+//            // 로그인 성공
+//            match.text('');
+//        } else {
+//            // 로그인 실패
+//            match.text('이메일이나 비밀번호가 잘못되었습니다. 다시 확인해주세요.'); // 에러 메시지 표시
+//            match.removeClass('checkMember').addClass('checkFail');
+//        }
+//    });
 //});

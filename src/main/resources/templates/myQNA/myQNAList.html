@@ -17,7 +17,7 @@
                 <div class="container2 relative mx-auto">
                     <div class="main">
                         <h4 class="myQNAList">문의내역</h4>
-                        <button class="question" onclick="location.href='/myQNADetail'">문의하기</button>
+                        <button class="question" onclick="location.href='/createQNA'">문의하기</button>
                     </div>
                         <div class="contents">
                         <div class="my-1">
@@ -27,6 +27,7 @@
                                     <table class="table table-hover">
                                     <thead>
                                     <tr>
+                                        <th>문의유형</th>
                                         <th>제목</th>
                                         <th>작성일</th>
                                         <th>답변상황</th>
@@ -39,14 +40,40 @@
 <!--                                            <span th:text="${myQNA.id}"></span>-->
 <!--                                            </a>-->
 <!--                                        </td>-->
+                                        <td th:text="${myQNA.qnaStatus}"></td>
                                         <td th:text="${myQNA.title}"></td>
-                                        <td th:text="${myQNA.createdBy}"></td>
+                                        <td th:text="${myQNA.createdAt}"></td>
                                         <td th:text="${myQNA.answer}"></td>
                                     </tr>
                                     </tbody>
                                     </table>
                                 </div>
                             </form>
+
+<!--                            페이징처리-->
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" style="color: black;">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" style="color: black;">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" style="color: black;">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Next" style="color: black;">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
