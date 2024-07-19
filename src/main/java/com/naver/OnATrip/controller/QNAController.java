@@ -1,6 +1,7 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.service.MyQNAService;
 import com.naver.OnATrip.web.dto.myQNA.CreateQNADto;
 import com.naver.OnATrip.web.dto.myQNA.MyQNAListDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -25,9 +27,11 @@ import java.util.List;
 public class QNAController {
 
     private final MyQNAService myQNAService;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/myQNAList")
-    public String QNAList() {
+    public String QNAList(Model model){
+        model.addAttribute("myQNAListDto", new MyQNAListDto());
         return "myQNA/myQNAList";
         }
 
@@ -41,12 +45,11 @@ public class QNAController {
     public String save(@Valid CreateQNADto createQNADto, @RequestParam("file") List<MultipartFile> file,
                        Principal principal, Model model) {
 
-        // 사용자 이름으로 Member 객체 생성
-        Member writer = createMember(principal.getName()); //사용자 이름 반환
-//        System.out.println("QNA Controller에 사용자 이름 = "+ writer);
-           myQNAService.save(createQNADto);
+        String email = principal.getName(); // 현재 로그인한 사용자의 이메일
+        System.out.println("컨트롤러에서 이메일 확인 =" + email) ;
+        myQNAService.save(createQNADto, email);
 
-        return "myQNA/createQNA";
+        return "myQNA/myQNAList";
     }
 
     public Member createMember(String username) {
