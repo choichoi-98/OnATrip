@@ -115,43 +115,47 @@ $(document).ready(function() {
         closeModal();
     });
 
-   // 모달 열기 함수 수정
-   function showModal(locationId) {
-       console.log('Received locationId:', locationId); // locationId 확인용 로그
+    // 일정 만들기 버튼 클릭 처리
+    $('#create-itinerary').click(function() {
+        var locationId = $(this).attr('data-location-id');
+        window.location.href = '/selectDate?locationId=' + locationId;
+    });
 
-       var csrfToken = $('meta[name="_csrf"]').attr('content');
-       $.ajax({
-           url: '/location/' + locationId,
-           type: 'GET',
-           dataType: 'json',
+    // 모달 열기 함수 수정
+    function showModal(locationId) {
+        console.log('Received locationId:', locationId); // locationId 확인용 로그
+
+        var csrfToken = $('meta[name="_csrf"]').attr('content');
+        $.ajax({
+            url: '/location/' + locationId,
+            type: 'GET',
+            dataType: 'json',
             beforeSend: function(xhr) {
-                           xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             },
-           success: function(data) {
-               // 서버에서 받은 데이터를 모달에 표시
-               console.log('Received Data:', data);  // 데이터 콘솔에 출력
-               $('#location-city').text(data.city);
-               $('#location-country').text(data.countryName);
-               $('#location-image').attr('src', data.imagePath);
-               console.log('Image Path:', data.imagePath);  // 이미지 경로 콘솔에 출력
-               $('#location-description').text(data.description);
+            success: function(data) {
+                // 서버에서 받은 데이터를 모달에 표시
+                console.log('Received Data:', data);  // 데이터 콘솔에 출력
+                $('#location-city').text(data.city);
+                $('#location-country').text(data.countryName);
+                $('#location-image').attr('src', data.imagePath);
+                console.log('Image Path:', data.imagePath);  // 이미지 경로 콘솔에 출력
+                $('#location-description').text(data.description);
 
-               // 일정 만들기 버튼에 locationId 설정
-               $('#create-itinerary').attr('data-location-id', locationId);
+                // 일정 만들기 버튼에 locationId 설정
+                $('#create-itinerary').attr('data-location-id', locationId);
 
-               // 모달을 페이드인하여 보여줌
-               $('#modal-root').fadeIn();
-           },
-           error: function(xhr, status, error) {
-               console.error('위치 데이터 가져오기 오류:', error);
-               console.log('XHR 응답:', xhr);
+                // 모달을 페이드인하여 보여줌
+                $('#modal-root').fadeIn();
+            },
+            error: function(xhr, status, error) {
+                console.error('위치 데이터 가져오기 오류:', error);
+                console.log('XHR 응답:', xhr);
 
-               alert('위치 데이터를 가져오지 못했습니다. 나중에 다시 시도해 주세요.');
-           }
-       });
-   }
-
-
+                alert('위치 데이터를 가져오지 못했습니다. 나중에 다시 시도해 주세요.');
+            }
+        });
+    }
 
     // 모달 닫기 함수
     function closeModal() {
