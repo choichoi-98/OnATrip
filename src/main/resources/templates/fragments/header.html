@@ -132,7 +132,7 @@
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/admin">관리자</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               sec:authorize="hasAnyAuthority('ROLE_USER')" href="/">내 여행</a>
+                             href="/myPage">내 여행</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                 href="/">공지사항</a>
                             <th:block th:if="${not #authorization.expression('isAuthenticated()')}">

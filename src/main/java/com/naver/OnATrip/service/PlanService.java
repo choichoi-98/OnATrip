@@ -1,9 +1,11 @@
 package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.entity.pay.SubscribeStatus;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
 import com.naver.OnATrip.repository.MemberRepository;
+import com.naver.OnATrip.repository.pay.SubscribeRepository;
 import com.naver.OnATrip.repository.plan.PlanRepository;
 //import com.naver.OnATrip.web.dto.plan.RouteDto;
 import com.naver.OnATrip.web.dto.plan.PlanDto;
@@ -24,13 +26,15 @@ public class PlanService {
 
     private final PlanRepository planRepository;
     private final MemberRepository memberRepository;
+    private final SubscribeRepository subscribeRepository;
     private final EntityManager em;
     private static final Logger logger = LoggerFactory.getLogger(PlanService.class);
 
     @Autowired
-    public PlanService(PlanRepository planRepository, MemberRepository memberRepository, EntityManager em) {
+    public PlanService(PlanRepository planRepository, MemberRepository memberRepository, SubscribeRepository subscribeRepository, EntityManager em) {
         this.planRepository = planRepository;
         this.memberRepository = memberRepository;
+        this.subscribeRepository = subscribeRepository;
         this.em = em;
     }
 
@@ -40,7 +44,6 @@ public class PlanService {
 
 
         LocationProjection locationProjection = planRepository.findLocationById(requestDto.getLocationId());
-
 
         // Plan 생성
         Plan plan = requestDto.toEntity(locationProjection);
@@ -115,10 +118,22 @@ public class PlanService {
         return planRepository.deletePlanById(planId);
     }
 
-    public Member findMemberByEmail(String email) {
+    public boolean existsByEmail(String email) {
         logger.info("findMemberByEmail-planService, email = " + email);
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.get();
-        return member;
+        boolean result = memberRepository.existsByEmail(email);
+
+
+        return result;
+    }
+
+
+    public Long planCount(String email) {
+        long planCount = planRepository.countByEmail(email);
+        return planCount;
+    }
+
+    public SubscribeStatus getSubscribeStatus(String email) {
+        SubscribeStatus statusByEmail = planRepository.getStatusByEmail(email);
+        return statusByEmail;
     }
 }

@@ -1,6 +1,7 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.entity.pay.SubscribeStatus;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
@@ -71,13 +72,25 @@ public class PlanController {
     @ResponseBody
     public String createPlan(@RequestBody PlanDto planDto) {
         logger.info("PlanController-createPlan");
+        String email = planDto.getEmail();
 
+        Long planCount = planService.planCount(email);
+        System.out.println("planCount = " + planCount);
+        //-----------------------------나중에 수정
+//        if (planCount > 3 ){
+//            String msg = "planCount > 3 이상";
+//            SubscribeStatus status = planService.getSubscribeStatus(email);
+//            System.out.println("planCount = " + planCount);
+//            System.out.println("status = " + status);
+//            return msg;
+//        } else {
+//
+//        }
 
-
+            Long planId = planService.createPlan(planDto);
+            return String.valueOf(planId);
         // Plan 생성
-        Long planId = planService.createPlan(planDto);
 
-        return String.valueOf(planId);
     }
 
     //detailPlan 생성
@@ -239,20 +252,17 @@ public class PlanController {
     @GetMapping("/myPage")
     public ModelAndView myPage(
                                ModelAndView mv,
-                               @RequestParam("email") String email){
+                               Principal principal){
 
 
+        String email = principal.getName();
 
-        logger.info("--------------------email ------------ " + email);
-
-
-//        logger.info("Member ID: {}", memberId);
         List<Plan> plans = planService.findPlanBymemberId(email);
-        for (Plan plan : plans) {
-            logger.info("Plan ID: {}, Member email: {}, Location: {}, Location:{}, Start Date: {}, End Date: {}, Mate ID: {}",
-                    plan.getId(), plan.getEmail(), plan.getLocation().getCountryName(), plan.getLocation().getImage(),
-                   plan.getStartDate(), plan.getEndDate(), plan.getMateId());
-        }
+//        for (Plan plan : plans) {
+//            logger.info("Plan ID: {}, Member email: {}, Location: {}, Location:{}, Start Date: {}, End Date: {}, Mate ID: {}",
+//                    plan.getId(), plan.getEmail(), plan.getLocation().getCountryName(), plan.getLocation().getImage(),
+//                   plan.getStartDate(), plan.getEndDate(), plan.getMateId());
+//        }
 
         mv.addObject("plans", plans);
         mv.setViewName("/myPage");
@@ -262,16 +272,26 @@ public class PlanController {
 
     //친구 이메일로 검색
     @GetMapping("/searchFriendByEmail")
-    public ResponseEntity<Member> searchFriendByEmail(@RequestParam("email") String email){
-        logger.info("-----------searchMemberByEmail-controller: "+ email);
-         Member member = planService.findMemberByEmail(email);
-//        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-//
-//        Member member = optionalMember.get();
-//        logger.info("Member Email: {}", member.getEmail());
+    public ResponseEntity<Boolean> searchFriendByEmail(@RequestParam("email") String email){
+         Boolean result = planService.existsByEmail(email);
 
-        return ResponseEntity.ok(member);
+        System.out.println("existEmail result = " + result);
+
+        return ResponseEntity.ok(result);
     }
+
+    //친구 초대
+    @PostMapping("/inviteFriend")
+    public void inviteFriend(@RequestParam("email") String email){
+        //1. mateEmail 혹은 email에 매개변수로 받은 email과 일치하는 값이 있는지 확인
+
+
+        //1-1. 있다면 '이미 초대된 친구입니다.' 띄우기
+
+        //2. 없는 경우 mateEmail에 email 값 넣기
+
+    }
+
 
 }//public class PlanController {
 

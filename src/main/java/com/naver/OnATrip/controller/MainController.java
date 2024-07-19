@@ -34,7 +34,7 @@ public class MainController {
 
     @GetMapping("/main")
     // 메인 주의 여기 주의 주의 주의 주의
-    public String main(Model model, HttpSession session) {
+    public String main(Model model, HttpSession session, Principal principal) {
         logger.info("main---------------------------------------------------------");
         List<LocationDTO> allLocations = locationService.getAllLocations();
         model.addAttribute("allLocations", allLocations);
@@ -48,12 +48,12 @@ public class MainController {
         model.addAttribute("internationalLocations", internationalLocations);
         logger.info("Printing international locations: {}", internationalLocations);
 
-        String loginEmail = (String) session.getAttribute("email");
-        System.out.println("세션 확인 = " + loginEmail);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("인증 확인 = " + authentication);
 
+//        String email = principal.getName();
+//        System.out.println("컨트롤러에서 확인하는 principal =" + email);
 
         String username = authentication.getName();
         model.addAttribute("email", username);

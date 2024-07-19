@@ -21,7 +21,7 @@
                     </div>
                         <div class="contents">
                         <div class="my-1">
-                            <form id="QNAList" th:action="@{/myQNAList}" method="post">
+                            <form id="QNAList" th:action="@{/myQNAList}" th:object="${MyQNAListDto}" method="post">
 
                                 <div class="group">
                                     <table class="table table-hover">
@@ -34,7 +34,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
-                                    <tr th:each="myQNA : ${myQNA}">
+                                    <tr th:each="myQNA : ${MyQNA}">
 <!--                                        <td>-->
 <!--                                            <a th:href="@{'/myQNA/QNADetail/' + ${myQNA.id}}">-->
 <!--                                            <span th:text="${myQNA.id}"></span>-->

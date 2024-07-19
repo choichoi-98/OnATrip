@@ -1,98 +1,107 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout/default_layout">
+      layout:decorate="layout/default_layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <style>
-        .card {
-            margin-right: 35px;
-            margin-left: 35px;
-            text-align: center;
+<style>
+    .card {
+        margin-right: 35px;
+        margin-left: 35px;
+        text-align: center;
+    }
+
+    .container-fluid {
+        display: flex;
+        justify-content: center;
+    }
+
+    #order_button, #login_button {
+        background-color: #067033;
+        border-color: #067033;
+    !important;
+    }
+
+    /*화면 크기 조절*/
+
+    .mb-800 {
+        margin-bottom: 50rem;
+    }
+
+
+    @media (min-width: 1280px) {
+        .xl\:pb-240 {
+            padding-bottom: 10rem;
         }
+    }
 
-        .container-fluid {
-            display: flex;
-            justify-content: center;
+    @media (min-width: 768px) {
+        .md\:pb-160 {
+            padding-bottom: 10rem;
         }
+    }
 
-        #order_button {
-            background-color: #067033;
-            border-color: #067033;
-        !important;
-        }
-
-        /*화면 크기 조절*/
-
-        .mb-800 {
-            margin-bottom: 50rem;
-        }
-
-
-        @media (min-width: 1280px) {
-            .xl\:pb-240 {
-                padding-bottom: 10rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .md\:pb-160 {
-                padding-bottom: 10rem;
-            }
-        }
-
-        @media (min-width: 1200px) {
-        }
-    </style>
-    <link href="/css/pay/product.css" rel="stylesheet">
-    <head th:replace="fragments/header :: headerFragment">
+    @media (min-width: 1200px) {
+    }
+</style>
+<link href="/css/pay/product.css" rel="stylesheet">
+<head th:replace="fragments/header :: headerFragment">
 </head>
 <body>
+<!--<div id="isAuthenticated" data-authenticated="false" sec:authorize="isAuthenticated()" style="display: none;" th:data-authenticated="true"></div>-->
 
 <div class="safari_only_wrapper">
     <div class="fixed-status"></div>
     <div class="h-full mx-auto">
         <div id="searchcity" class="md:pb-160 xl:pb-240" style="padding-bottom: 100px !important;"></div>
-        <div class="w-screen pl-8 mb-800 md:pl-0"  style="margin-bottom: 150px !important;">
+        <div class="w-screen pl-8 mb-800 md:pl-0" style="margin-bottom: 150px !important;">
             <div class="container2 relative mx-auto">
-            <!--  여기에 내용 채우기 -->
-            <main style="background-color:#cbcbb966">
-                <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
-                    <div class="col-md-6 p-lg-5 mx-auto my-5">
-                        <h1 class="display-3 fw-bold">Starts with OnATrip</h1>
-                        <h3 class="fw-normal text-muted mb-3">구독을 통해 여행의 추억을 간직해보세요.</h3>
+                <!--  여기에 내용 채우기 -->
+                <main style="background-color:#cbcbb966">
+                    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
+                        <div class="col-md-6 p-lg-5 mx-auto my-5">
+                            <h1 class="display-3 fw-bold">Starts with OnATrip</h1>
+                            <h3 class="fw-normal text-muted mb-3">구독을 통해 여행의 추억을 간직해보세요.</h3>
+                        </div>
                     </div>
-                </div>
-            </main>
+                </main>
 
-            <div> <!-- 구독권 선택 -->
-                <form class="item_select"  th:action="@{/payPage}"  method="POST">
-                    <div class="container-fluid">
-                        <div class="item_select" style="display:flex; margin: auto">
-                            <div class="card" style="width: 18rem;" th:each="item : ${item}">
-                                <img src="/images/common/OnATrip_Logo.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${item.name}"></h5>
-                                    <p class="card-text" th:text="${item.itemPrice}">Some quick example text to build on the card title and make up the bulk
-                                        of
-                                        the card's content.</p>
-<!--                                    <input type="radio" th:attr="name=${item.id}" th:value="${item.id}" >-->
-                                    <input type="radio" th:name="item_id" th:value="${item.id}" >
-                                    <input type="hidden" th:value="${item.period}">
+                <div> <!-- 구독권 선택 -->
+                    <form class="item_select" th:action="@{/payPage}" method="POST" id="subscription_Form">
+                        <div class="container-fluid">
+                            <div class="item_select" style="display:flex; margin: auto">
+                                <div class="card" style="width: 18rem;" th:each="item : ${item}">
+                                    <img src="/images/common/OnATrip_Logo.png" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${item.name}"></h5>
+                                        <p class="card-text" th:text="${item.itemPrice}">Some quick example text to
+                                            build on the card title and make up the bulk
+                                            of
+                                            the card's content.</p>
+                                        <!--                                    <input type="radio" th:attr="name=${item.id}" th:value="${item.id}" >-->
+                                        <input type="radio" th:name="item_id" th:value="${item.id}">
+                                        <input type="hidden" th:value="${item.period}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 col-xxl-4 my-5 mx-auto">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" id="order_button" type="submit" style="margin: auto; display:block">
-                                구독 시작하기
-                            </button>
+                        <div class="col-lg-6 col-xxl-4 my-5 mx-auto">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" id="order_button" type="submit"
+                                        th:if="${#authorization.expression('isAuthenticated()')}"
+                                        style="margin: auto; display:block">
+                                    구독 시작하기
+                                </button>
+                                <button class="btn btn-primary" id="login_button" type="button"  th:if="${#authorization.expression('!isAuthenticated()')}"
+                                        style="margin: auto; display:block">
+                                    구독 시작하기
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                </form>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                    </form>
 
-            </div>
+                </div>
 
             </div>
         </div>
@@ -101,5 +110,13 @@
 
 <!--  Footer -->
 <div th:replace="fragments/footer :: footerFragment"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#login_button').click(function() {
+            window.location.href = '/login';
+        });
+    });
+</script>
 </body>
 </html>

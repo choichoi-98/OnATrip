@@ -1,5 +1,9 @@
 package com.naver.OnATrip.repository.plan;
 
+import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.entity.QMember;
+import com.naver.OnATrip.entity.pay.QSubscribe;
+import com.naver.OnATrip.entity.pay.SubscribeStatus;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.LocationProjectionImpl;
 import com.naver.OnATrip.entity.plan.Plan;
@@ -62,4 +66,23 @@ public class PlanRepositoryCustomImpl implements PlanRepositoryCustom {
 
         return deletedCount > 0;
     }
+
+    @Override
+    public SubscribeStatus getStatusByEmail(String email) {
+        SubscribeStatus subscribeStatus = queryFactory
+                .select(QSubscribe.subscribe.status)
+                .from(QSubscribe.subscribe)
+                .where(QSubscribe.subscribe.memberId.eq(email))
+                .fetchOne();
+
+        return subscribeStatus;
+    }
+
+//    @Override
+//    public Member findMemberByEmail(String email) {
+//        queryFactory
+//                .select(Member)
+//                .from()
+//        return null;
+//    }
 }
