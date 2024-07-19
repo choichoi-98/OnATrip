@@ -11,8 +11,10 @@ $(document).ready(function() {
         var endDate = new Date($(this).data('enddate'));
         endDate.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정하여 날짜만 비교
 
-        if (today.getTime() !== endDate.getTime()) {
-            $(this).find('.new-badge').show();
+        if (today.getTime() === endDate.getTime()) {
+            $(this).find('.new-badge').hide(); // 오늘 날짜와 일치하는 경우 'NEW' 배지 숨김
+        } else {
+            $(this).find('.new-badge').show(); // 오늘 날짜와 일치하지 않는 경우 'NEW' 배지 표시
         }
     });
 
@@ -20,61 +22,51 @@ $(document).ready(function() {
     $('input[name="search"]').on('input', function() {
         var searchText = $(this).val().toLowerCase(); // 입력된 검색어를 소문자로 변환
 
-        // 모든 위치 항목 숨기기
-        $('#tab-all > div').hide();
-        $('#tab-domestic > div').hide();
-        $('#tab-international > div').hide();
+        // 검색어와 일치하는 위치 항목 표시 여부
+        var hasResultsAll = false;
+        var hasResultsDomestic = false;
+        var hasResultsInternational = false;
 
-        // 검색어와 일치하는 위치 항목 표시
-        var allResults = 0;
-        var domesticResults = 0;
-        var internationalResults = 0;
-
+        // 전체 탭 검색 처리
         $('#tab-all > div').each(function() {
             var locationCity = $(this).find('.location-city').text().toLowerCase();
             var locationCountry = $(this).find('.location-country').text().toLowerCase();
             if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
                 $(this).show();
-                allResults++;
+                hasResultsAll = true;
+            } else {
+                $(this).hide();
             }
         });
 
+        // 국내 탭 검색 처리
         $('#tab-domestic > div').each(function() {
             var locationCity = $(this).find('.location-city').text().toLowerCase();
             var locationCountry = $(this).find('.location-country').text().toLowerCase();
             if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
                 $(this).show();
-                domesticResults++;
+                hasResultsDomestic = true;
+            } else {
+                $(this).hide();
             }
         });
 
+        // 해외 탭 검색 처리
         $('#tab-international > div').each(function() {
             var locationCity = $(this).find('.location-city').text().toLowerCase();
             var locationCountry = $(this).find('.location-country').text().toLowerCase();
             if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
                 $(this).show();
-                internationalResults++;
+                hasResultsInternational = true;
+            } else {
+                $(this).hide();
             }
         });
 
         // 검색 결과가 없을 경우 메시지 표시
-        if (allResults === 0) {
-            $('#no-results-all').show();
-        } else {
-            $('#no-results-all').hide();
-        }
-
-        if (domesticResults === 0) {
-            $('#no-results-domestic').show();
-        } else {
-            $('#no-results-domestic').hide();
-        }
-
-        if (internationalResults === 0) {
-            $('#no-results-international').show();
-        } else {
-            $('#no-results-international').hide();
-        }
+        $('#no-results-all').toggle(!hasResultsAll);
+        $('#no-results-domestic').toggle(!hasResultsDomestic);
+        $('#no-results-international').toggle(!hasResultsInternational);
     });
 
     // 탭 클릭 처리
