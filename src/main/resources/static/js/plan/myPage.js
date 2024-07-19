@@ -33,8 +33,9 @@ $(document).ready(function() {
         $('#confirmExitModal').modal('hide');
     });
 
-    // ----------------친구 초대 버튼 클릭 시 이벤트 핸들러
+    // 친구 초대 버튼 클릭 시 이벤트 핸들러
     $(document).on('click', '.invite', function() {
+        var planId = $(this).data('planid');
         $('#inviteFriendModal').modal('show');
     });
 
@@ -58,7 +59,8 @@ $(document).ready(function() {
     // 초대하기 버튼 클릭 시 이벤트 핸들러
     $('#inviteFriendButton').on('click', function() {
         var email = $('#friendEmail').val();
-//        inviteFriend(email);
+        console.log("초대할 친구의 email-----", email);
+         inviteFriend(email);
     });
 
 });//$(document).ready(function() {
@@ -121,12 +123,8 @@ function searchFriendByEmail(email) {
         data: { email: email },
         success: function(response) {
             var resultHtml = '';
-            if (response.length > 0) {
-                resultHtml = '<ul>';
-                response.forEach(function(friend) {
-                    resultHtml += '<li>' + friend.email + '</li>';
-                });
-                resultHtml += '</ul>';
+            if (response === true) {
+                resultHtml = '<ul><li>' + email + '</li></ul>';
             } else {
                 resultHtml = '<p>검색 결과가 없습니다.</p>';
             }

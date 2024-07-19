@@ -1,5 +1,7 @@
 package com.naver.OnATrip.repository.plan;
 
+import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.entity.pay.SubscribeStatus;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
 
@@ -13,4 +15,8 @@ public interface PlanRepositoryCustom {
     List<Plan> findBymemberId(String email);
 
     boolean deletePlanById(Long planId);
+
+    SubscribeStatus getStatusByEmail(String email);
+
+//    Member findMemberByEmail(String email);
 }

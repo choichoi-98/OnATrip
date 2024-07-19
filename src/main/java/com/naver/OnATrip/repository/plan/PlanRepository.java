@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Long>, PlanRepositoryCustom {
+    long countByEmail(String email);// plan 갯수
 }
