@@ -21,6 +21,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -44,6 +46,13 @@ public class PayController {
     @Value("${imp.api.secretKey}")
     private String secretKey;
 
+
+//
+//    private String apiKey = "5567300760752543";
+//    private String secretKey = "akexds3WZwtp2HRTUZtWHI7Nk1SFMg4ZT6IQtTKWM7O8xOaeZqDZsWyHwaEnqj7qwAf1TzyadBK4ouUv";
+//
+
+
     @PostConstruct
     private void init() {
         this.iamportClient = new IamportClient(apiKey, secretKey);
@@ -57,35 +66,33 @@ public class PayController {
         System.out.println("Preparing payment: {}");
         paymentService.postPrepare(request);
         System.out.println("Payment prepared successfully for merchant_uid");
-//        log.info("Payment prepared successfully for merchant_uid: {}", request.getMerchantUid());
     }
 
-//    @GetMapping("/payPrepare")
-//    public void preparePaymentGet(){
-//
-//    }
-
-    @PostMapping("/payment/payPage")
-    public String getItemById(@RequestParam("item_id") int itemId, Model model, @AuthenticationPrincipal Member member) {
+    @PostMapping("/payPage")
+    public String getItemById(@RequestParam("item_id") int itemId, Model model) {
         Optional<Item> itemOptional = itemService.findById(itemId);
         if (itemOptional.isPresent()) {
             Item item = itemOptional.get();
             model.addAttribute("item", item);
-            log.info("$$ Id:", member.getId());
         }
-
         return "pay/payPage";
     }
 
-//    @PostMapping("/pay/validate")
-//    @ResponseBody
-//    public Orders insertPay(@RequestBody OrderDto request, HttpSession session, RedirectAttributes rttr)
-//                    throws IamportResponseException, IOException{
+    @PostMapping("/payment/validate")
+    @ResponseBody
+    public Payment validatePayment(@RequestBody PaymentDto request)
+            throws IamportResponseException, IOException, JsonIOException {
 //        log.info("Validating payment: {}", request);
-//        System.out.println("**** pay validate ***");
-//        return payService.insertPay(request);
-//    }
+        System.out.println("Validating payment");
+        return paymentService.validatePayment(request);
+    }
 
+
+    @GetMapping("/mypage/subscribe")
+    public String subscribe(Model model) {
+
+        return "pay/myPage_Subscribe";
+    }
 
 //
 //    @GetMapping("/orderDone")
@@ -97,13 +104,7 @@ public class PayController {
 //    }
 
 
-    @PostMapping("/payment/validate")
-    public Payment validatePayment(@RequestBody PaymentDto request)
-                    throws IamportResponseException, IOException, JsonIOException {
-//        log.info("Validating payment: {}", request);
-        System.out.println("Validating payment");
-        return paymentService.validatePayment(request);
-    }
+
 
 //    @PostMapping("/pay/validate")
 //    @ResponseBody

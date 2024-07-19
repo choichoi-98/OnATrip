@@ -8,7 +8,7 @@ import lombok.Data;
 public class SubscribeDto {
 
     private Long id;
-//    private Member memberId;
+    private String memberId;
     private String startDate;
     private String renewal;
     private SubscribeStatus status;

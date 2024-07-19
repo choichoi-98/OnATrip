@@ -34,9 +34,10 @@ public class Orders {
 //            inverseJoinColumns = @JoinColumn(name = "item_id")
 //    )
 //    private List<Item> items = new ArrayList<>();       //주문된 아이템 리스트
+    private String memberId;
 
-    @Enumerated(EnumType.STRING)
-    private payMethod payMethod;        //결제방식
+  //  @Enumerated(EnumType.STRING)
+    private String payMethod;        //결제방식
 
     @Column(length = 100, name = "merchant_uid")
     private String merchantUid;      //주문명
@@ -44,6 +45,10 @@ public class Orders {
     private BigDecimal amount;  //총 가격
 
     private String orderUid; // 주문 번호
+
+    private int itemId;
+
+    private int itemPeriod;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -58,20 +63,14 @@ public class Orders {
     public Orders(OrderDto request) {
     }
 
-//
-//    public void orderConfirm(String merchantUid, OrderDto orderDto) {
-//        this.merchantUid = merchantUid;
-//        this.totalPrice = orderDto.getTotalPrice();
-//        this.payMethod = orderDto.getPayMethod();
-//        this.orderDate = LocalDateTime.now();
-//    }
 
     public void setPaymentStatus(Boolean paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
     @Builder
-    public Orders(Long id, String orderUid, /* List<Item> items, */ com.naver.OnATrip.entity.pay.payMethod payMethod, String merchantUid, BigDecimal amount, LocalDateTime orderDate, Boolean paymentStatus) {
+    public Orders(Long id, String orderUid, String payMethod, String merchantUid, BigDecimal amount, LocalDateTime orderDate,
+                  Boolean paymentStatus, int itemId, int itemPeriod, String memberId) {
         this.id = id;
 //        this.member = member;
         this.orderUid = orderUid;
@@ -81,5 +80,8 @@ public class Orders {
         this.amount = amount;
         this.orderDate = orderDate;
         this.paymentStatus = paymentStatus;
+        this.itemId = itemId;
+        this.itemPeriod = itemPeriod;
+        this.memberId = memberId;
     }
 }
