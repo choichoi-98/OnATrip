@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -64,7 +65,7 @@ public class MyQNA {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.answer = answer;
+        this.answer = "N";
     }
 
 
