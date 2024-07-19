@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-      layout:decorate="layout/default_layout">
+layout:decorate="layout/default_layout">
 <th:block th:fragment="headerFragment">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -65,9 +65,9 @@
         <script src="/js/main/webpack-3c9b6c80d785b0f0.js" defer=""></script>
         <script src="/js/main/framework-3236775a9ca336a2.js" defer=""></script>
         <script src="/js/main/main-589843cdf0664f67.js" defer=""></script>
-<!--
-        <script src="/js/main/_app-650aad3504cc374e.js" defer=""></script>
--->
+        <!--
+                <script src="/js/main/_app-650aad3504cc374e.js" defer=""></script>
+        -->
         <script src="/js/main/6943-53ecf2adc2630d65.js" defer=""></script>
         <script src="/js/main/3932-1ead39fe62a0e367.js" defer=""></script>
         <script src="/js/main/9721-f18c9fc0a21c3670.js" defer=""></script>
@@ -132,15 +132,17 @@
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/admin">관리자</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                             href="/myPage">내 여행</a>
+                               href="/myPage">내 여행</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                                href="/">공지사항</a>
+                               href="/">공지사항</a>
                             <th:block th:if="${not #authorization.expression('isAuthenticated()')}">
                                 <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                    href="/subscribe">구독권</a>
                             </th:block>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                                sec:authorize="isAnonymous()" href="/login">로그인</a>
+                               href="/alert">알림</a>
+                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
+                               sec:authorize="isAnonymous()" href="/login">로그인</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="isAuthenticated()" href="#">마이페이지</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"

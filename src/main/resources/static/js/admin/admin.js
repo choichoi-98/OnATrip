@@ -2,8 +2,15 @@ $(document).ready(function() {
     // 페이지 로드 시 모든 여행지 목록을 불러오는 함수 호출
     loadAllLocations();
 
-       // 모든 여행지 목록을 불러오는 함수
-       function loadAllLocations() {
+    // 엔터키 누를 때 기본 동작 방지
+    $('#city_input, #country_input').keydown(function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            }
+    });
+
+     // 모든 여행지 목록을 불러오는 함수
+     function loadAllLocations() {
            $.ajax({
                url: '/admin/getAllLocations',
                type: 'GET',
@@ -30,10 +37,10 @@ $(document).ready(function() {
                    alert('위치를 불러오는 도중 오류가 발생했습니다. 다시 시도해주세요.');
                }
            });
-       }
+     }
 
-       // 여행지를 목록에 추가하는 함수
-       function addToLocationList(listType, countryCode, city, description, imagePath) {
+     // 여행지를 목록에 추가하는 함수
+     function addToLocationList(listType, countryCode, city, description, imagePath) {
            // 이미지 경로를 절대 경로로 설정
            var absoluteImagePath = 'http://localhost:9100' + imagePath;
 
@@ -43,7 +50,7 @@ $(document).ready(function() {
            // 예를 들어, DOM에 이미지를 추가하는 코드
            var imageElement = $('<img>').attr('src', absoluteImagePath);
            $('#imageContainer').append(imageElement);
-       }
+     }
 
         // 도시명 검색 버튼 클릭 이벤트 처리
         $('#city_search_btn').click(function(event) {
@@ -55,8 +62,8 @@ $(document).ready(function() {
             checkCityExistence(city);
         });
 
-        // 서버로 도시명 검색 요청을 보내는 함수
-        function checkCityExistence(cityName) {
+     // 서버로 도시명 검색 요청을 보내는 함수
+     function checkCityExistence(cityName) {
             // CSRF 토큰 가져오기
             var csrfToken = $('meta[name="_csrf"]').attr('content');
 
@@ -81,7 +88,7 @@ $(document).ready(function() {
                     alert('도시명 검색 중 오류가 발생했습니다. 다시 시도해주세요.');
                 }
             });
-        }
+     }
 
     // 공공데이터포털 API 키
     const apiKey = 'q1y2LxDgfm2mCBSf2WsLlYxlAW6%2BQgPj%2FGN%2B5Evoojnqak2OLBFMZF2rTJRwyzUeOjghsPTvt%2BHZwdWk0iT%2BmA%3D%3D';
@@ -419,8 +426,7 @@ $(document).ready(function() {
       $targetLi.find('.preview-image').attr('src', imageSrc);
   }
 
-
-    // Country 검색 버튼 클릭 이벤트 처리
+    /*// Country 검색 버튼 클릭 이벤트 처리
     $('#country_search_btn').click(function(event) {
         event.preventDefault(); // 기본 이벤트 방지
 
@@ -434,7 +440,7 @@ $(document).ready(function() {
             console.log('----------Country_search_btn: 검색창에 아무것도 없을떄')
             alert('국가명을 입력하세요.');
         }
-    });
+    });*/
 
     // 서버로 국가명 검색 요청을 보내는 함수
     function checkCountryExistence(countryName) {
@@ -494,19 +500,21 @@ $(document).ready(function() {
            });
        }
 
-       // 국가 입력 필드에 대한 이벤트 리스너 추가
+      // 국가 입력 필드에 대한 이벤트 리스너 추가
       $('#country_search_btn').click(function(event) {
           event.preventDefault(); // 기본 이벤트 방지
 
           var countryName = $('#country_input').val().trim();
           if (countryName !== '') {
               console.log('검색할 국가명:', countryName);
-              getCountryCode(countryName);
+              // 국가 존재 여부 확인 후 필요한 작업 수행
+              checkCountryExistence(countryName);
           } else {
               alert('국가명을 입력하세요.');
           }
       });
- // 도시명 검색 버튼 클릭 이벤트 처리
+
+      // 도시명 검색 버튼 클릭 이벤트 처리
       $('#search_city_btn').click(function(event) {
           event.preventDefault(); // 기본 이벤트 방지
 
@@ -544,7 +552,7 @@ $(document).ready(function() {
           });
       }
 
-   // 여행지 목록 수정
+  // 여행지 목록 수정
   // 여행지 정보 업데이트 함수
   function updateLocationData($targetLi, countryName, countryCode, city, description, imageSrc) {
       var formData = new FormData();
