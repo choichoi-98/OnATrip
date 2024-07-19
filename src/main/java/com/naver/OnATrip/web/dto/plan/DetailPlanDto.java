@@ -18,7 +18,7 @@ public class DetailPlanDto {
     @JsonProperty("planId")
     private Long plan_id;
 
-    private Long memberId;//회원가입 기능 완료 시 수정필요
+    private String email;//회원가입 기능 완료 시 수정필요
 
     private String countryName;
 
@@ -27,9 +27,9 @@ public class DetailPlanDto {
     private LocalDate perDate;
 
     @Builder
-    public DetailPlanDto(Long planId, Long memberId, String countryName, String countryCode, LocalDate perDate) {
+    public DetailPlanDto(Long planId, String email, String countryName, String countryCode, LocalDate perDate) {
         this.plan_id = planId;
-        this.memberId = memberId;
+        this.email = email;
         this.countryName = countryName;
         this.countryCode = countryCode;
         this.perDate = perDate;
@@ -40,7 +40,7 @@ public class DetailPlanDto {
 
         return DetailPlan.builder()
                 .plan(Plan.builder().id(plan_id).build()) // Plan 엔티티의 ID만 설정
-                .memberId(memberId)
+                .email(email)
                 .countryName(countryName)
                 .countryCode(countryCode)
                 .perDate(perDate)
@@ -52,7 +52,7 @@ public class DetailPlanDto {
     public DetailPlanDto(DetailPlan detailPlan) {
         this.id = detailPlan.getId();
         this.plan_id = detailPlan.getPlan().getId();
-        this.memberId = detailPlan.getMemberId();
+        this.email = detailPlan.getEmail();
         this.countryName = detailPlan.getCountryName();
         this.countryCode = detailPlan.getCountryCode();
         this.perDate = detailPlan.getPerDate();

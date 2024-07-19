@@ -1,8 +1,11 @@
 package com.naver.OnATrip.controller;
 
+import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
-import com.naver.OnATrip.entity.plan.DetailPlan;
+import com.naver.OnATrip.exception.UnauthorizedAccessException;
+import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.service.DetailPlanService;
 import com.naver.OnATrip.service.PlanService;
 import com.naver.OnATrip.service.RouteService;
@@ -16,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class PlanController {
@@ -35,8 +40,9 @@ public class PlanController {
     private final RouteService routeService;
     private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
+
     @Autowired
-    public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService) {
+    public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService, MemberRepository memberRepository) {
         this.planService = planService;
         this.detailPlanService = detailPlanService;
         this.routeService = routeService;
@@ -45,16 +51,28 @@ public class PlanController {
     // GET 요청 처리 메서드
     //이용자 날짜 선택
     @GetMapping("/selectDate")
-    public String selectDate(Model model){
+    public String selectDate(Model model, Principal principal){
         Long locationId = 1L; // 예시로 1L로 설정
+//, @RequestParam("locationId") Long loctionId
         //-> 이거 나중에 연결하면 ok~
 
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+
+        if (principal == null) {
+            throw new UnauthorizedAccessException("로그인이 필요한 서비스 입니다.");
+        }
+
+        String email = principal.getName();
+        //-------null이면 어쩌구~~~
         logger.info("PlanController-selectDate");
+
 
         // Model 객체에 데이터 추가
         model.addAttribute("locationId", locationId);
+        model.addAttribute("email", email);
 
-        return "plan/selectDate"; // 해당하는 HTML 파일의 경로와 파일명을 반환
+        return "plan/selectDate";
     }
 
     //Plan 생성
@@ -62,6 +80,7 @@ public class PlanController {
     @ResponseBody
     public String createPlan(@RequestBody PlanDto planDto) {
         logger.info("PlanController-createPlan");
+
 
 
         // Plan 생성
@@ -97,7 +116,7 @@ public class PlanController {
         for (LocalDate date : datesList) {
             DetailPlanDto detailPlanDto = DetailPlanDto.builder()
                     .planId(planDto.getId())
-                    .memberId(planDto.getMemberId())
+                    .email(planDto.getEmail())
                     .countryName(location.getCountryName())
                     .countryCode(location.getCountryCode())
                     .perDate(date)
@@ -117,11 +136,12 @@ public class PlanController {
     public ModelAndView detailPlan(ModelAndView mv,
                                    @RequestParam("planId") Long planId
                                    ) {
-        logger.info("Controller------------viewDetailPlan 0----------------");
+        logger.info("Controller------------viewDetailPlan----------------");
         List<DetailPlan> detailPlans = detailPlanService.findDetailPlanByPlanId(planId);
         Map<Long, List <RouteDto>> routeMap = new HashMap<>();
         for (DetailPlan dp : detailPlans) {
-            logger.info("DetailPlan ID: {}, Country: {}, PerDate: {}", dp.getId(), dp.getCountryName(), dp.getCountryCode() , dp.getPerDate());
+            logger.info("DetailPlan ID: {}, Country: {}, CountryCode: {}, PerDate: {}, Email: {}",
+                    dp.getId(), dp.getCountryName(), dp.getCountryCode(), dp.getPerDate(), dp.getEmail());
             List<RouteDto> routes = routeService.findRoutesByDetailPlanId(dp.getId());
             for (RouteDto route : routes) {
                 logger.info("RouteDto Id: {}, category: {}, day_number: {}, place_name: {}, sort_key: {}, mark_seq: {}", route.getId(), route.getCategory(), route.getDay_number(), route.getPlaceName(), route.getSortKey(), route.getMarkSeq());
@@ -170,6 +190,27 @@ public class PlanController {
         }
     }
 
+    //Plan 삭제
+    @PostMapping("/deletePlan")
+    public ResponseEntity<Boolean> deletePlan(@RequestParam("planId") Long planId){
+        logger.info("--------------deletePlan - planId : " + planId);
+        boolean result = planService.deletePlan(planId);
+        if(result){
+            return ResponseEntity.ok((result));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    //Plan 리스트 반환 ajax
+    @GetMapping("/getPlans")
+    public String getPlans(Model model, Principal principal){
+        String email = principal.getName();
+        List<Plan> plans = planService.findPlanBymemberId(email);
+        model.addAttribute("plans", plans);
+        return "fragments/planList :: planListContent";
+    }
+
     //modifyMemo-메모 내용 수정
     @PostMapping("/modifyMemo")
     @ResponseBody
@@ -205,13 +246,40 @@ public class PlanController {
 
     //myPage 이동
     @GetMapping("/myPage")
-    public String myPage(@AuthenticationPrincipal Principal principal){
+    public ModelAndView myPage(
+                               ModelAndView mv,
+                               @RequestParam("email") String email){
 
-        logger.info("Principal Object: {}", principal);
 
-//        logger.info("Principal",principal.getName());
 
-        return "/myPage";
+        logger.info("--------------------email ------------ " + email);
+
+
+//        logger.info("Member ID: {}", memberId);
+        List<Plan> plans = planService.findPlanBymemberId(email);
+        for (Plan plan : plans) {
+            logger.info("Plan ID: {}, Member email: {}, Location: {}, Location:{}, Start Date: {}, End Date: {}, Mate ID: {}",
+                    plan.getId(), plan.getEmail(), plan.getLocation().getCountryName(), plan.getLocation().getImage(),
+                   plan.getStartDate(), plan.getEndDate(), plan.getMateId());
+        }
+
+        mv.addObject("plans", plans);
+        mv.setViewName("/myPage");
+
+        return mv;
+    }
+
+    //친구 이메일로 검색
+    @GetMapping("/searchFriendByEmail")
+    public ResponseEntity<Member> searchFriendByEmail(@RequestParam("email") String email){
+        logger.info("-----------searchMemberByEmail-controller: "+ email);
+         Member member = planService.findMemberByEmail(email);
+//        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+//
+//        Member member = optionalMember.get();
+//        logger.info("Member Email: {}", member.getEmail());
+
+        return ResponseEntity.ok(member);
     }
 
 }//public class PlanController {

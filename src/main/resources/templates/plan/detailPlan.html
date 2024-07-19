@@ -59,7 +59,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/main">홈으로</a></li>
                             <li><a class="dropdown-item" href="#">친구초대</a></li>
-                            <li><a class="dropdown-item" href="/myPage">여행 리스트</a></li>
+                            <li><a class="dropdown-item" th:href="'/myPage?email=' + ${detailPlans[0].email}">여행 리스트</a></li>
                         </ul>
                     </div>
                 </div>

@@ -1,40 +1,36 @@
 package com.naver.OnATrip.service;
 
-import com.naver.OnATrip.controller.PlanController;
-import com.naver.OnATrip.entity.Location;
+import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
-import com.naver.OnATrip.repository.PlanRepository;
+import com.naver.OnATrip.repository.MemberRepository;
+import com.naver.OnATrip.repository.plan.PlanRepository;
 //import com.naver.OnATrip.web.dto.plan.RouteDto;
 import com.naver.OnATrip.web.dto.plan.PlanDto;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PlanService {
 
     private final PlanRepository planRepository;
+    private final MemberRepository memberRepository;
     private final EntityManager em;
     private static final Logger logger = LoggerFactory.getLogger(PlanService.class);
 
     @Autowired
-    public PlanService(PlanRepository planRepository, EntityManager em) {
+    public PlanService(PlanRepository planRepository, MemberRepository memberRepository, EntityManager em) {
         this.planRepository = planRepository;
+        this.memberRepository = memberRepository;
         this.em = em;
     }
 
@@ -110,4 +106,19 @@ public class PlanService {
     }
 
 
+    public List<Plan> findPlanBymemberId(String email) {
+//        planRepository.findById(memberId);
+        return planRepository.findBymemberId(email);
+    }
+
+    public boolean deletePlan(Long planId) {
+        return planRepository.deletePlanById(planId);
+    }
+
+    public Member findMemberByEmail(String email) {
+        logger.info("findMemberByEmail-planService, email = " + email);
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.get();
+        return member;
+    }
 }
