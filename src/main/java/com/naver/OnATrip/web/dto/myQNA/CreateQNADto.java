@@ -53,7 +53,7 @@ public class CreateQNADto {
                 .qnaStatus(qnaStatus)
                 .title(title)
                 .content(content)
-                .writer(writer)
+                .writer(member.getName())
                 .createAt(createAt)
                 .member(member) // Member 객체 설정
                 .build();
