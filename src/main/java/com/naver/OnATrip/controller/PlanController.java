@@ -51,17 +51,8 @@ public class PlanController {
     // GET 요청 처리 메서드
     //이용자 날짜 선택
     @GetMapping("/selectDate")
-    public String selectDate(Model model, Principal principal){
-        Long locationId = 1L; // 예시로 1L로 설정
-//, @RequestParam("locationId") Long loctionId
-        //-> 이거 나중에 연결하면 ok~
+    public String selectDate(Model model, Principal principal, @RequestParam("locationId") Long locationId){
 
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String email = authentication.getName();
-
-        if (principal == null) {
-            throw new UnauthorizedAccessException("로그인이 필요한 서비스 입니다.");
-        }
 
         String email = principal.getName();
         //-------null이면 어쩌구~~~
