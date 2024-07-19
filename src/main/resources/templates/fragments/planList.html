@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan List Fragment</title>
+</head>
+<body>
+<div th:fragment="planListContent">
+    <div th:each="plan : ${plans}" class="card-container mt-3">
+        <!-- Plan Card -->
+        <div class="card d-flex justify-content-center" data-planid="${plan.id}">
+            <div class="card-horizontal">
+                <img th:src="@{${plan.location.image}}" class="card-img-left img-margin" alt="여행 국가 이미지">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${plan.location.countryName}"></h5>
+                    <span th:text="${plan.startDate} + ' - ' + ${plan.endDate}"></span>
+                </div>
+                <div class="p-2 justify-content-center" style="margin-top: 34px">
+                    <button type="button" class="btn btn-primary view-detail" th:data-planid="${plan.id}">자세히</button>
+                    <button type="button" class="btn btn-success invite">친구초대</button>
+                    <button type="button" class="btn btn-secondary mr-2 delete-plan" th:data-planid="${plan.id}">나가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

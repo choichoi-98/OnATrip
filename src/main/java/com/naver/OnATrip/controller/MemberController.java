@@ -108,7 +108,7 @@ public class MemberController {
 
     @GetMapping("/join")
     public String join(Model model) {
-        logger.info("MemberController, join");
+        logger.info("--------------------------------------------MemberController, join");
         model.addAttribute("memberDTO", new MemberDTO());
 
         return "member/join";

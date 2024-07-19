@@ -34,9 +34,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                        .requestMatchers("/", "/member/**", "/item/**", "/images/**").permitAll()
+                        .requestMatchers( "/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADM…
                         .anyRequest().authenticated() //// 나머지 요청은 인증 필요
-
+//                        "/member/**", "/item/**", "/images/**","/main","/location/**","/join/**","/login/**","/findPassword/**",
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -49,14 +50,14 @@ public class WebSecurityConfig {
                 )
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/main")
                         .invalidateHttpSession(true)
                 )
                 .exceptionHandling((exceptions) -> exceptions
                         .accessDeniedHandler(accessDeniedHandler())
                 )
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers("/payment/**")
+                        .ignoringRequestMatchers("/payment/**","/admin/**","/member/**","/member/join")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 );
 

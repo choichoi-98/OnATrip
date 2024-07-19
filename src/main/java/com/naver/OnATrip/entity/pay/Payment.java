@@ -31,12 +31,12 @@ public class Payment {
 
 //    private LocalDateTime payDate;   //결제 시각
 
-    private PaymentStatus status;   //결제 상태
+//    private PaymentStatus status;   //결제 상태
 
 
 
-    @Enumerated(EnumType.STRING)
-    private payMethod payMethod;        //결제방식
+   // @Enumerated(EnumType.STRING)
+   // private payMethod payMethod;        //결제방식
 
     @Column(length = 100, name = "merchant_uid")
     private String merchantUid;      //주문명

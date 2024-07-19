@@ -52,9 +52,11 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("인증 확인 = "+authentication);
 
+
         String username = authentication.getName();
         model.addAttribute("email", username);
         System.out.println("유저 확인 = "+username);
+
 
         return "main"; // 메인 페이지로 이동
     }

@@ -31,12 +31,12 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.get().getPassword();
+        return null;
     }//----수정한 부분 --
 
     @Override
     public String getUsername() {
-        return member.get().getName();
+        return null;
     }//----수정한 부분 --
 
     /* 계정 만료 여부, false : 만료 */

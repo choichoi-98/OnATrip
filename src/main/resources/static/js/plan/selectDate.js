@@ -44,6 +44,7 @@ $(document).ready(function(){
     $('.btn-get-started').on('click', function(){
         var dateRange = $('#datepicker-container').val();
         var locationId = $(this).data('location-id');
+        var email = $(this).data('email');
 
         console.log(dateRange);
 
@@ -63,7 +64,7 @@ $(document).ready(function(){
                 data: JSON.stringify({
                     startDate: startDate,
                     endDate: endDate,
-                    memberId: 1, //-----임시, 추후 수정 필요
+                    email: email, //-----임시, 추후 수정 필요
                     locationId: locationId // 위치 ID 추가
 
                 }),

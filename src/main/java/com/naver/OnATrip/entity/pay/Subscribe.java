@@ -2,11 +2,10 @@ package com.naver.OnATrip.entity.pay;
 
 import com.naver.OnATrip.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,19 +19,30 @@ public class Subscribe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "member_id", insertable = false, updatable = false) //MEMBER_ID를 읽기 전용으로만 사용
-    private Member member;
+    private String memberId;
 
+    @CreationTimestamp
+    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private String startDate;
 
     private String endDate;
+
+    private int itemPeriod;         //구독권 기간
 
     @Enumerated(EnumType.STRING)
     private SubscribeStatus status;
 
     @Enumerated(EnumType.STRING)
     private SubscribeRenewal renewal;
+
+
+    @Builder
+    public Subscribe(String memberId, String endDate, int itemPeriod, SubscribeStatus status) {
+        this.memberId = memberId;
+        this.endDate = endDate;
+        this.itemPeriod = itemPeriod;
+        this.status = status;
+    }
 
 
 //    //-- 구독권 결제시 구독 추가 --//

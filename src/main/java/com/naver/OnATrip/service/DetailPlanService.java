@@ -1,7 +1,7 @@
 package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.entity.plan.DetailPlan;
-import com.naver.OnATrip.repository.DetailPlanRepository;
+import com.naver.OnATrip.repository.plan.DetailPlanRepository;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
