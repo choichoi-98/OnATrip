@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -65,13 +66,7 @@ public class PayController {
         System.out.println("Preparing payment: {}");
         paymentService.postPrepare(request);
         System.out.println("Payment prepared successfully for merchant_uid");
-//        log.info("Payment prepared successfully for merchant_uid: {}", request.getMerchantUid());
     }
-
-//    @GetMapping("/payPrepare")
-//    public void preparePaymentGet(){
-//
-//    }
 
     @PostMapping("/payPage")
     public String getItemById(@RequestParam("item_id") int itemId, Model model) {
@@ -80,19 +75,24 @@ public class PayController {
             Item item = itemOptional.get();
             model.addAttribute("item", item);
         }
-
         return "pay/payPage";
     }
 
-//    @PostMapping("/pay/validate")
-//    @ResponseBody
-//    public Orders insertPay(@RequestBody OrderDto request, HttpSession session, RedirectAttributes rttr)
-//                    throws IamportResponseException, IOException{
+    @PostMapping("/payment/validate")
+    @ResponseBody
+    public Payment validatePayment(@RequestBody PaymentDto request)
+            throws IamportResponseException, IOException, JsonIOException {
 //        log.info("Validating payment: {}", request);
-//        System.out.println("**** pay validate ***");
-//        return payService.insertPay(request);
-//    }
+        System.out.println("Validating payment");
+        return paymentService.validatePayment(request);
+    }
 
+
+    @GetMapping("/mypage/subscribe")
+    public String subscribe(Model model) {
+
+        return "pay/myPage_Subscribe";
+    }
 
 //
 //    @GetMapping("/orderDone")
@@ -104,14 +104,7 @@ public class PayController {
 //    }
 
 
-    @PostMapping("/payment/validate")
-    @ResponseBody
-    public Payment validatePayment(@RequestBody PaymentDto request)
-                    throws IamportResponseException, IOException, JsonIOException {
-//        log.info("Validating payment: {}", request);
-        System.out.println("Validating payment");
-        return paymentService.validatePayment(request);
-    }
+
 
 //    @PostMapping("/pay/validate")
 //    @ResponseBody

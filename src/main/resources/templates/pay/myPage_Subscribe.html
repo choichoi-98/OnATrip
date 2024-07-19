@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default_layout">
+
+<style>
+
+    /*화면 크기 조절*/
+
+    .mb-800 {
+        margin-bottom: 50rem;
+    }
+
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .card {
+            flex: 1 1 calc(33.333% - 1rem); /* 3개의 박스가 한 줄에 표시되도록 함 */
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            .card {
+                flex: 1 1 calc(50% - 1rem); /* 작은 화면에서는 2개의 박스가 한 줄에 표시되도록 함 */
+            }
+        }
+        @media (max-width: 576px) {
+            .card {
+                flex: 1 1 100%; /* 가장 작은 화면에서는 1개의 박스가 한 줄에 표시되도록 함 */
+            }
+        }
+
+</style>
+<link href="/css/pay/product.css" rel="stylesheet">
+<head th:replace="fragments/header :: headerFragment">
+</head>
+<body>
+
+<div class="safari_only_wrapper">
+    <div class="fixed-status"></div>
+    <div class="h-full mx-auto">
+        <div id="searchcity" class="md:pb-160 xl:pb-240" style="padding-bottom: 100px !important;"></div>
+        <div class="w-screen pl-8 mb-800 md:pl-0"  style="margin-bottom: 150px !important;">
+            <div class="container2 relative mx-auto">
+                <!--  여기에 내용 채우기 -->
+
+                <div class="container mt-5">
+                    <ul class="nav nav-tabs" id="travelPlanTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming" role="tab" aria-controls="upcoming" aria-selected="true">구독권 관리</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">완료된 구독권</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="travelPlanTabsContent">
+                        <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                            <div class="card-container mt-3">
+                                <!-- 구독권 목록 -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">예정된 여행 1</h5>
+                                        <p class="card-text">예정된 여행 1에 대한 설명입니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                            <div class="card-container mt-3">
+                                <!-- 완료된 여행 목록 -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">완료된 여행 1</h5>
+                                        <p class="card-text">완료된 여행 1에 대한 설명입니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- 여기가 custom 마지막 -->
+
+        </div>
+    </div>
+</div>
+
+                <!--  Footer -->
+<div th:replace="fragments/footer :: footerFragment"></div>
+</body>
+</html>

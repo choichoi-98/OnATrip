@@ -2,9 +2,11 @@ package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.entity.pay.Orders;
 import com.naver.OnATrip.entity.pay.Payment;
+import com.naver.OnATrip.entity.pay.Subscribe;
 import com.naver.OnATrip.repository.pay.ItemRepositoryCustom;
 import com.naver.OnATrip.repository.pay.OrderRepository;
 import com.naver.OnATrip.repository.pay.PayRepository;
+import com.naver.OnATrip.repository.pay.SubscribeRepository;
 import com.naver.OnATrip.web.dto.pay.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,12 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private ItemRepositoryCustom itemRepository;
-
     @Autowired
     private PayRepository payRepository;
+    @Autowired
+    private SubscribeRepository subscribeRepository;
 
 //    public  PaymentDto orderDone(String merchantUid) {
 //       Payment payment = payRepository.findByMerchantUid(merchantUid);
@@ -38,6 +40,11 @@ public class OrderService {
     @Transactional
     public void save_orderInfo(Orders request) {
         orderRepository.save(request);
+    }
+
+    @Transactional
+    public void save_subscribe(Subscribe request){
+        subscribeRepository.save(request);
     }
 
 //    public void save_orderInfo(Orders request){

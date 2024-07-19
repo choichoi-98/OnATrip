@@ -35,6 +35,9 @@ public class OrderDto {
 
     private String impUid;
 
+    private String memberId;
+
+
 
 
 

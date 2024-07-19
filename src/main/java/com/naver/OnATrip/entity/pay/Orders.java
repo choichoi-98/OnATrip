@@ -34,6 +34,7 @@ public class Orders {
 //            inverseJoinColumns = @JoinColumn(name = "item_id")
 //    )
 //    private List<Item> items = new ArrayList<>();       //주문된 아이템 리스트
+    private String memberId;
 
   //  @Enumerated(EnumType.STRING)
     private String payMethod;        //결제방식
@@ -68,7 +69,8 @@ public class Orders {
     }
 
     @Builder
-    public Orders(Long id, String orderUid, /* List<Item> items, */ String payMethod, String merchantUid, BigDecimal amount, LocalDateTime orderDate, Boolean paymentStatus, int itemId, int itemPeriod) {
+    public Orders(Long id, String orderUid, String payMethod, String merchantUid, BigDecimal amount, LocalDateTime orderDate,
+                  Boolean paymentStatus, int itemId, int itemPeriod, String memberId) {
         this.id = id;
 //        this.member = member;
         this.orderUid = orderUid;
@@ -80,5 +82,6 @@ public class Orders {
         this.paymentStatus = paymentStatus;
         this.itemId = itemId;
         this.itemPeriod = itemPeriod;
+        this.memberId = memberId;
     }
 }
