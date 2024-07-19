@@ -108,7 +108,7 @@ public class PlanService {
         return dates;
     }
 
-
+    @Transactional
     public List<Plan> findPlanBymemberId(String email) {
 //        planRepository.findById(memberId);
         return planRepository.findBymemberId(email);
@@ -118,6 +118,7 @@ public class PlanService {
         return planRepository.deletePlanById(planId);
     }
 
+    @Transactional
     public boolean existsByEmail(String email) {
         logger.info("findMemberByEmail-planService, email = " + email);
         boolean result = memberRepository.existsByEmail(email);
@@ -135,5 +136,77 @@ public class PlanService {
     public SubscribeStatus getSubscribeStatus(String email) {
         SubscribeStatus statusByEmail = planRepository.getStatusByEmail(email);
         return statusByEmail;
+    }
+
+    //친구 초대 시 등록 된 친구인지 여부 확인
+    @Transactional
+    public boolean ExistPlanByEmail(String email, Long planId) {
+        return planRepository.ExistPlanByEmail(email, planId);
+    }
+
+    //mate_id update
+    @Transactional
+    public boolean updateMateEmailToPlan(String email, Long planId) {
+        return planRepository.updateMateEmailToPlan(email, planId);
+    }
+
+    public boolean incrementMemberCount(Long planId) {
+        try {
+            Plan plan = planRepository.findById(planId).orElseThrow(() -> new IllegalArgumentException("Invalid planId: " + planId));
+            plan.incrementMemberCount();
+            planRepository.save(plan);
+            return true;
+        } catch (Exception e) {
+            // 예외 처리 로직
+            return false;
+        }
+
+    }
+
+    //plan 삭제 + update
+    @Transactional
+    public boolean deleteOrUpdatePlan(Long planId, String loginEmail){
+        try{
+            Plan plan = planRepository.findById(planId).orElseThrow(() -> new IllegalArgumentException("Invalid planId: " + planId));
+            if(plan.getMemberCount()==1){ // 개인 일정
+                planRepository.delete(plan);
+                return true;
+            } else { // 공유된 일정
+
+                if(plan.getEmail().equals(loginEmail)){
+                    //로그인한 유저가 최초 생성자인 경우
+                    planRepository.updatePlanEmailAndDecrementMemberCount(planId);
+                } else {
+                    //로그인한 유저가 초대 받은 멤버인 경우
+                    String updatedMateId = removeEmailFromMateId(plan.getMateId(), loginEmail);
+                    plan.updateMateId(updatedMateId);
+                    planRepository.updatePlanMateIdAndDecrementMemberCount(planId, updatedMateId);
+                }
+
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    //mateId에서 로그인한 멤버의 email 값 제거
+    private String removeEmailFromMateId(String mateId, String email) {
+        if (mateId == null || mateId.isEmpty()){
+            return mateId;
+        }
+        String[] emails = mateId.split(",\\s*");
+        StringBuilder updateMateId = new StringBuilder();
+        for(String e : emails){
+            if(!e.equals(email)){
+                if(updateMateId.length() > 0){
+                    updateMateId.append(", ");
+                }
+                updateMateId.append(e);
+            }
+        }
+        return updateMateId.toString();
     }
 }

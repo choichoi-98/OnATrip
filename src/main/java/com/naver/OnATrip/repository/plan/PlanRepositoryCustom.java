@@ -18,5 +18,13 @@ public interface PlanRepositoryCustom {
 
     SubscribeStatus getStatusByEmail(String email);
 
+    boolean ExistPlanByEmail(String email, Long planId);
+
+    boolean updateMateEmailToPlan(String email, Long planId);
+
+    void updatePlanEmailAndDecrementMemberCount(Long planId);
+
+    void updatePlanMateIdAndDecrementMemberCount(Long planId, String updatedMateId);
+
 //    Member findMemberByEmail(String email);
 }

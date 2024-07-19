@@ -19,10 +19,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 <link rel="stylesheet" href="css/plan/detailPlan.css">
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClupjj1Y0A3u-NHuIO7RaQZzZ5_5Yd2Mg&
-            callback=initMap&v=weekly&language=ko&libraries=places"
-></script>
+<script src="/js/plan/googleApikey.js"></script>
+<script>
+    const API_KEY = config.apikey; // API 키를 가져옵니다.
+const script = document.createElement('script');
+script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap&v=weekly&language=ko&libraries=places`;
+document.head.appendChild(script); // 동적으로 스크립트를 추가합니다.
+</script>
 
 <script src="/js/plan/detailPlan.js"></script>
 <style>
@@ -49,8 +52,10 @@
         <div id="route-section" class="flex-fill" style="padding-top: 0px;">
             <div class="route-summary" style="margin-top: 10px;">
                 <div class="d-flex flex-row">
-                    <h2 class="heading me-2" id="countryHeading" th:text="${detailPlans[0].countryName}" th:data-countrycode="${detailPlans[0].countryCode}"></h2>
-
+                    <h2 class="heading me-2" id="countryHeading"
+                        th:text="${detailPlans[0].plan.location.locationType == 'domestic' ? detailPlans[0].plan.location.city : detailPlans[0].countryName}"
+                        th:data-countrycode="${detailPlans[0].plan.location.locationType == 'domestic' ? '' : detailPlans[0].countryCode}">
+                    </h2>
                     <!-- dropend-->
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

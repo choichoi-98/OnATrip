@@ -28,6 +28,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <!-- Bootstrap JavaScript 파일 포함 -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 <script src="/js/plan/myPage.js"></script>
 
 <body>
@@ -43,31 +44,20 @@
                 <div class="container mt-5">
                     <ul class="nav nav-tabs" id="travelPlanTabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#private" role="tab" aria-controls="private" aria-selected="true">나의 여정</a>
+                            <a class="nav-link active" id="private-tab" data-toggle="tab" href="#private" role="tab" aria-controls="private" aria-selected="true">나의 여정</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="completed-tab" data-toggle="tab" href="#share" role="tab" aria-controls="share" aria-selected="false">공유된 여정</a>
+                            <a class="nav-link" id="share-tab" data-toggle="tab" href="#share" role="tab" aria-controls="share" aria-selected="false">공유된 여정</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="travelPlanTabsContent">
                         <div class="tab-pane fade show active" id="private" role="tabpanel" aria-labelledby="private-tab">
                             <!-- 내 여행 목록-->
                             <div th:replace="fragments/planList :: planListContent"></div>
-
                         </div>
                         <div class="tab-pane fade" id="share" role="tabpanel" aria-labelledby="share-tab">
-                            <div class="card-container mt-3">
-                                <!-- 공유 여행 목록 -->
-                                <div class="card">
-                                    <div class="card-horizontal">
-                                        <img src="" class="card-img-left" alt="여행 국가 이미지">
-                                        <div class="card-body">
-                                            <h5 class="card-title"></h5>
-                                            <p class="card-text">예정된 여행 1에 대한 설명입니다.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div th:replace="fragments/sharedPlanList :: SharedPlanListContent"></div>
+
                         </div>
                     </div>
                 </div>
