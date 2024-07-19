@@ -1,11 +1,14 @@
 package com.naver.OnATrip.service;
 
 import com.naver.OnATrip.constant.Role;
+import com.naver.OnATrip.controller.MemberController;
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
 import com.naver.OnATrip.web.dto.member.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

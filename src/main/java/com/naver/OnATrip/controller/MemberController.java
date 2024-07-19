@@ -40,7 +40,7 @@ public class MemberController {
                 ;
     }
 
-    @PostMapping("/loginProc")
+    @PostMapping("/login")
     public String loginProc(@ModelAttribute MemberDTO memberDTO, HttpSession session, Model model) {
         MemberDTO loginResult = memberService.login(memberDTO);
         if (loginResult != null) {

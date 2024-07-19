@@ -11,6 +11,9 @@
     margin: 0% 15% 10% 15% ;
 }
 
+.alert {
+    font-size: small;
+}
 .question {
      background-color: #128D47;
      border-radius: .375rem;
@@ -18,11 +21,13 @@
      width: 80px;
 }
 
-.table {
-     table-layout: fixed;
-     width: 100%;
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
 }
 
-tr {
-    text-align: center;
+.button-group{
+    margin-top: 5%;
+    margin-left: 45%;
+
 }
