@@ -64,9 +64,9 @@ $(document).ready(function() {
         });
 
         // 검색 결과가 없을 경우 메시지 표시
-        $('#no-results-all').toggle(!hasResultsAll);
-        $('#no-results-domestic').toggle(!hasResultsDomestic);
-        $('#no-results-international').toggle(!hasResultsInternational);
+        $('#no-results-all').toggle(!hasResultsAll && searchText.length > 0);
+        $('#no-results-domestic').toggle(!hasResultsDomestic && searchText.length > 0);
+        $('#no-results-international').toggle(!hasResultsInternational && searchText.length > 0);
     });
 
     // 탭 클릭 처리
@@ -108,9 +108,35 @@ $(document).ready(function() {
     });
 
     // 일정 만들기 버튼 클릭 처리
-    $('#create-itinerary').click(function() {
-        var locationId = $(this).attr('data-location-id');
-        window.location.href = '/selectDate?locationId=' + locationId;
+    $('#create-itinerary').click(function(event) {
+            event.preventDefault(); // 기본 동작 막기
+
+            var locationId = $(this).attr('data-location-id');
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+            // 서버에 인증 여부 확인 요청
+            $.ajax({
+                url: '/check-authentication',
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                },
+                success: function(isAuthenticated) {
+                    if (isAuthenticated) {
+                        // 인증된 사용자 -> 일정 만들기 페이지로 이동
+                        window.location.href = '/selectDate?locationId=' + locationId;
+                    } else {
+                        // 비회원 -> 로그인 경고 및 로그인 페이지로 이동
+                        alert('로그인이 필요합니다.');
+                        window.location.href = '/login'; // 로그인 페이지 URL로 수정
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('인증 확인 오류:', error);
+                    alert('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+                }
+            });
     });
 
     // 모달 열기 함수 수정
@@ -153,4 +179,9 @@ $(document).ready(function() {
     function closeModal() {
         $('#modal-root').fadeOut(); // 모달 닫기
     }
+
+    // 페이지 로드 시 결과 메시지 숨기기
+    $('#no-results-all').hide();
+    $('#no-results-domestic').hide();
+    $('#no-results-international').hide();
 });
