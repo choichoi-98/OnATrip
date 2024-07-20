@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>inviteFriendModal</title>
+</head>
+<body>
+<!-- src/main/resources/templates/fragments/inviteFriendModal.html -->
+<div th:fragment="modal">
+    <div class="modal fade" id="inviteFriendModal" tabindex="-1" role="dialog" aria-labelledby="inviteFriendModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteFriendModalLabel">친구 초대</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="friendEmail">친구 이메일 주소</label>
+                        <input type="email" class="form-control" id="friendEmail" placeholder="이메일 주소를 입력하세요">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="searchFriendButton">검색</button>
+                        </div>
+                    </div>
+                    <div class="search-results">
+                        <!-- 검색 결과가 여기에 표시됩니다. -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" id="inviteFriendButton">초대하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
