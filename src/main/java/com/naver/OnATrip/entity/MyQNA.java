@@ -2,6 +2,7 @@ package com.naver.OnATrip.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -33,7 +34,7 @@ public class MyQNA {
     private String writer;
 
     @CreatedDate
-    private LocalDate createAt;
+    private LocalDate createdAt;
 
     @LastModifiedDate
     private LocalDate modifyDate;
@@ -41,8 +42,10 @@ public class MyQNA {
     @Column
     private String is_deleted; //삭제 여부
 
-    @Column
-    private String answer = "N"; // 답변 달림 여부 Y, N // 기본값 'N' 설정
+    @Column(columnDefinition = "varchar(10) default 'N'")
+    private String answer ; // 답변 달림 여부 Y, N // 기본값 'N' 설정
+
+    private String reply; //답변 내용
 
     @ManyToOne
     @JoinColumn(name="member_id")
@@ -60,12 +63,13 @@ public class MyQNA {
     }
 
     @Builder
-    public MyQNA(String qnaStatus, String title, String content, String writer, Member member, String answer){
+    public MyQNA(String qnaStatus, String title, String content, String writer, Member member, String answer, String reply){
         this.qnaStatus = qnaStatus;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.answer = "N";
+        this.reply = reply;
     }
 
 

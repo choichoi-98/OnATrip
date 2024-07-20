@@ -19,7 +19,9 @@ public class MyQNAListDto {
 
     private String writer;
 
-    private LocalDateTime createAt;
+    private String email;
+
+    private LocalDateTime createdAt;
 
     private LocalDateTime modifyDate;
 

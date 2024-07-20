@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>회원문의내역</title>
+    <title>회원문의내역수정</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/myQNA/createQNA.css}">
     <head th:replace="fragments/header :: headerFragment"></head>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="contents">
                     <div class="my-1">
-                        <form id="QNADetail" th:action="@{/createQNA}" th:object="${createQNADto}" method="post" enctype="multipart/form-data">
+                        <form id="QNADetail" th:action="@{'/updateQNA/' + ${myQNA.id}}"  th:object="${createQNADto}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{writer}">
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}">
 
@@ -58,15 +58,6 @@
                                 <button type="button" id="gotoList" class="btn btn-outline-success">목록</button>
                             </div>
                         </form>
-                        <!-- 답변 작성 폼 -->
-
-                        <!--                        <div id="answer">-->
-                        <!--                            <div class="form-group">-->
-                        <!--                                <label for="answerForm">답변</label>-->
-                        <!--                                <textarea class="form-control" th:field="*{answer}" id="answerForm" rows="5"></textarea>-->
-                        <!--                            </div>-->
-                        <!--&lt;!&ndash;                            <button type="button" class="btn btn-primary" id="create-comment-btn">댓글 작성</button>&ndash;&gt;-->
-                        <!--                        </div>-->
                     </div>
                 </div>
             </div>

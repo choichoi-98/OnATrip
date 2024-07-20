@@ -55,7 +55,7 @@ public class MemberController {
             return "member/login";
         }
     }
-
+    //비밀번호 찾기
     @GetMapping("/findPassword")
     public String findPassword() {
 
@@ -63,6 +63,7 @@ public class MemberController {
                 ;
     }
 
+    //이메일로 링크 발송 후 재설정
     @GetMapping(value = "/findPassword/{code}")
     public String changePasswordForm(@PathVariable("code") String code, Model model) {
         model.addAttribute("code", code);
@@ -105,7 +106,7 @@ public class MemberController {
             return "redirect:/findPassword/" + code;
         }
     }
-
+    //회원가입
     @GetMapping("/join")
     public String join(Model model) {
         logger.info("--------------------------------------------MemberController, join");
@@ -152,5 +153,7 @@ public class MemberController {
 
         return memberService.checkEmail(email);
     }
+
+    //회원 탈퇴
 }
 
