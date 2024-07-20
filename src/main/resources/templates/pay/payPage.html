@@ -150,129 +150,125 @@
                 amount: totalPrice             //결제 예정 금액
 
             })
-                //로그 확인
-                ,
-                beforeSend: function (xhr) {
-                    console.log("Sending data: ", {
-                        merchant_uid: merchant_uid,
-                        amount: totalPrice
-                    });
-                },
-                success: function (response) {
-                    console.log("Response received: ", response);
-                    console.log("Merchant UID: ", merchant_uid);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("Error: ", textStatus, errorThrown);
-                    console.log("Merchant UID: ", merchant_uid);
-                }
-
+            //     //로그 확인
+            //     ,
+            //     beforeSend: function (xhr) {
+            //         console.log("Sending data: ", {
+            //             merchant_uid: merchant_uid,
+            //             amount: totalPrice
+            //         });
+            //     },
+            //     success: function (response) {
+            //         console.log("Response received: ", response);
+            //         console.log("Merchant UID: ", merchant_uid);
+            //     },
+            //     error: function (jqXHR, textStatus, errorThrown) {
+            //         console.log("Error: ", textStatus, errorThrown);
+            //         console.log("Merchant UID: ", merchant_uid);
+            //     }
+            //
             })
-    });
+        });
 
 
-    $('#submit').click(function (event) {    //결제 요청 스크립트
-        event.preventDefault(); // 기본 동작 막기
+        $('#submit').click(function (event) {    //결제 요청 스크립트
+            event.preventDefault(); // 기본 동작 막기
 
-        if (!$('#agree-services').is(':checked')) {
-            alert('구독 서비스 운영정책 이용약관 동의 사항에 체크 해야 합니다.');
-            return;
-        }
-        if (!$('#agree-condition').is(':checked')) {
-            alert('구매 조건 확인 및 동의 사항에 체크해야 합니다.');
-            return;
-        }
-        if (!$('#agree-refund').is(':checked')) {
-            alert('환불 안내 및 동의 사항에 체크해야 합니다.');
-            return;
-        }
-
-        let msg = "결제에 성공하였습니다.";
-        var IMP = window.IMP;
-        IMP.init('imp63854110');   //가맹점 식별코드 입력
-
-        //DOM 객체들에서 사용할 데이터 뽑기
-        var paymentGoods = $('#product_name').text();
-        var totalPrice = $('#total_price').text();
-        var itemId = $('#item_id').val();
-        var itemPeriod = $('#subscribe_period').text();
-        //merchant_uid = "O" + new Date().getTime() /* + '_'  +memberId-*/;
-        // var memberId =
-
-        IMP.request_pay({
-            //결제 시 사용할 정보
-            pg: "html5_inicis",           // 등록된 pg사 (적용된 pg사는 KG이니시스)
-            pay_method: "card",           // 결제방식: card(신용카드), trans(실시간계좌이체), vbank(가상계좌), phone(소액결제)
-            merchant_uid: merchant_uid,   // 주문번호
-            name: paymentGoods,          //상품명
-            amount: totalPrice           //금액
-            // ,m_redirect_url: "/orderEnd"        //리디렉션 될 url
-        }, function (rsp) {
-            console.log(rsp);
-            if (rsp.success) {      //결제 성공시
-                $.ajax({
-                    url: "payment/validate",
-                    method: "POST",
-                    contentType: "application/json",
-                    // headers: {
-                    //     "${_csrf.headerName}": "${_csrf.token}"
-                    // },
-                    data: JSON.stringify({
-                        impUid: rsp.imp_uid,
-                        merchantUid: rsp.merchant_uid,
-                    })
-                }).done(function (data) {
-                    msg = '결제가 완료되었습니다.';
-                    //결제 정보 DB 저장
-                    //주문 상품 정보 DB 저장
-                    var buyerInfo = {
-                        "merchantUid": rsp.merchant_uid,
-                        "payMethod": rsp.pay_method,
-                        "amount": rsp.paid_amount,
-                        "itemId": itemId,
-                        "impUid": rsp.imp_uid
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        url: "payment/save_buyerInfo",
-                        contentType: "application/json",
-                        data: JSON.stringify(buyerInfo),
-                        success: function (response) {
-                            console.log("결제정보 저장 완료");
-                            console.log("Merchant UID: ", merchant_uid);
-                        }
-                    }); //ajax end
-
-                    var orderInfo = {
-                        "merchantUid": rsp.merchant_uid,
-                        "payMethod": rsp.pay_method,
-                        "amount": rsp.paid_amount,
-                        "itemId": itemId,
-                        "itemPeriod" : itemPeriod
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        url: "payment/save_orderInfo",
-                        contentType: "application/json",
-                        data: JSON.stringify(orderInfo),
-                        success: function (response){
-                            console.log("주문완료");
-                            console.log("Merchant UID: ", merchant_uid);
-                            window.location.href = '/main';
-                        }
-                })
-                });
-            } else {
-                //결제 실패시
-                msg = '결제에 실패하였습니다.';
-                console.log(rsp);
-                console.log("결제 실패");
+            if (!$('#agree-services').is(':checked')) {
+                alert('구독 서비스 운영정책 이용약관 동의 사항에 체크 해야 합니다.');
+                return;
             }
-            alert(msg);
-        })
-    }) //submit end
+            if (!$('#agree-condition').is(':checked')) {
+                alert('구매 조건 확인 및 동의 사항에 체크해야 합니다.');
+                return;
+            }
+            if (!$('#agree-refund').is(':checked')) {
+                alert('환불 안내 및 동의 사항에 체크해야 합니다.');
+                return;
+            }
+
+            let msg = "결제에 성공하였습니다.";
+            var IMP = window.IMP;
+            IMP.init('imp63854110');   //가맹점 식별코드 입력
+
+            //DOM 객체들에서 사용할 데이터 뽑기
+            var paymentGoods = $('#product_name').text();
+            var totalPrice = $('#total_price').text();
+            var itemId = $('#item_id').val();
+            var itemPeriod = $('#subscribe_period').text();
+
+            IMP.request_pay({
+                //결제 시 사용할 정보
+                pg: "html5_inicis",           // 등록된 pg사 (적용된 pg사는 KG이니시스)
+                pay_method: "card",           // 결제방식: card(신용카드), trans(실시간계좌이체), vbank(가상계좌), phone(소액결제)
+                merchant_uid: merchant_uid,   // 주문번호
+                name: paymentGoods,          //상품명
+                amount: totalPrice           //금액
+                // ,m_redirect_url: "/orderEnd"        //리디렉션 될 url
+            }, function (rsp) {
+               // console.log(rsp);
+                if (rsp.success) {      //결제 성공시
+                    $.ajax({
+                        url: "payment/validate",
+                        method: "POST",
+                        contentType: "application/json",
+                        // headers: {
+                        //     "${_csrf.headerName}": "${_csrf.token}"
+                        // },
+                        data: JSON.stringify({
+                            impUid: rsp.imp_uid,
+                            merchantUid: rsp.merchant_uid,
+                        })
+                    }).done(function (data) {
+                        msg = '결제가 완료되었습니다.';
+                        //결제 정보 DB 저장
+                        //주문 상품 정보 DB 저장
+                        var buyerInfo = {
+                            "merchantUid": rsp.merchant_uid,
+                            "payMethod": rsp.pay_method,
+                            "amount": rsp.paid_amount,
+                            "itemId": itemId,
+                            "impUid": rsp.imp_uid
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "payment/save_buyerInfo",
+                            contentType: "application/json",
+                            data: JSON.stringify(buyerInfo),
+                            success: function (response) {
+                                console.log("결제정보 저장 완료");
+                            }
+                        }); //ajax end
+
+                        var orderInfo = {
+                            "merchantUid": rsp.merchant_uid,
+                            "payMethod": rsp.pay_method,
+                            "amount": rsp.paid_amount,
+                            "itemId": itemId,
+                            "itemPeriod": itemPeriod
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "payment/save_orderInfo",
+                            contentType: "application/json",
+                            data: JSON.stringify(orderInfo),
+                            success: function (response) {
+                                console.log("주문완료");
+                                window.location.href = '/main';
+                            }
+                        })
+                    });
+                } else {
+                    //결제 실패시
+                    msg = '결제에 실패하였습니다.';
+                    console.log(rsp);
+                    console.log("결제 실패");
+                }
+                alert(msg);
+            })
+    })//submit end
 
 
 </script>

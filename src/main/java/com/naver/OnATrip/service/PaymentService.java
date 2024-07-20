@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 @Slf4j
 public class PaymentService {
 
-    private final IamportClient iamportClient;
+    private IamportClient iamportClient;
 
     @Autowired
     private PayRepository payRepository;
@@ -34,17 +34,14 @@ public class PaymentService {
     private PrePaymentRepository prePaymentRepository;
 
 
-//    @Value("${imp.api.key}")    //application.yml에서 값을 불러와서 사용
-//    private String impKey;
-//
-//    @Value("${imp.api.secretKey}")
-//    private String impSecret;
+    @Value("${imp.api.key}")    //application.yml에서 값을 불러와서 사용
+    private String impKey;
 
-    private String impKey = "5567300760752543";
-    private String impSecret = "akexds3WZwtp2HRTUZtWHI7Nk1SFMg4ZT6IQtTKWM7O8xOaeZqDZsWyHwaEnqj7qwAf1TzyadBK4ouUv";
+    @Value("${imp.api.secretKey}")
+    private String impSecret;
 
-
-    public PaymentService(){
+    @PostConstruct
+    public void init(){
         this.iamportClient = new IamportClient(impKey, impSecret);
     }
 
