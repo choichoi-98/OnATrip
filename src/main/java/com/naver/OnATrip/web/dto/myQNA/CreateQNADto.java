@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,11 +32,11 @@ public class CreateQNADto {
 
     private String writer;
 
-    private LocalDate createAt;
+    private LocalDate createdAt;
 
     private LocalDate modifyDate;
 
-    private String answer; // 답변 달림 여부 Y, N
+    private String answer="N"; // 답변 달림 여부 Y, N
 
     private Member member;
 
@@ -43,8 +44,10 @@ public class CreateQNADto {
 
     private String image;
 
+
+
     public CreateQNADto() {
-        this.createAt = LocalDate.now(); // 기본 생성자에서 현재 날짜로 초기화
+        this.createdAt = LocalDate.now(); // 기본 생성자에서 현재 날짜로 초기화
     }
 
 
@@ -54,8 +57,9 @@ public class CreateQNADto {
                 .title(title)
                 .content(content)
                 .writer(member.getName())
-                .createAt(createAt)
+                .createdAt(createdAt)
                 .member(member) // Member 객체 설정
+                .answer(answer)
                 .build();
     }
 
@@ -67,14 +71,6 @@ public class CreateQNADto {
         this.content = myQNA.getContent();
         this.member = myQNA.getMember(); // MyQNA 객체의 member 필드를 가져옴
         this.writer = myQNA.getMember().getName(); // 작성자 이름 설정
+        this.answer = myQNA.getAnswer();
     }
-
-//    public MyQNA saveQNA() {
-//        MyQNA myQNA = MyQNA.builder()
-//            .qnaStatus(qnaStatus)
-//            .title(title)
-//            .content(content)
-//            .build();
-//        return myQNA;
-//        }
-    }
+}

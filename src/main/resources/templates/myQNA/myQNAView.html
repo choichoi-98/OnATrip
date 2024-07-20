@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default_layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>회원문의내역상세페이지</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/myQNA/createQNA.css}">
+    <head th:replace="fragments/header :: headerFragment"></head>
+
+<!--    <script>-->
+<!--        function previewFile() {-->
+<!--            const fileInput = document.getElementById('inputGroupFile04');-->
+<!--            const previewImg = document.getElementById('previewImg');-->
+<!--            const file = fileInput.files[0];-->
+<!--    -->
+<!--            if (file) {-->
+<!--                const reader = new FileReader();-->
+<!--    -->
+<!--                reader.onload = function (e) {-->
+<!--                    previewImg.src = e.target.result;-->
+<!--                    previewImg.style.display = 'block'; // 이미지 표시-->
+<!--                };-->
+<!--    -->
+<!--                reader.readAsDataURL(file);-->
+<!--            } else {-->
+<!--                previewImg.style.display = 'none'; // 이미지 숨기기-->
+<!--                previewImg.src = ''; // 이미지 경로 초기화-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
+    <style>
+        .button-group button {
+            margin-right: 10px;
+        }
+        .button {
+            border-radius: .375rem;
+        }
+
+    </style>
+
+
+</head>
+<body>
+<div class="safari_only_wrapper">
+    <div class="fixed-status"></div>
+    <div class="h-full mx-auto">
+        <div id="search" class="md:pb-160 xl:pb-240" style="padding-bottom: 100px !important;"></div>
+        <div class="containerWrapped">
+            <div class="container2 relative mx-auto">
+                <div class="main">
+                    <h4 class="memberQNA">문의사항</h4>
+                    <hr style="margin-top:0px; margin-bottom:0px">
+                </div>
+                <div class="contents">
+                    <div class="my-1">
+                        <input type="hidden" id="myQNAId" th:value="${myQNA.id}">
+
+                        <div class="form-group">
+                            <label th:text="${myQNA.qnaStatus}">문의 유형</label>
+                        </div>
+
+                        <div class="mb-3" id="title">
+                            <label class="form-label">제목</label>
+                            <p type="text" class="form-control" th:text="${myQNA.title}"></p>
+                        </div>
+                        <div class="mb-3" id="content">
+                            <label class="form-label">내용</label>
+                            <textarea class="form-control" th:text="${myQNA.content}" id="exampleFormControlTextarea1" rows="5" readonly style="background-color: white;"></textarea>
+                        </div>
+
+                        <img id="previewImg" src="" alt="파일 미리보기" style="display: none; margin-top: 10px;" class="img-thumbnail">
+
+                        <!-- 답변 작성 폼 -->
+                        <div id="answer">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label for="answerForm">답변</label>
+                                    <textarea class="form-control readonly-textarea" id="answerForm" rows="5" readonly style="background-color: white;"
+                                              th:if="${myQNA.reply != null and !myQNA.reply.isEmpty()}"
+                                              th:text="${myQNA.reply}"></textarea>
+                                    <textarea class="form-control readonly-textarea" id="answerFormNull" rows="5" readonly style="background-color: white;"
+                                              th:if="${myQNA.reply == null or myQNA.reply.isEmpty()}"
+                                              placeholder="등록된 답변이 없습니다"></textarea>
+                                </div>
+                        </div>
+
+                        <div class="button-group btn-group" role="group" aria-label="Button group">
+                            <button type="button" id="editBtn" class="btn btn-outline-success">수정</button>
+
+                            <form th:action="@{'/delete/' + ${myQNA.id}}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');" style="display: inline;">
+                                <button type="submit" class="btn btn-outline-success">삭제</button>
+                            </form>
+
+                            <button type="button" id="gotoList" class="btn btn-outline-success" onclick="location.href='/myQNAList'">목록</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<!--    <script th:src="@{/js/admin/admin.js}"></script>-->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+</body>
+</html>

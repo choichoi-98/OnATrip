@@ -31,35 +31,35 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return getPassword();
     }//----수정한 부분 --
 
     @Override
     public String getUsername() {
-        return null;
+        return getUsername();
     }//----수정한 부분 --
 
     /* 계정 만료 여부, false : 만료 */
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     /* 계정 잠김 여부, false : 잠김 */
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     /* 비밀번호 만료 여부, false : 만료 */
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     /* 사용자 활성화 여부, false : 만료 */
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
