@@ -12,9 +12,7 @@ let markerIndex = 1;
 let polyline;
 let originalIcon;// 마커 강조 함수
 
-
 $(document).ready(function() {
-
 
     const countryName = $('#countryHeading').text().trim();
     const countryCode = $('#countryHeading').data('countrycode');
@@ -27,8 +25,9 @@ $(document).ready(function() {
         initAutocomplete(countryCode); // 장소검색 호출
     } else {
         // countryCode가 null인 경우
+        const latlng = '';
+        initMap(latlng); // 지도 초기화 호출
         initAutocomplete('KR'); // 한국으로 검색 지역 설정
-        initMap(); // 지도 초기화 호출
     }
 
     setBadgeColor();
