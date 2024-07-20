@@ -46,13 +46,6 @@ public class PayController {
     @Value("${imp.api.secretKey}")
     private String secretKey;
 
-
-//
-//    private String apiKey = "5567300760752543";
-//    private String secretKey = "akexds3WZwtp2HRTUZtWHI7Nk1SFMg4ZT6IQtTKWM7O8xOaeZqDZsWyHwaEnqj7qwAf1TzyadBK4ouUv";
-//
-
-
     @PostConstruct
     private void init() {
         this.iamportClient = new IamportClient(apiKey, secretKey);

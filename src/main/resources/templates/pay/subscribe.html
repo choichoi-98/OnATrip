@@ -48,7 +48,6 @@
 <head th:replace="fragments/header :: headerFragment">
 </head>
 <body>
-<!--<div id="isAuthenticated" data-authenticated="false" sec:authorize="isAuthenticated()" style="display: none;" th:data-authenticated="true"></div>-->
 
 <div class="safari_only_wrapper">
     <div class="fixed-status"></div>
@@ -88,11 +87,6 @@
                         <div class="col-lg-6 col-xxl-4 my-5 mx-auto">
                             <div class="d-grid gap-2">
                                 <button class="btn btn-primary" id="order_button" type="submit"
-                                        th:if="${#authorization.expression('isAuthenticated()')}"
-                                        style="margin: auto; display:block">
-                                    구독 시작하기
-                                </button>
-                                <button class="btn btn-primary" id="login_button" type="button"  th:if="${#authorization.expression('!isAuthenticated()')}"
                                         style="margin: auto; display:block">
                                     구독 시작하기
                                 </button>
@@ -110,13 +104,6 @@
 
 <!--  Footer -->
 <div th:replace="fragments/footer :: footerFragment"></div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#login_button').click(function() {
-            window.location.href = '/login';
-        });
-    });
-</script>
+
 </body>
 </html>
