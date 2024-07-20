@@ -273,7 +273,6 @@
                     </div>
                     <!-- 구독권 -->
                     <div id="Tokyo" class="tabcontent">
-                        <h3>구독권</h3>
                         <form id="subscribeItemForm" th:action="@{/addItem}" method="post"
                               enctype="multipart/form-data">
 
@@ -283,11 +282,11 @@
                             </p>
                             <p>
                                 <label for="country_input">상품 가격:</label><br>
-                                <input type="text" id="item_price" name="itemPrice" placeholder="상품 가격을 입력하세요">
+                                <input type="text" id="item_price" name="itemPrice" placeholder="상품 가격을 입력하세요(숫자만 입력)">
                             </p>
                             <p>
                                 <label for="country_input">구독 기간:</label><br>
-                                <input type="text" id="item_period" name="period" placeholder="구독 기간을 입력하세요">
+                                <input type="text" id="item_period" name="period" placeholder="구독 기간을 입력하세요(숫자만 입력)">
                             </p>
                             <p>
                                 <button type="submit" id="add_item_btn" class="btn" style="border-color: #2125295c;">구독권
