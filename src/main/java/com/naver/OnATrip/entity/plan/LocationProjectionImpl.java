@@ -3,9 +3,12 @@ package com.naver.OnATrip.entity.plan;
 public class LocationProjectionImpl implements LocationProjection {
 
     private Long id;
+    private String locationType;
     private String countryName;
     private String countryCode;
+    private String city;
     private String image;
+
 
     // 기본 생성자
     public LocationProjectionImpl() {
@@ -17,6 +20,11 @@ public class LocationProjectionImpl implements LocationProjection {
     }
 
     @Override
+    public String getLocationType() {
+        return locationType;
+    }
+
+    @Override
     public String getCountryName() {
         return countryName;
     }
@@ -24,6 +32,11 @@ public class LocationProjectionImpl implements LocationProjection {
     @Override
     public String getCountryCode() {
         return countryCode;
+    }
+
+    @Override
+    public String getCity() {
+        return city;
     }
 
     @Override
@@ -45,5 +58,9 @@ public class LocationProjectionImpl implements LocationProjection {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setLocationType(String locationType) {
+        this.locationType = locationType;
     }
 }

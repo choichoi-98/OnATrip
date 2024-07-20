@@ -4,8 +4,6 @@ let map;
 let countryName;
   //REST Countries API 엔드포인트 URL
 const apiUrl = "https://restcountries.com/v3/alpha/";
-// 공공데이터포털 API 키
-const apiKey = 'GqsVgyYpktxrLRv1S%2FvX5a%2BU0How0aXThcAAfkLelSha90ZyXvuhuZYsF5T1A5btMEBpUyTq6Dj8UWEKKQ%2BVOQ%3D%3D';
 let dayNumber;//일차
 let detailPlanId;
 let category;//memo, place
@@ -22,8 +20,16 @@ $(document).ready(function() {
     const countryCode = $('#countryHeading').data('countrycode');
     console.log('countryCode------------: ', countryCode);
 
-    getCountryInfo(countryCode); //위도, 경도 구함
-    initAutocomplete(countryCode);//장소검색 호출
+
+    if (countryCode) {
+        // countryCode가 존재하는 경우
+        getCountryInfo(countryCode); // 위도, 경도 구함
+        initAutocomplete(countryCode); // 장소검색 호출
+    } else {
+        // countryCode가 null인 경우
+        initAutocomplete('KR'); // 한국으로 검색 지역 설정
+        initMap(); // 지도 초기화 호출
+    }
 
     setBadgeColor();
 
@@ -178,7 +184,7 @@ function initAutocomplete(countryCode) {
     // Google Places Autocomplete 초기화
     const autocomplete = new google.maps.places.Autocomplete(autocompleteInput[0], {
         types: ['establishment'],
-        componentRestrictions: { country: countryCode }
+        componentRestrictions: { country: countryCode || 'KR'}
     });
 
     // 장소가 변경되었을 때 처리
@@ -309,6 +315,7 @@ function addRoute(day, placeName, category, detailPlanId, lat, lng){
 function refreshDetailPlan(detailPlanId, dayToUpdate, category) {
     console.log('refreshDetailPlan-dayToUpdate: ', dayToUpdate);
     console.log('refreshDetailPlan-category: ', category);
+
     $.ajax({
         url: '/api/viewRoute',
         method: 'GET',
@@ -489,7 +496,7 @@ function bindPlaceAddButtons(routes) {
 
     //수정 버튼
     modifyBtn.off('click').on('click', function(){
-
+        console.log('------------modifyBtn 수정 버튼 클릭 -----------');
         const container = $(this).closest('.container');
         const deleteIcons = container.find('.delete-icon');
         const modifyIcons = container.find('.modify-icon');
@@ -508,7 +515,9 @@ function bindPlaceAddButtons(routes) {
                 disableDragAndDrop(sortable);
                 container.removeData('sortable-instance');
             }
+            console.log('bindAddPlace~~~ updateRouteSequence 호출, container = ', container);
             updateRouteSequence(container);
+
         } else {//수정 시작
             $('.delete-icon').hide();
             $('.modify-icon').hide();
@@ -633,25 +642,7 @@ function addMarkersFromHTML() {
         }
     });//Object.keys(markersByDay).forEach(day => {
 
-    // 배지에 마우스 이벤트 추가
-//    $(document).on('mouseenter', '.badge', function() {
-//        const day = $(this).attr('data-daynum');
-//        const sortKey = $(this).text().trim();
-//
-//        if (markersByDay[day]) {
-//            const marker = markersByDay[day].find(m => m.label.text === sortKey);
-//            if (marker) {
-//                highlightMarker(marker);
-//            }
-//        }
-//    });
-//
-//    $(document).on('mouseleave', '.badge', function() {
-//        if (originalIcon) {
-//            resetMarker(originalIcon);
-//            originalIcon = null;
-//        }
-//    });
+
 
 }//function addMarkersFromHTML() {
 
@@ -809,7 +800,7 @@ function disableDragAndDrop(sortable) {
 //-------------routeSequence update 로직(순서 변경 db 반영)
 function updateRouteSequence(container){
     let routeDataList = [];
-
+    console.log('----------updateRouteSequence 시작-------------')
     container.children('.place-block, .memo-block').each(function(index){
         const routeSequence = index + 1; //1부터 시작
 
@@ -817,8 +808,13 @@ function updateRouteSequence(container){
          routeId = $(this).find('.delete-icon').data('routeid');
          category = $(this).find('.delete-icon').data('category');
          dayNumber = $(this).find('.delete-icon').data('daynum');
-         detailPlanId = $(this).find('.delete-icon').data('daynum');
+         detailPlanId = $(this).find('.delete-icon').data('detailplanid');
 
+
+        console.log('routeId : ', routeId);
+        console.log('category : ', category);
+        console.log('dayNumber : ', dayNumber);
+        console.log('detailPlanId : ', detailPlanId);
 
         routeDataList.push({
             id: routeId,

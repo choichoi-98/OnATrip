@@ -144,8 +144,10 @@ public class PlanController {
         List<DetailPlan> detailPlans = detailPlanService.findDetailPlanByPlanId(planId);
         Map<Long, List <RouteDto>> routeMap = new HashMap<>();
         for (DetailPlan dp : detailPlans) {
-            logger.info("DetailPlan ID: {}, Country: {}, CountryCode: {}, PerDate: {}, Email: {}",
-                    dp.getId(), dp.getCountryName(), dp.getCountryCode(), dp.getPerDate(), dp.getEmail());
+            logger.info("DetailPlan ID: {}, Country: {}, CountryCode: {}, PerDate: {}, Email: {}, Location locationType: {},  Location city: {}",
+                    dp.getId(), dp.getCountryName(), dp.getCountryCode(), dp.getPerDate(), dp.getEmail()
+                    ,dp.getPlan().getLocation().getLocationType()
+                    ,dp.getPlan().getLocation().getCity());
             List<RouteDto> routes = routeService.findRoutesByDetailPlanId(dp.getId());
             for (RouteDto route : routes) {
                 logger.info("RouteDto Id: {}, category: {}, day_number: {}, place_name: {}, sort_key: {}, mark_seq: {}", route.getId(), route.getCategory(), route.getDay_number(), route.getPlaceName(), route.getSortKey(), route.getMarkSeq());
@@ -194,11 +196,12 @@ public class PlanController {
         }
     }
 
-    //Plan 삭제
+    //Plan 나가기
     @PostMapping("/deletePlan")
-    public ResponseEntity<Boolean> deletePlan(@RequestParam("planId") Long planId){
-        logger.info("--------------deletePlan - planId : " + planId);
-        boolean result = planService.deletePlan(planId);
+    public ResponseEntity<Boolean> deletePlan(@RequestParam("planId") Long planId, Principal principal){
+        String email = principal.getName();
+        logger.info("--------------deletePlan - planId : " + planId + " email : " + email);
+        boolean result = planService.deleteOrUpdatePlan(planId,email);
         if(result){
             return ResponseEntity.ok((result));
         } else {
@@ -206,13 +209,19 @@ public class PlanController {
         }
     }
 
-    //Plan 리스트 반환 ajax
+    //Plan 리스트 반환 정적 + 동적
     @GetMapping("/getPlans")
-    public String getPlans(Model model, Principal principal){
+    public String getPlans(Model model, Principal principal,
+                           @RequestParam(value = "activeTabId", defaultValue = "private-tab") String activeTabId){
         String email = principal.getName();
         List<Plan> plans = planService.findPlanBymemberId(email);
         model.addAttribute("plans", plans);
-        return "fragments/planList :: planListContent";
+
+        if ("private-tab".equals(activeTabId)) {
+            return "fragments/planList :: planListContent";
+        } else {
+            return "fragments/sharedPlanList :: SharedPlanListContent";
+        }
     }
 
     //modifyMemo-메모 내용 수정
@@ -258,12 +267,6 @@ public class PlanController {
         String email = principal.getName();
 
         List<Plan> plans = planService.findPlanBymemberId(email);
-//        for (Plan plan : plans) {
-//            logger.info("Plan ID: {}, Member email: {}, Location: {}, Location:{}, Start Date: {}, End Date: {}, Mate ID: {}",
-//                    plan.getId(), plan.getEmail(), plan.getLocation().getCountryName(), plan.getLocation().getImage(),
-//                   plan.getStartDate(), plan.getEndDate(), plan.getMateId());
-//        }
-
         mv.addObject("plans", plans);
         mv.setViewName("/myPage");
 
@@ -282,13 +285,33 @@ public class PlanController {
 
     //친구 초대
     @PostMapping("/inviteFriend")
-    public void inviteFriend(@RequestParam("email") String email){
+    public ResponseEntity<String> inviteFriend(@RequestParam("email") String email,
+                                               @RequestParam("planId") Long planId){
         //1. mateEmail 혹은 email에 매개변수로 받은 email과 일치하는 값이 있는지 확인
+        boolean result = planService.ExistPlanByEmail(email, planId);
+        System.out.println("친구 초대 이메일 Exist result = " + result);
 
+        if(result){//1-1. 있다면 '이미 초대된 친구입니다.' 띄우기
 
-        //1-1. 있다면 '이미 초대된 친구입니다.' 띄우기
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 초대된 친구입니다.");
 
-        //2. 없는 경우 mateEmail에 email 값 넣기
+        }else {//2. 없는 경우 mateEmail에 email 값 넣기
+
+            boolean updateResult = planService.updateMateEmailToPlan(email, planId);
+            System.out.println("updateMateEmail-----" +  updateResult);
+
+            if(updateResult){
+                //3. memberCount 증가시키기
+                boolean incrementResult = planService.incrementMemberCount(planId);
+                if(incrementResult){
+                    return ResponseEntity.ok("친구 초대 성공");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("멤버 카운트 증가 중 오류 발생");
+                }
+            }else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("친구 초대 중 오류 발생");
+            }
+        }
 
     }
 

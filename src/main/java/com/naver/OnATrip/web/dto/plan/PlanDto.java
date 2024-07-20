@@ -18,7 +18,8 @@ public class PlanDto {
     private Long locationId;
     private String startDate;
     private String endDate;
-    private Long mateId;
+    private String mateId;
+    private int memberCount;
 
     public Plan toEntity(LocationProjection locationProjection) {
         return Plan.from(locationProjection, this);
@@ -32,5 +33,6 @@ public class PlanDto {
         this.startDate = plan.getStartDate();
         this.endDate = plan.getEndDate();
         this.mateId = plan.getMateId();
+        this.memberCount = plan.getMemberCount();
     }
 }
