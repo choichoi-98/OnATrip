@@ -16,6 +16,7 @@ import com.naver.OnATrip.web.dto.plan.RouteDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -43,16 +45,28 @@ public class PlanController {
 
 
     @Autowired
-    public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService, MemberRepository memberRepository) {
+    public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService, MemberRepository memberRepository, RestTemplate restTemplate) {
         this.planService = planService;
         this.detailPlanService = detailPlanService;
         this.routeService = routeService;
+        this.restTemplate = restTemplate;
+    }
+
+    @Value("${google.maps.api-key}")
+    private String googleMapsApiKey;
+
+    private final RestTemplate restTemplate;
+
+    // Google Maps API 호출 메서드
+    private String getMapData(String location) {
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=" + googleMapsApiKey;
+        return restTemplate.getForObject(url, String.class);
     }
 
     // GET 요청 처리 메서드
     //이용자 날짜 선택
     @GetMapping("/selectDate")
-    public String selectDate(Model model, Principal principal, @RequestParam("locationId") Long locationId){
+    public ModelAndView selectDate(ModelAndView mv, Principal principal, @RequestParam("locationId") Long locationId){
 
 
         String email = principal.getName();
@@ -61,10 +75,12 @@ public class PlanController {
 
 
         // Model 객체에 데이터 추가
-        model.addAttribute("locationId", locationId);
-        model.addAttribute("email", email);
+        mv.addObject("locationId", locationId);
+        mv.addObject("email", email);
+        mv.setViewName("plan/selectDate"); // View 이름 설정
 
-        return "plan/selectDate";
+        //"plan/selectDate"
+        return mv;
     }
 
     //Plan 생성
@@ -142,6 +158,23 @@ public class PlanController {
                                    ) {
         logger.info("Controller------------viewDetailPlan----------------");
         List<DetailPlan> detailPlans = detailPlanService.findDetailPlanByPlanId(planId);
+
+        // 첫 번째 DetailPlan의 위치 정보를 사용하여 Google Maps API 호출
+        if (!detailPlans.isEmpty()) {
+            DetailPlan firstDetailPlan = detailPlans.get(0);
+            String locationType = firstDetailPlan.getPlan().getLocation().getLocationType(); // 위치 타입
+
+            String latlng = "";
+            if ("domestic".equals(locationType)) {
+                latlng = ""; // 빈 문자열로 설정
+            } else {
+                String countryCode = firstDetailPlan.getPlan().getLocation().getCountryCode(); // 국가 코드
+                mv.addObject("countryCode", countryCode); // 국가 코드를 모델에 추가
+            }
+
+            mv.addObject("latlng", latlng); // latlng을 모델에 추가
+        }
+
         Map<Long, List <RouteDto>> routeMap = new HashMap<>();
         for (DetailPlan dp : detailPlans) {
             logger.info("DetailPlan ID: {}, Country: {}, CountryCode: {}, PerDate: {}, Email: {}, Location locationType: {},  Location city: {}",

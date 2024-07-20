@@ -18,17 +18,17 @@ $(document).ready(function() {
     const countryCode = $('#countryHeading').data('countrycode');
     console.log('countryCode------------: ', countryCode);
 
-
-    if (countryCode) {
-        // countryCode가 존재하는 경우
-        getCountryInfo(countryCode); // 위도, 경도 구함
-        initAutocomplete(countryCode); // 장소검색 호출
-    } else {
-        // countryCode가 null인 경우
-        const latlng = '';
-        initMap(latlng); // 지도 초기화 호출
-        initAutocomplete('KR'); // 한국으로 검색 지역 설정
-    }
+//
+//    if (countryCode) {
+//        // countryCode가 존재하는 경우
+//        getCountryInfo(countryCode); // 위도, 경도 구함
+//        initAutocomplete(countryCode); // 장소검색 호출
+//    } else {
+//        // countryCode가 null인 경우
+//        const latlng = '';
+//        initMap(latlng); // 지도 초기화 호출
+//        initAutocomplete('KR'); // 한국으로 검색 지역 설정
+//    }
 
     setBadgeColor();
 
@@ -130,48 +130,50 @@ $(document).ready(function() {
 
 //--------------------------[Google Maps API]-----------------------
 function initMap(latlng) {
+    console.log('initMap()의 latlng ', latlng);
 
-  console.log('initMap()의 latlng ', latlng);
+    const defaultLocation = { lat: 37.0, lng: 127.5 }; // 기본값: 한국 좌표
+    const center = latlng && latlng.length === 2 ? { lat: latlng[0], lng: latlng[1] } : defaultLocation;
 
-  const defaultLocation = {lat: 37.0, lng: 127.5}; // 기본값: 한국 좌표
-  const center = latlng && latlng.length === 2 ? { lat: latlng[0], lng: latlng[1] } : defaultLocation;
+    const mapOptions = {
+        zoom: 8,
+        center: center,
+        fullscreenControl: false, // 전체화면 x
+        streetViewControl: false, // 거리뷰 x
+        mapTypeControl: false,
+    };
 
-  const mapOptions = {
-    zoom: 8,
-    center: center,
-    fullscreenControl: false, //전체화면 x
-    streetViewControl: false, //거리뷰 x
-    mapTypeControl: false,
-  };
+    map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-  map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    // countryCode를 사용하여 장소 검색 초기화
+    const countryCode = $('#countryHeading').data('countrycode');
+    initAutocomplete(countryCode);
 
-  // 초기 마커 추가
-  addMarkersFromHTML();
-
-}//function initMap() {
+    // 초기 마커 추가
+    addMarkersFromHTML();
+}
 
 //--------------------------[REST Countries API]-----------------------
 //----국가 관련 정보(위경도)
-function getCountryInfo(countryCode){
+function getCountryInfo(countryCode) {
     $.ajax({
         url: apiUrl + encodeURIComponent(countryCode),
         dataType: 'json',
-        success: function(data){
-            if(data && data.length > 0){
+        success: function(data) {
+            if (data && data.length > 0) {
                 const latlng = data[0].latlng;
-                console.log(latlng)
-//                initCountryCode(latlng);//위도, 경도
-                initMap(latlng);
-            }else{
+                console.log(latlng);
+                initMap(latlng); // 위도, 경도 전달
+            } else {
                 console.error('국가 정보를 찾을 수 없습니다.');
             }
         },
-        error: function(xhr, status, error){
-            console.log("REST Countries API 호출 중 오류 발생", error)
+        error: function(xhr, status, error) {
+            console.log("REST Countries API 호출 중 오류 발생", error);
         }
-    });//$.ajax
-}//function getCountryCode(countryName){
+    });
+}
+
 
 //-----------------------자동검색어 완성
 function initAutocomplete(countryCode) {

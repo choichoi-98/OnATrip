@@ -63,6 +63,12 @@ pay:
   admin-key: 25f3c5241ac9ac3441dc3a1a2b893ae6
   cid: TC0ONETIME
 
+#Google Map
+google:
+  maps:
+    api-key: AIzaSyClupjj1Y0A3u-NHuIO7RaQZzZ5_5Yd2Mg
+
+
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
