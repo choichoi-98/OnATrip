@@ -32,11 +32,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
-                        .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                        .requestMatchers( "/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADM…
-                        .anyRequest().authenticated() //// 나머지 요청은 인증 필요
+                                // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
+                                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+//                                .requestMatchers( "/**").permitAll()
+                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/mail","/sendEmail", "/main", "/subscribe").permitAll()
+                                .requestMatchers("/admin/**","/memberQNA").hasRole("ADMIN")
+                                .anyRequest().authenticated() // 나머지 요청은 인증 필요
+
 //                        "/member/**", "/item/**", "/images/**","/main","/location/**","/join/**","/login/**","/findPassword/**",
                 )
                 .formLogin((form) -> form

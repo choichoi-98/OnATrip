@@ -147,7 +147,7 @@ public class MemberController {
     }
 
     //회원가입시 이메일 중복 확인
-    @PostMapping("checkEmail")
+    @PostMapping("/checkEmail")
     @ResponseBody
     public boolean checkEmail(@RequestParam("email") String email) {
 
