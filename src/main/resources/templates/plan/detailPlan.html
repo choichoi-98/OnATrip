@@ -20,12 +20,10 @@
 <link rel="stylesheet" href="css/plan/detailPlan.css">
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script src="/js/plan/googleApikey.js"></script>
-<script>
-    const API_KEY = config.apikey; // API 키를 가져옵니다.
-const script = document.createElement('script');
-script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap&v=weekly&language=ko&libraries=places`;
-document.head.appendChild(script); // 동적으로 스크립트를 추가합니다.
-</script>
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClupjj1Y0A3u-NHuIO7RaQZzZ5_5Yd2Mg&
+            callback=initMap&v=weekly&language=ko&libraries=places"
+></script>
 
 <script src="/js/plan/detailPlan.js"></script>
 <style>
