@@ -33,7 +33,6 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    // 메인 주의 여기 주의 주의 주의 주의
     public String main(Model model, HttpSession session, Principal principal) {
         logger.info("main---------------------------------------------------------");
         List<LocationDTO> allLocations = locationService.getAllLocations();
@@ -81,5 +80,11 @@ public class MainController {
         LocationDTO location = locationService.getLocationById(locationId);
 
         return ResponseEntity.ok(location);
+    }
+
+    // 알림
+    @GetMapping("/alert")
+    public String getAlertPage() {
+        return "alertPage";
     }
 }
