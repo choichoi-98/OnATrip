@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -28,6 +29,13 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    @Autowired
+    private AuthenticationSuccessHandler successHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler failureHandler;
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -35,7 +43,7 @@ public class WebSecurityConfig {
                                 // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 //                                .requestMatchers( "/**").permitAll()
-                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/mail","/sendEmail", "/main", "/subscribe").permitAll()
+                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe").permitAll()
                                 .requestMatchers("/admin/**","/memberQNA").hasRole("ADMIN")
                                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
 
@@ -48,6 +56,8 @@ public class WebSecurityConfig {
                         .usernameParameter("email") //사용자 이름 파라미터 이름 설정
                         .passwordParameter("password") // 비밀번호 파라미터 이름 설정
                         .defaultSuccessUrl("/main")  // 로그인 성공 후 이동 페이지
+                        .successHandler(successHandler)  // 로그인 성공 핸들러
+                        .failureHandler(failureHandler)  // 로그인 실패 핸들러
                         .permitAll()
                 )
                 .logout((logout) -> logout
