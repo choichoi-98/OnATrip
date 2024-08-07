@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface MyQNARepository extends JpaRepository<MyQNA, Long>, MyQNARepositoryCustom {
 
     Optional<MyQNA> findById(Long id);
+
 }
