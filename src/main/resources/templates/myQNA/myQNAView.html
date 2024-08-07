@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/default_layout">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>회원문의내역상세페이지</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/myQNA/createQNA.css}">
-    <head th:replace="fragments/header :: headerFragment"></head>
+    <head th:replace="~{fragments/header :: headerFragment}"></head>
 
 <!--    <script>-->
 <!--        function previewFile() {-->
@@ -30,6 +29,12 @@
 <!--            }-->
 <!--        }-->
 <!--    </script>-->
+    <script>
+        function goUpdate() {
+             var id = document.getElementById('id').value;
+            location.href = '/update/' + id;
+        }
+    </script>
     <style>
         .button-group button {
             margin-right: 10px;
@@ -55,7 +60,7 @@
                 </div>
                 <div class="contents">
                     <div class="my-1">
-                        <input type="hidden" id="myQNAId" th:value="${myQNA.id}">
+                        <input type="hidden" id="id" th:value="${myQNA.id}">
 
                         <div class="form-group">
                             <label th:text="${myQNA.qnaStatus}">문의 유형</label>
@@ -87,7 +92,7 @@
                         </div>
 
                         <div class="button-group btn-group" role="group" aria-label="Button group">
-                            <button type="button" id="editBtn" class="btn btn-outline-success">수정</button>
+                            <button type="button" id="editBtn" class="btn btn-outline-success" onclick="goUpdate();">수정</button>
 
                             <form th:action="@{'/delete/' + ${myQNA.id}}" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');" style="display: inline;">
                                 <button type="submit" class="btn btn-outline-success">삭제</button>

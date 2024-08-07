@@ -52,20 +52,27 @@ public class CreateQNADto {
 
 
     public MyQNA toEntity() {
-        return MyQNA.builder()
+        MyQNA.MyQNABuilder builder = MyQNA.builder()
                 .qnaStatus(qnaStatus)
                 .title(title)
                 .content(content)
-                .writer(member.getName())
+                .writer(writer)
                 .createdAt(createdAt)
-                .member(member) // Member 객체 설정
-                .answer(answer)
-                .build();
+                .member(member)
+                .answer(answer);
+
+        // ID가 설정되어 있으면 기존 데이터를 업데이트
+        if (id != null) {
+            builder.id(id);
+        }
+
+        return builder.build();
     }
 
     @Builder
     public CreateQNADto(Member member){
         MyQNA myQNA = new MyQNA();
+        this.id = myQNA.getId();
         this.qnaStatus = myQNA.getQnaStatus();
         this.title = myQNA.getTitle();
         this.content = myQNA.getContent();
