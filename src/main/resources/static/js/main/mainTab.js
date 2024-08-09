@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    // 페이지 로드 시 결과 메시지 숨기기
+    $('#no-results-all').hide();
+    $('#no-results-domestic').hide();
+    $('#no-results-international').hide();
+
     // 페이지 로드 시 모달 숨김 처리 (CSS에서 처리됨)
     $('#modal-root').hide();
 
@@ -94,6 +99,64 @@ $(document).ready(function() {
         // 해당 탭 콘텐츠 표시
         $('#tab-all, #tab-domestic, #tab-international').not(tabId).hide();
         $(tabId).show();
+
+        // 각 탭별로 처음에는 12개 항목만 표시하고 더보기 버튼 상태 업데이트
+        showInitialItems(tabId);
+        checkLoadMoreButton(tabId);
+    }
+
+    function showInitialItems(tabId) {
+        var $tabContent = $(tabId + ' > div');
+        $tabContent.hide(); // 모든 항목 숨김
+        $tabContent.slice(0, 12).show(); // 처음 12개 항목만 표시
+    }
+
+    function checkLoadMoreButton(tabId) {
+        // 더보기 버튼의 표시 여부 결정
+        var $tabContent = $(tabId + ' > div');
+        var visibleCount = $tabContent.filter(':visible').length;
+        var totalCount = $tabContent.length;
+        var $loadMoreButton = $(tabId === '#tab-all' ? '#load-more-all' :
+                              tabId === '#tab-domestic' ? '#load-more-domestic' : '#load-more-international');
+
+        // 12개 이상이 있을 경우에만 더보기 버튼 표시
+        if (totalCount > 12) {
+            $loadMoreButton.toggle(visibleCount < totalCount);
+        } else {
+            $loadMoreButton.hide();
+        }
+    }
+
+    // 초기 로드 시 각 탭에 대해 12개 항목만 표시하고 더보기 버튼 확인
+    showInitialItems('#tab-all');
+    checkLoadMoreButton('#tab-all');
+
+    showInitialItems('#tab-domestic');
+    checkLoadMoreButton('#tab-domestic');
+
+    showInitialItems('#tab-international');
+    checkLoadMoreButton('#tab-international');
+
+    // 더보기 버튼 클릭 처리
+    $('#load-more-all-btn').click(function() {
+        loadMoreContent('#tab-all');
+    });
+
+    $('#load-more-domestic-btn').click(function() {
+        loadMoreContent('#tab-domestic');
+    });
+
+    $('#load-more-international-btn').click(function() {
+        loadMoreContent('#tab-international');
+    });
+
+    function loadMoreContent(tabId) {
+        var $tabContent = $(tabId + ' > div');
+        var visibleCount = $tabContent.filter(':visible').length;
+        var newVisibleCount = visibleCount + 12; // 12개 추가
+
+        $tabContent.slice(visibleCount, newVisibleCount).show();
+        checkLoadMoreButton(tabId);
     }
 
     // 목적지 클릭 시 모달 열기
@@ -109,34 +172,34 @@ $(document).ready(function() {
 
     // 일정 만들기 버튼 클릭 처리
     $('#create-itinerary').click(function(event) {
-            event.preventDefault(); // 기본 동작 막기
+        event.preventDefault(); // 기본 동작 막기
 
-            var locationId = $(this).attr('data-location-id');
-            var csrfToken = $('meta[name="_csrf"]').attr('content');
+        var locationId = $(this).attr('data-location-id');
+        var csrfToken = $('meta[name="_csrf"]').attr('content');
 
-            // 서버에 인증 여부 확인 요청
-            $.ajax({
-                url: '/check-authentication',
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                },
-                success: function(isAuthenticated) {
-                    if (isAuthenticated) {
-                        // 인증된 사용자 -> 일정 만들기 페이지로 이동
-                        window.location.href = '/selectDate?locationId=' + locationId;
-                    } else {
-                        // 비회원 -> 로그인 경고 및 로그인 페이지로 이동
-                        alert('로그인이 필요합니다.');
-                        window.location.href = '/login'; // 로그인 페이지 URL로 수정
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('인증 확인 오류:', error);
-                    alert('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+        // 서버에 인증 여부 확인 요청
+        $.ajax({
+            url: '/check-authentication',
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+            },
+            success: function(isAuthenticated) {
+                if (isAuthenticated) {
+                    // 인증된 사용자 -> 일정 만들기 페이지로 이동
+                    window.location.href = '/selectDate?locationId=' + locationId;
+                } else {
+                    // 비회원 -> 로그인 경고 및 로그인 페이지로 이동
+                    alert('로그인이 필요합니다.');
+                    window.location.href = '/login'; // 로그인 페이지 URL로 수정
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('인증 확인 오류:', error);
+                alert('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+            }
+        });
     });
 
     // 모달 열기 함수 수정
@@ -179,9 +242,4 @@ $(document).ready(function() {
     function closeModal() {
         $('#modal-root').fadeOut(); // 모달 닫기
     }
-
-    // 페이지 로드 시 결과 메시지 숨기기
-    $('#no-results-all').hide();
-    $('#no-results-domestic').hide();
-    $('#no-results-international').hide();
 });
