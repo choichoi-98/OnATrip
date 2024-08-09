@@ -18,6 +18,16 @@ $(document).ready(function() {
     const countryCode = $('#countryHeading').data('countrycode');
     console.log('countryCode------------: ', countryCode);
 
+    if(countryCode){
+        //해외
+        getCountryInfo(countryCode);//->initMap(countryCode)->initAutocomplete(countryCode)호출
+    } else {
+        //국내
+        const latlng = '';
+        initMap(latlng);
+    }
+
+
 //
 //    if (countryCode) {
 //        // countryCode가 존재하는 경우

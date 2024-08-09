@@ -290,9 +290,9 @@ public class PlanController {
         }
     }
 
-    //myPage 이동
-    @GetMapping("/myPage")
-    public ModelAndView myPage(
+    //내 여행 목록으로 이동
+    @GetMapping("/myPlanList")
+    public ModelAndView myPlanList(
                                ModelAndView mv,
                                Principal principal){
 
@@ -301,7 +301,7 @@ public class PlanController {
 
         List<Plan> plans = planService.findPlanBymemberId(email);
         mv.addObject("plans", plans);
-        mv.setViewName("/myPage");
+        mv.setViewName("/myPlanList");
 
         return mv;
     }
@@ -348,6 +348,19 @@ public class PlanController {
 
     }
 
+    @GetMapping("/myPage")
+    public ModelAndView myPage(ModelAndView mv, Principal principal){
+
+        String email = principal.getName();
+
+        //최대 다섯개만 가져오기
+        List<Plan> plans = planService.findFivePlanBymemberId(email);
+
+        mv.addObject("plans", plans);
+
+        mv.setViewName("myPage");
+        return mv;
+    }
 
 }//public class PlanController {
 

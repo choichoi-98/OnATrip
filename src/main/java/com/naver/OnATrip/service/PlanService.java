@@ -209,4 +209,9 @@ public class PlanService {
         }
         return updateMateId.toString();
     }
+
+    //여행 목록 다섯개 조회_myPage에서 사용
+    public List<Plan> findFivePlanBymemberId(String email) {
+        return planRepository.findFivePlan(email);
+    }
 }

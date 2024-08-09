@@ -20,59 +20,10 @@
 <link rel="stylesheet" href="css/plan/detailPlan.css">
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script src="/js/plan/googleApikey.js"></script>
-<script>
-    const latlng = /*[[${latlng}]]*/ ''; // latlng을 JSON 형태로 변환
-    const countryCode = /*[[${countryCode}]]*/ ''; // 국가 코드 가져오기
-
-    if (countryCode) {
-        getCountryInfo(countryCode); // 국가 코드가 있을 경우 getCountryInfo 호출
-    } else {
-        initMap(''); // 빈 문자열일 경우 initMap 호출
-    }
-
-    function getCountryInfo(countryCode) {
-        $.ajax({
-            url: apiUrl + encodeURIComponent(countryCode),
-            dataType: 'json',
-            success: function(data) {
-                if (data && data.length > 0) {
-                    const latlng = data[0].latlng;
-                    console.log(latlng);
-                    initMap(latlng); // 위도, 경도 전달
-                } else {
-                    console.error('국가 정보를 찾을 수 없습니다.');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log("REST Countries API 호출 중 오류 발생", error);
-            }
-        });
-    }
-
-    function initMap(latlng) {
-    console.log('initMap()의 latlng ', latlng);
-
-    const defaultLocation = { lat: 37.0, lng: 127.5 }; // 기본값: 한국 좌표
-    const center = latlng && latlng.length === 2 ? { lat: latlng[0], lng: latlng[1] } : defaultLocation;
-
-    const mapOptions = {
-        zoom: 8,
-        center: center,
-        fullscreenControl: false,
-        streetViewControl: false,
-        mapTypeControl: false,
-    };
-
-    map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-    // countryCode를 사용하여 장소 검색 초기화
-    const countryCode = $('#countryHeading').data('countrycode');
-    initAutocomplete(countryCode);
-
-    // 초기 마커 추가
-    addMarkersFromHTML();
-}
-</script>
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClupjj1Y0A3u-NHuIO7RaQZzZ5_5Yd2Mg&
+            callback=initMap&v=weekly&language=ko&libraries=places"
+></script>
 
 
 
@@ -113,8 +64,8 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/main">홈으로</a></li>
-                            <li><a class="dropdown-item" href="/myPage">친구초대</a></li>
-                            <li><a class="dropdown-item" href="/myPage">여행 리스트</a></li>
+                            <li><a class="dropdown-item" href="/myPlanList">친구초대</a></li>
+                            <li><a class="dropdown-item" href="/myPlanList">여행 리스트</a></li>
                         </ul>
                     </div>
                 </div>
