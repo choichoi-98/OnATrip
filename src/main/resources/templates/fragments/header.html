@@ -132,8 +132,6 @@ layout:decorate="layout/default_layout">
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/admin">관리자</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               sec:authorize="isAuthenticated()" href="/myPage">내 여행</a>
-                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                href="/">공지사항</a>
                             <th:block th:if="${not #authorization.expression('isAuthenticated()')}">
                                 <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
@@ -144,11 +142,11 @@ layout:decorate="layout/default_layout">
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="isAnonymous()" href="/login">로그인</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               sec:authorize="isAuthenticated()" href="#">마이페이지</a>
+                               sec:authorize="isAuthenticated()" href="/myPage">마이페이지</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="hasAnyAuthority('ROLE_USER')" href="/myQNAList">문의내역</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/memberQNA">문의내역</a>
+                               sec:authorize="hasAnyAuthority('ROLE_ADMIN')" href="/memberQNAList">문의내역</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                id="logoutBtn" sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
                         </div>

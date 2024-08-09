@@ -131,6 +131,16 @@ public class PlanRepositoryCustomImpl implements PlanRepositoryCustom {
                 .execute();
     }
 
+    //여행 목록 5개 조회
+    @Override
+    public List<Plan> findFivePlan(String email) {
+        return queryFactory
+                .selectFrom(plan)
+                .where(plan.email.eq(email))
+                .limit(5)
+                .fetch();
+    }
+
     @Override
     public SubscribeStatus getStatusByEmail(String email) {
         SubscribeStatus subscribeStatus = queryFactory

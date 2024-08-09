@@ -26,5 +26,7 @@ public interface PlanRepositoryCustom {
 
     void updatePlanMateIdAndDecrementMemberCount(Long planId, String updatedMateId);
 
+    List<Plan> findFivePlan(String email);
+
 //    Member findMemberByEmail(String email);
 }
