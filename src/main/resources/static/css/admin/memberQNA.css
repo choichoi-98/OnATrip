@@ -27,3 +27,8 @@ body{
 tr {
     text-align: center;
 }
+
+.link {
+     color: black;
+    text-decoration: none;
+}

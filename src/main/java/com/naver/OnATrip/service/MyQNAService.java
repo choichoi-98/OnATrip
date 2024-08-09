@@ -28,6 +28,7 @@ public class MyQNAService {
         // CreateQNADto를 MyQNA로 변환
         MyQNA myQNA = createQNADto.toEntity();
         myQNA.setMember(member); // Member 객체 설정
+        myQNA.setWriter(member.getName()); // Writer를 Member의 이름으로 설정
 
         if (myQNA.getId() != null && myQNARepository.existsById(myQNA.getId())) {
             // 기존 데이터가 있으면 업데이트
@@ -38,6 +39,7 @@ public class MyQNAService {
             existingQNA.setContent(myQNA.getContent());
             existingQNA.setQnaStatus(myQNA.getQnaStatus());
             existingQNA.setMember(member);
+            existingQNA.setWriter(myQNA.getWriter()); // 기존 writer 값을 업데이트
             existingQNA.setAnswer(myQNA.getAnswer());
 
             myQNARepository.save(existingQNA);
@@ -46,6 +48,7 @@ public class MyQNAService {
             myQNARepository.save(myQNA);
         }
     }
+
 
     public List<MyQNA> findMyQNA(String email) {
         return myQNARepository.findAll(email);
@@ -62,4 +65,7 @@ public class MyQNAService {
         myQNARepository.deleteById(id);
     }
 
+    public List<MyQNA> findAll() {
+        return myQNARepository.findAll();
+    }
 }
