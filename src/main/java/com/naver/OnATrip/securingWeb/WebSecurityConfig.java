@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                                 // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 //                                .requestMatchers( "/**").permitAll()
-                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe","/location/**").permitAll()
+                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe","/location/**", "/check-authentication").permitAll()
                                 .requestMatchers("/admin/**","/memberQNA").hasRole("ADMIN")
                                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
 
