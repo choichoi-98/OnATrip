@@ -6,7 +6,7 @@
 <title>회원문의내역<관리자></title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" th:href="@{/css/admin/memberQNA.css}">
-<head th:replace="fragments/header :: headerFragment">
+<head th:replace="~{fragments/header :: headerFragment}">
 </head>
 <body>
 <div class="safari_only_wrapper">
@@ -20,7 +20,7 @@
                 </div>
                 <div class="contents">
                     <div class="my-1">
-                        <form id="memberQNAList" th:action="@{/memberQNA}" method="post">
+                        <form id="memberQNAList" th:action="@{/memberQNAList}" method="post">
 
                             <div class="group">
                                 <table class="table table-hover">
@@ -34,16 +34,16 @@
                                     </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
-                                    <tr th:each="memberQNA : ${memberQNA}">
+                                    <tr th:each="myQNA : ${myQNA}">
+                                        <td th:text="${myQNA.id}"></td>
                                         <td>
-                                            <a th:href="@{'/admin/memberQNA/' + ${memberQNA.id}}">
-                                                <span th:text="${memberQNA.id}"></span>
+                                            <a th:href="@{'/memberQNAView/' + ${myQNA.id}}" class="link">
+                                                <span th:text="${myQNA.title}"></span>
                                             </a>
                                         </td>
-                                        <td th:text="${memberQNA.title}"></td>
-                                        <td th:text="${memberQNA.writer}"></td>
-                                        <td th:text="${memberQNA.createdBy}"></td>
-                                        <td th:text="${memberQNA.answer}"></td>
+                                        <td th:text="${myQNA.writer}"></td>
+                                        <td th:text="${myQNA.createdAt}"></td>
+                                        <td th:text="${myQNA.answer}"></td>
                                     </tr>
                                     </tbody>
                                 </table>

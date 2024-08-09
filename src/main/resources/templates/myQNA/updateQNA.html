@@ -35,7 +35,7 @@
                     <div class="my-1">
                         <form id="QNADetail" th:action="@{'/update/' + *{id}}" th:object="${createQNADto}" method="post" enctype="multipart/form-data">
                             <input type="hidden" id="id" name="id" th:value="*{id}"/>
-                            <input type="hidden" th:field="*{writer}">
+                            <input type="hidden" id="writer" name="writer"  th:field="*{writer}">
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}">
                             <div class="form-group">
                                 <select class="form-select" th:field="*{qnaStatus}" aria-label="Default select example">
