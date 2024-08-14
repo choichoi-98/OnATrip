@@ -94,11 +94,18 @@ public class LocationService {
             locationDTO.setId(location.getId());
             locationDTO.setCountryName(location.getCountryName());
             locationDTO.setCountryCode(location.getCountryCode());
+            locationDTO.setCreatedDate(location.getCreatedDate());
+            locationDTO.setEndDate(location.getEndDate());
             locationDTO.setCity(location.getCity());
             locationDTO.setDescription(location.getDescription());
             locationDTO.setLocationType(location.getLocationType());
             locationDTO.setImagePath(location.getImage());
             locationDTOs.add(locationDTO);
+
+/*
+            logger.info("LocationDTO: {}==================", locationDTO); // 로그로 데이터 확인
+*/
+
         }
 
 
@@ -177,6 +184,7 @@ public class LocationService {
             LocationDTO locationDTO = new LocationDTO();
             locationDTO.setId(location.getId());
             locationDTO.setCreatedDate(location.getCreatedDate());
+            locationDTO.setEndDate(location.getEndDate());
             locationDTO.setCountryName(location.getCountryName());
             locationDTO.setCountryCode(location.getCountryCode());
             locationDTO.setCity(location.getCity());

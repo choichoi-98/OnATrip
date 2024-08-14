@@ -18,4 +18,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     // 메인 tab 부분(여행지 목록 저장)
     List<Location> findByLocationType(String locationType);
+
+    
 }
