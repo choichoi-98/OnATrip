@@ -1,15 +1,12 @@
 package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Member;
-import com.naver.OnATrip.entity.pay.SubscribeStatus;
+import com.naver.OnATrip.entity.pay.Subscribe;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
-import com.naver.OnATrip.exception.UnauthorizedAccessException;
 import com.naver.OnATrip.repository.MemberRepository;
-import com.naver.OnATrip.service.DetailPlanService;
-import com.naver.OnATrip.service.PlanService;
-import com.naver.OnATrip.service.RouteService;
+import com.naver.OnATrip.service.*;
 import com.naver.OnATrip.web.dto.plan.DetailPlanDto;
 import com.naver.OnATrip.web.dto.plan.PlanDto;
 import com.naver.OnATrip.web.dto.plan.RouteDto;
@@ -19,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,14 +35,18 @@ public class PlanController {
     private final PlanService planService;
     private final DetailPlanService detailPlanService;
     private final RouteService routeService;
+    private final MemberService memberService;
+    private final OrderService orderService;
     private static final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
 
     @Autowired
-    public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService, MemberRepository memberRepository, RestTemplate restTemplate) {
+    public PlanController(PlanService planService, DetailPlanService detailPlanService, RouteService routeService, MemberRepository memberRepository, MemberService memberService, OrderService orderService, RestTemplate restTemplate) {
         this.planService = planService;
         this.detailPlanService = detailPlanService;
         this.routeService = routeService;
+        this.memberService = memberService;
+        this.orderService = orderService;
         this.restTemplate = restTemplate;
     }
 
@@ -357,6 +355,17 @@ public class PlanController {
         List<Plan> plans = planService.findFivePlanBymemberId(email);
 
         mv.addObject("plans", plans);
+
+        Member member = memberService.findByEmail(email);
+        mv.addObject("member", member);
+
+
+//        Optional<Subscribe> subscribe = orderService.findByMemberId(email);
+//        if (subscribe.isPresent()){
+//            mv.addObject("subscribe", subscribe);
+//        } else {
+//            mv.addObject("subscribe", null);
+//        }
 
         mv.setViewName("myPage");
         return mv;
