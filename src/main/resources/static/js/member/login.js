@@ -1,24 +1,44 @@
-//$(document).ready(function(){
-//     let token = $("meta[name='_csrf']").attr("content");
-//     let header = $("meta[name='_csrf_header']").attr("content");
-//     console.log(token);
-//     console.log(header);
-//
-//    $('#form_login').submit(function(event) {
-//        event.preventDefault(); // 폼 기본 제출 동작 방지
-//
-//        var email = $('#email').val();
-//        var password = $('#password').val();
-//        var match = $('#checkMember');
-//
-//        // 간단한 예시로 이메일과 비밀번호가 존재하고 비밀번호가 'password'일 때만 로그인 성공으로 가정합니다.
-//        if (email && password === 'password') {
-//            // 로그인 성공
-//            match.text('');
-//        } else {
-//            // 로그인 실패
-//            match.text('이메일이나 비밀번호가 잘못되었습니다. 다시 확인해주세요.'); // 에러 메시지 표시
-//            match.removeClass('checkMember').addClass('checkFail');
-//        }
-//    });
-//});
+        $(document).ready(function() {
+             let token = $("meta[name='_csrf']").attr("content");
+             let header = $("meta[name='_csrf_header']").attr("content");
+             console.log(token);
+             console.log(header);
+            function validateEmail() {
+                var $emailInput = $('#email');
+                var $emailError = $('#emailError');
+                var emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailPattern.test($emailInput.val().trim())) {
+                    $emailError.addClass('show');
+                } else {
+                    $emailError.removeClass('show');
+                }
+            }
+
+            function validatePassword() {
+                var $passwordInput = $('#password');
+                var $passwordError = $('#passwordError');
+                if ($passwordInput.val().trim() === '') {
+                    $passwordError.addClass('show');
+                } else {
+                    $passwordError.removeClass('show');
+                }
+            }
+
+            $('#email').on('input', validateEmail);
+            $('#password').on('input', validatePassword);
+
+            $('#loginForm').on('submit', function(event) {
+                validateEmail();  // 추가 검증
+                validatePassword();  // 추가 검증
+
+                var $emailError = $('#emailError');
+                var $passwordError = $('#passwordError');
+                if ($emailError.hasClass('show') || $passwordError.hasClass('show')) {
+                    event.preventDefault(); // 폼 제출을 막음
+                }
+            });
+
+             $('#email, #password').on('input', function() {
+                 $('#error').hide();  // 에러 메시지 숨기기
+             });
+        });

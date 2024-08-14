@@ -68,4 +68,29 @@ public class MyQNAService {
     public List<MyQNA> findAll() {
         return myQNARepository.findAll();
     }
+
+    public boolean saveReply(Long id, String reply) {
+        MyQNA qna = myQNARepository.findById(id).orElse(null);
+        if (qna != null) {
+            qna.setReply(reply);
+            qna.setAnswer("Y");
+            myQNARepository.save(qna);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean clearReply(Long id) {
+        try {
+            // 댓글을 빈 문자열로 업데이트하는 로직
+            MyQNA myQNA = myQNARepository.findById(id).orElseThrow(() -> new RuntimeException("문의가 없습니다."));
+            myQNA.setReply(null);
+            myQNA.setAnswer("N");
+            myQNARepository.save(myQNA);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // 실패 시 false 반환
+        }
+    }
 }

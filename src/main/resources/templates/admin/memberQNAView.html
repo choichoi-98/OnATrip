@@ -8,33 +8,6 @@
     <link rel="stylesheet" th:href="@{/css/myQNA/createQNA.css}">
     <head th:replace="~{fragments/header :: headerFragment}"></head>
 
-<!--    <script>-->
-<!--        function previewFile() {-->
-<!--            const fileInput = document.getElementById('inputGroupFile04');-->
-<!--            const previewImg = document.getElementById('previewImg');-->
-<!--            const file = fileInput.files[0];-->
-<!--    -->
-<!--            if (file) {-->
-<!--                const reader = new FileReader();-->
-<!--    -->
-<!--                reader.onload = function (e) {-->
-<!--                    previewImg.src = e.target.result;-->
-<!--                    previewImg.style.display = 'block'; // 이미지 표시-->
-<!--                };-->
-<!--    -->
-<!--                reader.readAsDataURL(file);-->
-<!--            } else {-->
-<!--                previewImg.style.display = 'none'; // 이미지 숨기기-->
-<!--                previewImg.src = ''; // 이미지 경로 초기화-->
-<!--            }-->
-<!--        }-->
-<!--    </script>-->
-    <script>
-        function goUpdate() {
-             var id = document.getElementById('id').value;
-            location.href = '/update/' + id;
-        }
-    </script>
     <style>
         .button-group button {
             margin-right: 10px;
@@ -60,7 +33,7 @@
                 </div>
                 <div class="contents">
                     <div class="my-1">
-                        <input type="hidden" id="id" th:value="${myQNA.id}">
+                        <input type="hidden" id="id" name="id" th:value="${myQNA.id}">
 
                         <div class="form-group">
                             <label th:text="${myQNA.qnaStatus}">문의 유형</label>
@@ -80,20 +53,29 @@
                         <!-- 답변 작성 폼 -->
                         <div id="answer">
                             <div class="form-group">
-                                <label for="answerForm">답변</label>
-                                <!-- 답변이 있는 경우에는 기존 답변을 보여주고, 없으면 빈 폼을 보여줍니다. -->
-                                <textarea class="form-control" id="answerForm" rows="5"
-                                          th:if="${myQNA.reply != null and !myQNA.reply.isEmpty()}"
-                                          th:text="${myQNA.reply}"></textarea>
-                                <textarea class="form-control" id="answerInput" rows="5"
-                                          th:if="${myQNA.reply == null or myQNA.reply.isEmpty()}"
-                                          placeholder="답변을 입력하세요."></textarea>
-                                <button type="button" class="btn btn-primary" onclick="submitAnswer()">답변 등록</button>
+                                <label for="replyForm">답변</label>
+                                <form th:action="@{/submitAnswer}" method="post">
+                                    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                                    <input type="hidden" name="id" th:value="${myQNA.id}">
+                                    <!-- 답변이 있는 경우에는 기존 답변을 보여주고, 없으면 빈 폼을 보여줍니다. -->
+                                    <textarea class="form-control" name="reply" id="replyForm" rows="5"
+                                              th:if="${myQNA.reply != null and !myQNA.reply.isEmpty()}"
+                                              th:text="${myQNA.reply}"></textarea>
+                                    <textarea class="form-control" name="reply" id="replyInput" rows="5"
+                                              th:if="${myQNA.reply == null or myQNA.reply.isEmpty()}"
+                                              placeholder="답변을 입력하세요."></textarea>
+                                    <div class="d-flex align-items-center">
+                                        <button type="submit" class="btn btn-primary">답변 등록</button>
+                                        <div th:if="${myQNA.reply != null and !myQNA.reply.isEmpty()}" class="ml-2">
+                                            <button type="button" class="btn btn-danger deleteReplyBtn" th:data-id="${myQNA.id}">댓글 삭제</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
                         <div class="button-group btn-group" role="group" aria-label="Button group">
-                            <button type="button" id="gotoList" class="btn btn-outline-success" onclick="location.href='/myQNAList'">목록</button>
+                            <button type="button" id="gotoList" class="btn btn-outline-success" onclick="location.href='/memberQNAList'">목록</button>
                         </div>
                     </div>
                 </div>
@@ -103,7 +85,7 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<!--    <script th:src="@{/js/admin/admin.js}"></script>-->
+<script src="/js/admin/memberQNAView.js"></script>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>

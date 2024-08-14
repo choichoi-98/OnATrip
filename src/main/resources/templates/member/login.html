@@ -12,6 +12,7 @@
 </head>
 <script src="/js/jquery-3.7.0.js"></script>
 <script src="/js/bootstrap.js"></script>
+<script src="/js/member/login.js"></script>
 <!--<script src="/js/member/login.js"></script>-->
 <body>
 
@@ -29,14 +30,16 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="group">
                     <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">이메일</label>
-                    <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="email">
+                    <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" id="email" name="email"  required>
+                    <p id="emailError" class="error-message">아이디가 형식에 맞지 않습니다.</p>
                 </div>
                 <div class="mt-4">
                     <div class="group">
                         <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">비밀번호</label>
-                        <input type="password" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" name="password">
+                        <input type="password" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary undefined" id="password" name="password"  required>
+                        <p id="passwordError" class="error-message">비밀번호를 입력하세요.</p>
                     </div>
-                    <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
+                    <p th:if="${param.error}" class="text-red-500 mt-2" id="error">이메일이나 비밀번호가 잘못되었습니다.</p>
                     <a class="text-xs text-gray-500 hover:underline" href="/findPassword">비밀번호를 잊으셨나요?</a>
                     <div class="mt-8">
                         <button type="submit" id="loginBtn" class="relative w-full px-4 py-2 h-[48px] text-white bg-lightScheme-primary-focus rounded-md">로그인</button>

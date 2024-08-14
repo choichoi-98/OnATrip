@@ -40,21 +40,22 @@ public class MemberController {
                 ;
     }
 
-    @PostMapping("/login")
-    public String loginProc(@ModelAttribute MemberDTO memberDTO, HttpSession session, Model model) {
-        MemberDTO loginResult = memberService.login(memberDTO);
-        if (loginResult != null) {
-            // login 성공
-            System.out.println("로그인 성공" + loginResult.getEmail());
-            session.setAttribute("email", loginResult.getEmail());
-            return "redirect:/main";
-        } else {
-            // login 실패
-            System.out.println("로그인 실패: 이메일이나 비밀번호가 잘못되었습니다.");
-            model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해주세요");
-            return "member/login";
-        }
-    }
+    // 주석 처리한 이유 => 시큐리티가 로그인프로세스 대신 해줌.. 매핑 없어도 잘 됨.
+//    @PostMapping("/login")
+//    public String loginProc(@ModelAttribute MemberDTO memberDTO, HttpSession session, Model model) {
+//        MemberDTO loginResult = memberService.login(memberDTO);
+//        if (loginResult != null) {
+//            // login 성공
+//            System.out.println("로그인 성공" + loginResult.getEmail());
+//            session.setAttribute("email", loginResult.getEmail());
+//            return "redirect:/main";
+//        } else {
+//            // login 실패
+//            System.out.println("로그인 실패: 이메일이나 비밀번호가 잘못되었습니다.");
+//            model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해주세요");
+//            return "member/login";
+//        }
+//    }
     //비밀번호 찾기
     @GetMapping("/findPassword")
     public String findPassword() {
