@@ -44,10 +44,9 @@ public class WebSecurityConfig {
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 //                                .requestMatchers( "/**").permitAll()
                                 .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe","/location/**", "/check-authentication").permitAll()
-                                .requestMatchers("/admin/**","/memberQNA").hasRole("ADMIN")
+                                .requestMatchers("/admin/**","/memberQNAList","/memberQNAView","/submitAnswer").hasRole("ADMIN")
                                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
 
-//                        "/member/**", "/item/**", "/images/**","/main","/location/**","/join/**","/login/**","/findPassword/**",
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -57,7 +56,7 @@ public class WebSecurityConfig {
                         .passwordParameter("password") // 비밀번호 파라미터 이름 설정
                         .defaultSuccessUrl("/main")  // 로그인 성공 후 이동 페이지
                         .successHandler(successHandler)  // 로그인 성공 핸들러
-                        .failureHandler(failureHandler)  // 로그인 실패 핸들러
+                        .failureUrl("/login?error=true")  // 로그인 실패
                         .permitAll()
                 )
                 .logout((logout) -> logout

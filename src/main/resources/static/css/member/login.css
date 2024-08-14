@@ -116,6 +116,18 @@ progress {
 ::-webkit-inner-spin-button,::-webkit-outer-spin-button {
     height: auto
 }
+#error{
+    color: red;
+    font-size: .75rem;
+}
+.error-message {
+    color: red;
+    font-size: .75rem;
+    display: none; /* 기본적으로 숨김 */
+}
+.error-message.show {
+    display: block;
+}
 
 [type=search] {
     -webkit-appearance: textfield;
