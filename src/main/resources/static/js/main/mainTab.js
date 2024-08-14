@@ -11,80 +11,69 @@ $(document).ready(function() {
     var today = new Date();
     today.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정하여 날짜만 비교
 
-    // 각 위치 항목에 대해 endDate 확인
-    $('[data-enddate]').each(function() {
-        var endDate = new Date($(this).data('enddate'));
-        endDate.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정하여 날짜만 비교
+    // 새로운 배지와 여행지 표시 처리
+    $('[data-createdate][data-enddate]').each(function() {
+        var createDateStr = $(this).data('createdate');
+        var endDateStr = $(this).data('enddate');
 
-        if (today.getTime() === endDate.getTime()) {
-            $(this).find('.new-badge').hide(); // 오늘 날짜와 일치하는 경우 'NEW' 배지 숨김
+        // 문자열을 Date 객체로 변환 (형식이 YYYY-MM-DD인 경우)
+        var createDate = new Date(createDateStr);
+        var endDate = new Date(endDateStr);
+
+        createDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+
+        // 콘솔에 로그를 추가하여 확인
+        console.log('Today:', today);
+        console.log('Create Date:', createDate);
+        console.log('End Date:', endDate);
+
+        // 'NEW' 배지 표시 여부
+        if (today >= createDate && today <= endDate) {
+            $(this).find('.new-badge').show();
+            $(this).find('.new-destination-badge').show(); // 새로운 여행지 배지도 동일한 조건으로 표시
         } else {
-            $(this).find('.new-badge').show(); // 오늘 날짜와 일치하지 않는 경우 'NEW' 배지 표시
+            $(this).find('.new-badge').hide();
+            $(this).find('.new-destination-badge').hide(); // 새로운 여행지 배지도 동일한 조건으로 숨김
         }
     });
 
-    // 검색 입력 처리
-    $('input[name="search"]').on('input', function() {
-        var searchText = $(this).val().toLowerCase(); // 입력된 검색어를 소문자로 변환
+    // 정렬 함수
+    function sortLocations(tabId) {
+       var $tabContent = $(tabId + ' > div');
+       var sortedContent = $tabContent.sort(function(a, b) {
+           var dateA = new Date($(a).data('createdate'));
+           var dateB = new Date($(b).data('createdate'));
 
-        // 검색어와 일치하는 위치 항목 표시 여부
-        var hasResultsAll = false;
-        var hasResultsDomestic = false;
-        var hasResultsInternational = false;
+           // 최신 순서로 정렬 (내림차순)
+           return dateB - dateA;
+       });
 
-        // 전체 탭 검색 처리
-        $('#tab-all > div').each(function() {
-            var locationCity = $(this).find('.location-city').text().toLowerCase();
-            var locationCountry = $(this).find('.location-country').text().toLowerCase();
-            if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
-                $(this).show();
-                hasResultsAll = true;
-            } else {
-                $(this).hide();
-            }
-        });
+       // 기존 내용 제거 후 정렬된 내용 삽입
+       $(tabId).empty().append(sortedContent);
+    }
 
-        // 국내 탭 검색 처리
-        $('#tab-domestic > div').each(function() {
-            var locationCity = $(this).find('.location-city').text().toLowerCase();
-            var locationCountry = $(this).find('.location-country').text().toLowerCase();
-            if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
-                $(this).show();
-                hasResultsDomestic = true;
-            } else {
-                $(this).hide();
-            }
-        });
-
-        // 해외 탭 검색 처리
-        $('#tab-international > div').each(function() {
-            var locationCity = $(this).find('.location-city').text().toLowerCase();
-            var locationCountry = $(this).find('.location-country').text().toLowerCase();
-            if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
-                $(this).show();
-                hasResultsInternational = true;
-            } else {
-                $(this).hide();
-            }
-        });
-
-        // 검색 결과가 없을 경우 메시지 표시
-        $('#no-results-all').toggle(!hasResultsAll && searchText.length > 0);
-        $('#no-results-domestic').toggle(!hasResultsDomestic && searchText.length > 0);
-        $('#no-results-international').toggle(!hasResultsInternational && searchText.length > 0);
-    });
+    // 각 탭 초기 로드 및 정렬
+    function initializeTab(tabId) {
+        showInitialItems(tabId);
+        checkLoadMoreButton(tabId);
+        sortLocations(tabId); // 정렬 호출
+    }
 
     // 탭 클릭 처리
     $('#tab-all-btn').click(function() {
         activateTab('#tab-all', this);
+        initializeTab('#tab-all'); // 탭 활성화 및 정렬
     });
 
     $('#tab-domestic-btn').click(function() {
         activateTab('#tab-domestic', this);
+        initializeTab('#tab-domestic'); // 탭 활성화 및 정렬
     });
 
     $('#tab-international-btn').click(function() {
         activateTab('#tab-international', this);
+        initializeTab('#tab-international'); // 탭 활성화 및 정렬
     });
 
     function activateTab(tabId, button) {
@@ -99,10 +88,6 @@ $(document).ready(function() {
         // 해당 탭 콘텐츠 표시
         $('#tab-all, #tab-domestic, #tab-international').not(tabId).hide();
         $(tabId).show();
-
-        // 각 탭별로 처음에는 12개 항목만 표시하고 더보기 버튼 상태 업데이트
-        showInitialItems(tabId);
-        checkLoadMoreButton(tabId);
     }
 
     function showInitialItems(tabId) {
@@ -128,14 +113,9 @@ $(document).ready(function() {
     }
 
     // 초기 로드 시 각 탭에 대해 12개 항목만 표시하고 더보기 버튼 확인
-    showInitialItems('#tab-all');
-    checkLoadMoreButton('#tab-all');
-
-    showInitialItems('#tab-domestic');
-    checkLoadMoreButton('#tab-domestic');
-
-    showInitialItems('#tab-international');
-    checkLoadMoreButton('#tab-international');
+    initializeTab('#tab-all');
+    initializeTab('#tab-domestic');
+    initializeTab('#tab-international');
 
     // 더보기 버튼 클릭 처리
     $('#load-more-all-btn').click(function() {
@@ -215,12 +195,13 @@ $(document).ready(function() {
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
             },
             success: function(data) {
-                // 서버에서 받은 데이터를 모달에 표시
+                // 서버에서 받은 데이터를 콘솔에 출력
                 console.log('Received Data:', data);  // 데이터 콘솔에 출력
+
+                // 모달에 데이터 설정
                 $('#location-city').text(data.city);
                 $('#location-country').text(data.countryName);
                 $('#location-image').attr('src', data.imagePath);
-                console.log('Image Path:', data.imagePath);  // 이미지 경로 콘솔에 출력
                 $('#location-description').text(data.description);
 
                 // 일정 만들기 버튼에 locationId 설정

@@ -36,6 +36,7 @@ public class Location {
     @Column(name = "created_date")
     private LocalDate createdDate = LocalDate.now(); // 현재 날짜로 초기화
 
+    @Column(name = "end_date")
     private LocalDate endDate;
 
 }

@@ -2,6 +2,7 @@ package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Location;
 import com.naver.OnATrip.entity.Member;
+import com.naver.OnATrip.repository.admin.LocationRepository;
 import com.naver.OnATrip.service.LocationService;
 import com.naver.OnATrip.web.dto.location.LocationDTO;
 import jakarta.servlet.http.HttpSession;
@@ -37,15 +38,12 @@ public class MainController {
         logger.info("main---------------------------------------------------------");
         List<LocationDTO> allLocations = locationService.getAllLocations();
         model.addAttribute("allLocations", allLocations);
-        logger.info("Printing all locations: {}", allLocations);
 
         List<LocationDTO> domesticLocations = locationService.getDomesticLocations();
         model.addAttribute("domesticLocations", domesticLocations);
-        logger.info("Printing domestic locations: {}", domesticLocations);
 
         List<LocationDTO> internationalLocations = locationService.getOverseasLocations();
         model.addAttribute("internationalLocations", internationalLocations);
-        logger.info("Printing international locations: {}", internationalLocations);
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

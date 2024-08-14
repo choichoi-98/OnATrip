@@ -75,7 +75,8 @@
                     <div id="tab-all" class="p-0 xl:p-4 flex flex-wrap w-full">
                         <div th:each="location : ${allLocations}" class="w-full md:w-1/2 lg:w-1/4 p-4">
                             <!-- Content for 전체 tab -->
-                            <div class="w-full" data-enddate="${location.endDate}">
+                            <div class="w-full" style="width: 250px;" th:attr="data-createdate=${location.createdDate},
+                                 data-enddate=${location.endDate}">
                                 <!-- 내용 -->
                                 <div class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer"
                                      th:attr="data-location-id=${location.id}">
@@ -92,7 +93,7 @@
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
-                                        <div class="absolute flex items-center leading-none top-2 md:top-2">
+                                        <div class="absolute flex items-center leading-none top-2 md:top-2 new-destination-badge">
                                             <span class="text-[9px] font-medium text-red-600">새로운 여행지</span>
                                         </div>
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
@@ -118,7 +119,8 @@
                     <div id="tab-domestic" class="p-0 xl:p-4 flex flex-wrap w-full" style="display: none;">
                         <div th:each="location : ${domesticLocations}" class="w-full md:w-1/2 lg:w-1/4 p-4">
                             <!-- Content for 국내 tab -->
-                            <div class="w-full" data-enddate="${location.endDate}">
+                            <div class="w-full" style="width: 250px;" th:attr="data-createdate=${location.createdDate},
+                                 data-enddate=${location.endDate}">
                                 <div th:attr="data-location-id=${location.id}"
                                      class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer">
                                     <div class="pt-2 md:pt-2 md:p-2">
@@ -134,7 +136,7 @@
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
-                                        <div class="absolute flex items-center leading-none top-2 md:top-2">
+                                        <div class="absolute flex items-center leading-none top-2 md:top-2 new-destination-badge">
                                             <span class="text-[9px] font-medium text-red-600">새로운 여행지</span>
                                         </div>
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
@@ -158,8 +160,10 @@
                     </div>
                     <!-- 해외 탭 -->
                     <div id="tab-international" class="p-0 xl:p-4 flex flex-wrap w-full" style="display: none;">
-                        <div th:each="location : ${internationalLocations}" class="w-full md:w-1/2 lg:w-1/4 p-4">                            <!-- Content for 해외 tab -->
-                            <div class="w-full" data-enddate="${location.endDate}">
+                        <div th:each="location : ${internationalLocations}" class="w-full md:w-1/2 lg:w-1/4 p-4">
+                            <!-- Content for 해외 tab -->
+                            <div class="w-full" style="width: 250px;" th:attr="data-createdate=${location.createdDate},
+                                 data-enddate=${location.endDate}">
                                 <div th:attr="data-location-id=${location.id}"
                                      class="h-auto overflow-hidden rounded-lg hover:scale-105 duration-200 mr-2 md:m-4 cursor-pointer">
                                     <div class="pt-2 md:pt-2 md:p-2">
@@ -175,7 +179,7 @@
                                         </div>
                                     </div>
                                     <div class="relative px-0.5 py-5 md:px-3 md:py-4 w-[130px] md:w-full">
-                                        <div class="absolute flex items-center leading-none top-2 md:top-2">
+                                        <div class="absolute flex items-center leading-none top-2 md:top-2 new-destination-badge">
                                             <span class="text-[9px] font-medium text-red-600">새로운 여행지</span>
                                         </div>
                                         <h1 class="text-sm font-medium truncate md:text-2xl font-Montserrat">
