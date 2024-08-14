@@ -98,6 +98,19 @@ public class MemberService implements UserDetailsService  {
         return email;
     }
 
+    public Member findByEmail(String email){
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if (member.isPresent()){
+            return member.get();
+        } else {
+            throw new RuntimeException("Member not found : " + email);
+        }
+    }
+
+    @Transactional
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
 }
 
 

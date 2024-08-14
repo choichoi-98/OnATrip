@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="layout/default_layout">
 
 <style>
@@ -95,10 +96,14 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">구독권</h5>
-                                                <a href="#" class="more-link">더보기</a>
+                                                <a th:if="${member.subscribe_status == 'ON'}" href="#" class="more-link">더보기</a>
+                                                <a th:if="${member.subscribe_status == 'OFF'}" href="/subscribe" class="more-link">더보기</a>
                                             </div>
                                             <hr class="title-underline">
-                                            <p class="card-text">구독권 정보를 여기에 표시합니다.</p>
+                                            <p class="card-text"><!--구독권 정보를 여기에 표시합니다. -->
+                                                <span th:if="${member.subscribe_status == 'ON'}"></span>
+                                                <span th:if="${member.subscribe_status == 'OFF'}">구독권 정보가 없습니다.</span>
+                                            </p>
                                             <hr class="content-underline">
                                         </div>
                                     </div>

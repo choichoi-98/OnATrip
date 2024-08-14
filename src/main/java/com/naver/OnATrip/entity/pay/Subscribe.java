@@ -23,7 +23,7 @@ public class Subscribe {
 
     @CreationTimestamp
     @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String startDate;
+    private LocalDateTime startDate;
 
     private String endDate;
 

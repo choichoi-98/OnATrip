@@ -1,6 +1,9 @@
 package com.naver.OnATrip.controller;
 
+import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.pay.*;
+import com.naver.OnATrip.repository.MemberRepository;
+import com.naver.OnATrip.service.MemberService;
 import com.naver.OnATrip.service.OrderService;
 import com.naver.OnATrip.service.PaymentService;
 import com.naver.OnATrip.web.dto.pay.OrderDto;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -24,6 +28,7 @@ public class OrderController {
     private final OrderService orderService;
     private final PaymentService paymentService;
     private final HttpSession httpSession;
+    private final MemberService memberService;
 
     @PostMapping("/payment/save_buyerInfo") //결제 정보 저장
     @ResponseBody
@@ -39,6 +44,8 @@ public class OrderController {
     public String orderDone(@RequestBody OrderDto request, Model model, Principal principal) {
         System.out.println("Saving order information: {}");
 
+        String memberId = principal.getName();
+
         Orders orders = Orders.builder()
                 .merchantUid(request.getMerchantUid())
                 .amount(request.getAmount())
@@ -53,8 +60,8 @@ public class OrderController {
         System.out.println("Order information saved successfully for merchantUid: {}");
 
 
-        LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime endDate = currentDate.plus(request.getItemPeriod(), ChronoUnit.DAYS);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate endDate = currentDate.plusDays(request.getItemPeriod());
 
         Subscribe subscribe = Subscribe.builder()
                 .memberId(principal.getName())
@@ -64,6 +71,12 @@ public class OrderController {
                 .build();
 
         orderService.save_subscribe(subscribe);
+
+        Member member = memberService.findByEmail(memberId);
+
+        member.setSubscribe_status("ON");
+        memberService.save(member);
+
         System.out.println("*** subscribe DB 저장 ***");
 
         return request.getMerchantUid();

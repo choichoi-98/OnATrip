@@ -3,14 +3,16 @@ package com.naver.OnATrip.service;
 import com.naver.OnATrip.entity.pay.Orders;
 import com.naver.OnATrip.entity.pay.Payment;
 import com.naver.OnATrip.entity.pay.Subscribe;
+import com.naver.OnATrip.entity.pay.SubscribeStatus;
 import com.naver.OnATrip.repository.pay.ItemRepositoryCustom;
 import com.naver.OnATrip.repository.pay.OrderRepository;
 import com.naver.OnATrip.repository.pay.PayRepository;
 import com.naver.OnATrip.repository.pay.SubscribeRepository;
-import com.naver.OnATrip.web.dto.pay.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,6 +47,11 @@ public class OrderService {
     @Transactional
     public void save_subscribe(Subscribe request){
         subscribeRepository.save(request);
+    }
+
+    @Transactional
+    public Optional<Subscribe> findByMemberId(String email) {
+       return subscribeRepository.findByMemberId(email, SubscribeStatus.ON);
     }
 
 //    public void save_orderInfo(Orders request){
