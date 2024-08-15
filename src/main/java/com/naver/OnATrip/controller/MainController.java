@@ -80,9 +80,4 @@ public class MainController {
         return ResponseEntity.ok(location);
     }
 
-    // 알림
-    @GetMapping("/alert")
-    public String getAlertPage() {
-        return "alertPage";
-    }
 }
