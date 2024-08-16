@@ -69,7 +69,41 @@ $(document).ready(function() {
         sendInvitation(email,planId); //초대장 보냄-알림 연동(sy)
     });
 
+
+    //초대장 보내기 sy
+    function sendInvitation(email, planId) {
+        $.ajax({
+            url: '/alerts/sendInvitation',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email, planId: planId }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function() {
+                console.log('초대장 보내기');
+                $('#inviteFriendModal').modal('hide');
+                window.location.href = '/myPlanList';
+            },
+
+            error: function(xhr, status, error) {
+                if (xhr.status === 409) {
+                    // 이미 초대된 친구일 때
+                    alert("이미 초대된 친구입니다.");
+                } else if (xhr.status === 500) {
+                    // 서버 내부 오류
+                    alert("친구 초대 중 오류 발생");
+                } else {
+                    // 기타 오류
+                    console.log('친구 초대 중 오류 발생: ', error);
+                }
+            }
+        });
+    }
+
 });//$(document).ready(function() {
+
+
 
 function deletePlan(planId, activeTabId) {
     console.log('삭제할 planId: ', planId);
@@ -197,33 +231,4 @@ function inviteFriend(email, planId) {
             }
         }
     });
-
-    //초대장 보내기 sy
-    function sendInvitation(email, planId) {
-        $.ajax({
-            url: '/sendInvitation',
-            method: 'POST',
-            data: { email: email, planId: planId },
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader(header, token);
-            },
-            success: function() {
-                console.log('초대장 보내기');
-                $('#inviteFriendModal').modal('hide');
-                window.location.href = '/myPlanList';
-            },
-
-            error: function(xhr, status, error) {
-                if (xhr.status === 409) {
-                    // 이미 초대된 친구일 때
-                    alert("이미 초대된 친구입니다.");
-                } else if (xhr.status === 500) {
-                    // 서버 내부 오류
-                    alert("친구 초대 중 오류 발생");
-                } else {
-                    // 기타 오류
-                    console.log('친구 초대 중 오류 발생: ', error);
-                }
-            }
-        });
 }
