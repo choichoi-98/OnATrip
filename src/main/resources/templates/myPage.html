@@ -8,6 +8,7 @@
     .mb-800 {
         margin-bottom: 50rem;
     }
+
     .card-horizontal {
         display: flex;
         flex-direction: row;
@@ -18,7 +19,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <!-- Bootstrap JavaScript 파일 포함 -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="css/plan/myPage.css">
 <script src="/js/plan/myPlanList.js"></script>
 
@@ -35,21 +37,21 @@
                 <div class="container mt-5" style="margin-top:50px;">
                     <div class="row">
                         <!-- 사이드바 -->
-<!--                        <nav class="col-md-3 col-lg-2 d-md-block sticky-sidebar" style="max-width: 140px">-->
-<!--                            <div class="position-sticky">-->
-<!--                                <ul class="nav flex-column">-->
-<!--                                    <li class="nav-item">-->
-<!--                                        <a class="nav-link active" href="#myPlanList">여행</a>-->
-<!--                                    </li>-->
-<!--                                    <li class="nav-item">-->
-<!--                                        <a class="nav-link" href="#mySubscription">구독권</a>-->
-<!--                                    </li>-->
-<!--                                    <li class="nav-item">-->
-<!--                                        <a class="nav-link" href="#myInfo">정보</a>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-<!--                        </nav>-->
+                        <!--                        <nav class="col-md-3 col-lg-2 d-md-block sticky-sidebar" style="max-width: 140px">-->
+                        <!--                            <div class="position-sticky">-->
+                        <!--                                <ul class="nav flex-column">-->
+                        <!--                                    <li class="nav-item">-->
+                        <!--                                        <a class="nav-link active" href="#myPlanList">여행</a>-->
+                        <!--                                    </li>-->
+                        <!--                                    <li class="nav-item">-->
+                        <!--                                        <a class="nav-link" href="#mySubscription">구독권</a>-->
+                        <!--                                    </li>-->
+                        <!--                                    <li class="nav-item">-->
+                        <!--                                        <a class="nav-link" href="#myInfo">정보</a>-->
+                        <!--                                    </li>-->
+                        <!--                                </ul>-->
+                        <!--                            </div>-->
+                        <!--                        </nav>-->
 
                         <!-- 메인 콘텐츠 -->
                         <div class="col-12 px-md-4">
@@ -74,14 +76,17 @@
                                             </div>
                                             <hr class="title-underline">
                                             <div class="plan-summary">
-                                                <div th:each="plan : ${plans}" class="plan-item d-flex justify-content-between align-items-center">
+                                                <div th:each="plan : ${plans}"
+                                                     class="plan-item d-flex justify-content-between align-items-center">
                                                     <div>
                                                         <h6 class="plan-destination"
                                                             th:text="${plan.location.locationType == 'domestic' ? plan.location.city : plan.location.countryName}"
                                                         ></h6>
-                                                        <p class="plan-dates" th:text="${plan.startDate} + ' - ' + ${plan.endDate}"></p>
+                                                        <p class="plan-dates"
+                                                           th:text="${plan.startDate} + ' - ' + ${plan.endDate}"></p>
                                                     </div>
-                                                    <a href="#" class="more-link" th:href="@{/viewDetailPlan(planId=${plan.id})}">자세히</a>
+                                                    <a href="#" class="more-link"
+                                                       th:href="@{/viewDetailPlan(planId=${plan.id})}">자세히</a>
                                                 </div>
 
                                             </div>
@@ -90,24 +95,66 @@
                                     </div>
                                 </section>
 
-                                <!-- 내 구독권 섹션 -->
                                 <section id="mySubscription" class="col-md-6">
                                     <div class="card custom-card">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">구독권</h5>
-                                                <a th:if="${member.subscribe_status == 'ON'}" href="/myPage/subscribe" class="more-link">더보기</a>
-                                                <a th:if="${member.subscribe_status == 'OFF'}" href="/subscribe" class="more-link">더보기</a>
+                                                <a th:if="${member.subscribe_status == 'OFF'}" href="/subscribe"
+                                                   class="more-link">더보기</a>
                                             </div>
                                             <hr class="title-underline">
-                                            <p class="card-text"><!--구독권 정보를 여기에 표시합니다. -->
-                                                <span th:if="${member.subscribe_status == 'ON'}"></span>
-                                                <span th:if="${member.subscribe_status == 'OFF'}">구독권 정보가 없습니다.</span>
-                                            </p>
+                                            <div class="plan-summary">
+                                                <div class="plan-item d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <span th:if="${subscribe != null}">
+                                                        <h6 class="plan-destination">구독 기간</h6>
+                                                        <p class="plan-dates"
+                                                           th:text="${subscribe.startDate} + ' ~ ' + ${subscribe.endDate}"></p>
+                                                        </span>
+                                                        <span th:if="${member.subscribe_status == 'OFF'}">구독권 정보가 없습니다.</span>
+
+                                                    </div>
+                                                    <a class="more-link" th:if="${member.subscribe_status == 'ON'}"
+                                                       href="/myPage/subscribe">자세히</a>
+                                                </div>
+
+                                            </div>
                                             <hr class="content-underline">
                                         </div>
                                     </div>
                                 </section>
+
+
+
+
+
+
+<!--                                &lt;!&ndash; 내 구독권 섹션 &ndash;&gt;-->
+<!--                                <section id="mySubscription" class="col-md-6">-->
+<!--                                    <div class="card custom-card">-->
+<!--                                        <div class="card-body">-->
+<!--                                            <div class="d-flex justify-content-between align-items-center">-->
+<!--                                                <h5 class="card-title">구독권</h5>-->
+<!--                                                <a th:if="${member.subscribe_status == 'OFF'}" href="/subscribe"-->
+<!--                                                   class="more-link">더보기</a>-->
+<!--                                            </div>-->
+<!--                                            <hr class="title-underline">-->
+<!--                                            <p class="card-text">&lt;!&ndash;구독권 정보를 여기에 표시합니다. &ndash;&gt;-->
+<!--                                            <div>-->
+<!--                                                <span th:if="${subscribe != null}">-->
+<!--                                                    구독 기간 : <p-->
+<!--                                                        th:text="${subscribe.startDate} + ' ~ ' + ${subscribe.endDate}"></p>-->
+<!--                                                    <a th:if="${member.subscribe_status == 'ON'}"-->
+<!--                                                       href="/myPage/subscribe" class="more-link">더보기</a>-->
+<!--                                                </span>-->
+<!--                                                <span th:if="${member.subscribe_status == 'OFF'}">구독권 정보가 없습니다.</span>-->
+<!--                                            </div>-->
+<!--                                            </p>-->
+<!--                                            <hr class="content-underline">-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </section>-->
 
                                 <!-- 알람 섹션 -->
                                 <section id="myAlert" class="col-md-6">
@@ -115,7 +162,7 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">알림</h5>
-<!--                                                <a href="#" class="more-link">더보기</a>-->
+                                                <!--                                                <a href="#" class="more-link">더보기</a>-->
                                             </div>
                                             <hr class="title-underline">
                                             <p class="card-text">알림 정보를 여기에 표시합니다.</p>
@@ -130,9 +177,6 @@
 
                     </div>
                 </div>
-
-
-
 
 
             </div><!-- 여기가 custom 마지막 -->

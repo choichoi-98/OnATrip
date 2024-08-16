@@ -48,7 +48,46 @@
 <head th:replace="fragments/header :: headerFragment">
 </head>
 <body>
+<script>
+    $(document).ready(function () {
+        $('#order_button').click(function (event) {
+            event.preventDefault();
 
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+
+            $.ajax({
+                url: '/check-subscribe',
+                type: 'GET',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                },
+                success: function(response) {
+                    if (response.isAuthenticated) {
+                        if (response.subscribeStatus === 'OFF') {
+                            // 인증된 사용자이고, 구독 상태가 OFF인 경우 -> 폼 제출
+                            $('#subscription_Form').submit();
+                        } else {
+                            alert('이미 구독 중입니다.');
+                        }
+                    } else {
+                        // 비회원 -> 로그인 경고 및 로그인 페이지로 이동
+                        alert('로그인이 필요합니다.');
+                        window.location.href = '/login'; // 로그인 페이지 URL로 수정
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('인증 확인 오류:', error);
+                    alert('오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+                }
+            });
+
+
+
+
+        });
+
+    });
+</script>
 <div class="safari_only_wrapper">
     <div class="fixed-status"></div>
     <div class="h-full mx-auto">
@@ -104,6 +143,5 @@
 
 <!--  Footer -->
 <div th:replace="fragments/footer :: footerFragment"></div>
-
 </body>
 </html>
