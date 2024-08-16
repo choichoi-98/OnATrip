@@ -81,7 +81,7 @@ public class PayController {
     }
 
 
-    @GetMapping("/mypage/subscribe")
+    @GetMapping("/myPage/subscribe")
     public String subscribe(Model model) {
 
         return "pay/myPage_Subscribe";
