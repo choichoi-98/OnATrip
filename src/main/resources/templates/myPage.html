@@ -23,6 +23,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="css/plan/myPage.css">
 <script src="/js/plan/myPlanList.js"></script>
+<script src="/js/plan/myAlert.js"></script>
+
 
 <body>
 
@@ -126,35 +128,31 @@
                                 </section>
 
 
-
-
-
-
-<!--                                &lt;!&ndash; 내 구독권 섹션 &ndash;&gt;-->
-<!--                                <section id="mySubscription" class="col-md-6">-->
-<!--                                    <div class="card custom-card">-->
-<!--                                        <div class="card-body">-->
-<!--                                            <div class="d-flex justify-content-between align-items-center">-->
-<!--                                                <h5 class="card-title">구독권</h5>-->
-<!--                                                <a th:if="${member.subscribe_status == 'OFF'}" href="/subscribe"-->
-<!--                                                   class="more-link">더보기</a>-->
-<!--                                            </div>-->
-<!--                                            <hr class="title-underline">-->
-<!--                                            <p class="card-text">&lt;!&ndash;구독권 정보를 여기에 표시합니다. &ndash;&gt;-->
-<!--                                            <div>-->
-<!--                                                <span th:if="${subscribe != null}">-->
-<!--                                                    구독 기간 : <p-->
-<!--                                                        th:text="${subscribe.startDate} + ' ~ ' + ${subscribe.endDate}"></p>-->
-<!--                                                    <a th:if="${member.subscribe_status == 'ON'}"-->
-<!--                                                       href="/myPage/subscribe" class="more-link">더보기</a>-->
-<!--                                                </span>-->
-<!--                                                <span th:if="${member.subscribe_status == 'OFF'}">구독권 정보가 없습니다.</span>-->
-<!--                                            </div>-->
-<!--                                            </p>-->
-<!--                                            <hr class="content-underline">-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </section>-->
+                                <!--                                &lt;!&ndash; 내 구독권 섹션 &ndash;&gt;-->
+                                <!--                                <section id="mySubscription" class="col-md-6">-->
+                                <!--                                    <div class="card custom-card">-->
+                                <!--                                        <div class="card-body">-->
+                                <!--                                            <div class="d-flex justify-content-between align-items-center">-->
+                                <!--                                                <h5 class="card-title">구독권</h5>-->
+                                <!--                                                <a th:if="${member.subscribe_status == 'OFF'}" href="/subscribe"-->
+                                <!--                                                   class="more-link">더보기</a>-->
+                                <!--                                            </div>-->
+                                <!--                                            <hr class="title-underline">-->
+                                <!--                                            <p class="card-text">&lt;!&ndash;구독권 정보를 여기에 표시합니다. &ndash;&gt;-->
+                                <!--                                            <div>-->
+                                <!--                                                <span th:if="${subscribe != null}">-->
+                                <!--                                                    구독 기간 : <p-->
+                                <!--                                                        th:text="${subscribe.startDate} + ' ~ ' + ${subscribe.endDate}"></p>-->
+                                <!--                                                    <a th:if="${member.subscribe_status == 'ON'}"-->
+                                <!--                                                       href="/myPage/subscribe" class="more-link">더보기</a>-->
+                                <!--                                                </span>-->
+                                <!--                                                <span th:if="${member.subscribe_status == 'OFF'}">구독권 정보가 없습니다.</span>-->
+                                <!--                                            </div>-->
+                                <!--                                            </p>-->
+                                <!--                                            <hr class="content-underline">-->
+                                <!--                                        </div>-->
+                                <!--                                    </div>-->
+                                <!--                                </section>-->
 
                                 <!-- 알람 섹션 -->
                                 <section id="myAlert" class="col-md-6">
@@ -162,16 +160,17 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">알림</h5>
-                                                <!--                                                <a href="#" class="more-link">더보기</a>-->
+                                                <a href="/myAlerts" class="more-link">더보기</a>
                                             </div>
                                             <hr class="title-underline">
-                                            <p class="card-text">알림 정보를 여기에 표시합니다.</p>
-                                            <hr class="content-underline">
+                                            <div class="alert-summary">
+                                                <!-- 알림이 없을 때 메시지 표시 -->
+                                                <!-- 이 부분은 AJAX로 데이터를 가져온 후에 동적으로 업데이트됩니다. -->
+                                            </div>
                                         </div>
                                     </div>
                                 </section>
                             </div>
-
                         </div>
 
 

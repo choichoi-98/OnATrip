@@ -37,26 +37,12 @@ public class LocationService {
     public void addLocation(LocationDTO locationDTO) throws IOException {
         // 파일 유효성 검사
         MultipartFile file = locationDTO.getFile();
-        if (file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("이미지 파일을 업로드해야 합니다.");
         }
 
         // 이미지 저장 경로 설정
-        String fileName = file.getOriginalFilename();
-        Path uploadPath = Paths.get("src/main/resources/static/images/location");
-
-        // 디렉토리 존재하지 않으면 생성
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        // 이미지 파일 저장
-        Path filePath = uploadPath.resolve(fileName);
-        Files.write(filePath, locationDTO.getFile().getBytes());
-
-        // 이미지 경로 설정
-        String imagePath = "/images/location/" + fileName;
-        locationDTO.setImagePath(imagePath);
+        String imagePath = saveFile(file); // 이미지 파일 저장 메서드 호출
 
         // DTO를 엔티티로 변환
         Location location = new Location();
@@ -65,13 +51,12 @@ public class LocationService {
         location.setCity(locationDTO.getCity());
         location.setDescription(locationDTO.getDescription());
         location.setLocationType(locationDTO.getLocationType());
-        location.setCreatedDate(locationDTO.getCreatedDate());
-        location.setEndDate(locationDTO.getEndDate());
         location.setImage(imagePath);
 
         // 여행지 저장
         locationRepository.save(location);
     }
+
 
     // 도시 중복 검사
     public boolean existsCity(String cityName) {
@@ -133,21 +118,20 @@ public class LocationService {
         existingLocation.setCity(locationDTO.getCity());
         existingLocation.setDescription(locationDTO.getDescription());
         existingLocation.setLocationType(locationDTO.getLocationType());
-        existingLocation.setCreatedDate(locationDTO.getCreatedDate());
+        // 날짜는 엔티티의 @PrePersist 메서드에서 설정되므로, 여기서는 설정하지 않음
 
         locationRepository.save(existingLocation);
     }
 
-
     private void updateLocationWithNewImage(LocationDTO locationDTO, String imagePath) {
-        Location location = new Location();
-        location.setId(locationDTO.getId());
+        Location location = locationRepository.findById(locationDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행지가 존재하지 않습니다."));
+
         location.setCountryName(locationDTO.getCountryName());
         location.setCountryCode(locationDTO.getCountryCode());
         location.setCity(locationDTO.getCity());
         location.setDescription(locationDTO.getDescription());
         location.setLocationType(locationDTO.getLocationType());
-        location.setCreatedDate(locationDTO.getCreatedDate());
 
         // 이미지 경로 설정
         if (imagePath != null) {

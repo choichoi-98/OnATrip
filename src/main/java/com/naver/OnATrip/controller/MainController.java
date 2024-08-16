@@ -67,7 +67,7 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
 
-        logger.info("로그인 인증 여부 ======================================" + isAuthenticated);
+        logger.info("로그인 인증 여부 ========== " + isAuthenticated);
 
         return ResponseEntity.ok(isAuthenticated);
     }

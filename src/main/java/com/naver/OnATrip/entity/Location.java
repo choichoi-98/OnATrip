@@ -39,5 +39,14 @@ public class Location {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = (this.createdDate == null) ? LocalDate.now() : this.createdDate;
+        this.endDate = (this.endDate == null) ? this.createdDate.plusDays(5) : this.endDate;
+
+        System.out.println("Created Date: " + this.createdDate);
+        System.out.println("End Date: " + this.endDate);
+    }
+
 }
 

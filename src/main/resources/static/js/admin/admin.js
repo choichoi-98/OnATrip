@@ -197,11 +197,17 @@ $(document).ready(function() {
     // 서버로 데이터 전송 함수 (AJAX)
     function sendLocationDataToServer(countryName, countryCode, city, description, file, locationType, imageSrc) {
         var formData = new FormData();
+
+        // 현재 날짜 가져오기 및 포맷 설정 (YYYY-MM-DD)
+        var today = new Date();
+        var formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+
         formData.append('countryName', countryName);
         formData.append('countryCode', countryCode);
         formData.append('city', city);
         formData.append('description', description);
-        formData.append('createDate', new Date()); // createDate 추가
+        formData.append('createDate', formattedDate); // 형식을 맞춘 createDate 추가
+        formData.append('endDate', formattedDate); // 필요시 endDate도 동일하게 추가 가능
 
         // 파일이 있는 경우에만 formData에 추가
         if (file) {
