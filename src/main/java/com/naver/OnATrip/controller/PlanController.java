@@ -70,11 +70,6 @@ public class PlanController {
 
         String email = principal.getName();
         logger.info("PlanController-selectDate");
-        //일정 생성 조건 확인
-        //1. plan > 3
-            //1-1. subscribe_status = 'ON' -> "/selectDate 요청"
-            //1-2. subscribe_status = 'null' -> "구독이 필요한 서비스입니다." alert로 알린 다음 구독권 페이지로 이동('/subscribe')
-        //2. plan < 3 -> "/selectDate" 요청
 
         // Model 객체에 데이터 추가
         mv.addObject("locationId", locationId);
@@ -85,6 +80,41 @@ public class PlanController {
         return mv;
     }
 
+    @GetMapping("/checkPlan")
+    public ModelAndView checkPlan(Principal principal, ModelAndView mv, @RequestParam("locationId") Long locationId){
+        String email = principal.getName();
+
+        logger.info("=========================checkPlan - controller ====================");
+        // 일정 생성 조건 확인
+        Long planCount = planService.planCount(email);
+        System.out.println("planCount = " + planCount);
+
+        if (planCount >= 4 ){
+            String msg = "planCount >= 4";
+            System.out.println("planCount = " + planCount);
+            logger.info("=====================3개 이상====================");
+            String status = planService.getSubscribeStatus(email);
+            System.out.println("status = " + status);
+            if(!"ON".equals(status)){
+                logger.info("==================구독 x ===================");
+                mv.addObject("alertMessage", "4개 이상의 여행 계획 생성은 구독이 필요합니다.");
+                mv.addObject("redirectUrl", "/subscribe");
+                mv.setViewName("/plan/alertAndRedirect"); // 경로 수정
+                return mv;
+            } else {
+                //"/selectDate"요청
+                logger.info("==================구독 O ===================");
+                mv.setViewName("redirect:/selectDate?locationId=" + locationId);
+            }
+        } else {
+            logger.info("=====================3개 이하====================");
+            mv.setViewName("redirect:/selectDate?locationId=" + locationId);
+        }
+
+        return mv;
+    }
+
+
     //Plan 생성
     @PostMapping("/createPlan")
     @ResponseBody
@@ -92,25 +122,7 @@ public class PlanController {
         logger.info("PlanController-createPlan");
         String email = principal.getName();
 
-        Long planCount = planService.planCount(email);
-        System.out.println("planCount = " + planCount);
-        //-----------------------------나중에 수정
-//        if (planCount > 3 ){
-//            String msg = "planCount > 3 이상";
-//            System.out.println("planCount = " + planCount);
-//
-//            String status = planService.getSubscribeStatus(email);
-//            System.out.println("status = " + status);
-//            if(status != "ON"){
-//                msg = "구독권 없음";
-//            } else {
-//                Long planId = planService.createPlan(planDto);
-//                return String.valueOf(planId);
-//            }
-//            return msg;
-//
-//        } else {
-//        }
+
         Long planId = planService.createPlan(planDto);
         return String.valueOf(planId);
 
@@ -365,16 +377,14 @@ public class PlanController {
 
         mv.addObject("plans", plans);
 
+        //회원 정보 가져오기
         Member member = memberService.findByEmail(email);
         mv.addObject("member", member);
 
-
-//        Optional<Subscribe> subscribe = orderService.findByMemberId(email);
-//        if (subscribe.isPresent()){
-//            mv.addObject("subscribe", subscribe);
-//        } else {
-//            mv.addObject("subscribe", null);
-//        }
+        //구독 정보 가져오기
+        Optional<Subscribe> subscribeOptional = orderService.findByMemberId(email);
+        Subscribe subscribe = subscribeOptional.orElse(null);
+        mv.addObject("subscribe", subscribe);
 
         mv.setViewName("myPage");
         return mv;

@@ -269,7 +269,9 @@ $(document).ready(function() {
             success: function(isAuthenticated) {
                 if (isAuthenticated) {
                     // 인증된 사용자 -> 일정 만들기 페이지로 이동
-                    window.location.href = '/selectDate?locationId=' + locationId;
+//                    window.location.href = '/selectDate?locationId=' + locationId;
+                      console.log("checkPlan 주소 요청 - " + locationId);
+                    window.location.href = '/checkPlan?locationId=' + locationId;
                 } else {
                     // 비회원 -> 로그인 경고 및 로그인 페이지로 이동
                     alert('로그인이 필요합니다.');

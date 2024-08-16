@@ -11,6 +11,7 @@ let markers = [];//마커들 저장
 let markerIndex = 1;
 let polyline;
 let originalIcon;// 마커 강조 함수
+let infoWindow = new google.maps.InfoWindow(); // InfoWindow 인스턴스 생성
 
 $(document).ready(function() {
 
@@ -422,6 +423,7 @@ function updateRoute(dayToUpdate, routes, category) {
     console.log('updateRoute-category: ', category);
     if (category === 'PLACE') {
         addMarkersFromRoutes(routes);
+
     }
 }
 
@@ -565,6 +567,7 @@ function addMarkersFromHTML() {
     // 각 날짜별로 마커와 폴리라인을 저장할 배열 초기화
     const markersByDay = {};
     const polylinesByDay = {};
+    const allMarkers = []; // 모든 마커를 포함할 배열 추가
 
     // 각 h6 태그에서 data-lat 및 data-lng 속성을 가진 요소를 반복 처리
     $('h6[data-lat][data-lng]').each(function() {
@@ -611,18 +614,25 @@ function addMarkersFromHTML() {
                 strokeOpacity: 0.8
             }
         });
-        // 각 마커에 마우스 이벤트 추가
-//        google.maps.event.addListener(marker, 'mouseover', function() {
-//            highlightMarker(marker);
-//        });
-//
-//        google.maps.event.addListener(marker, 'mouseout', function() {
-//            resetMarker(marker);
-//        });
+
+        marker.addListener('click', function() {
+            infoWindow.setContent('<div><strong>' + placeName + '</strong></div>');
+            infoWindow.open(map, marker);
+        });
 
         markersByDay[day].push(marker);
         markersByDay[day].markerIndex++; // 날짜별 마커 인덱스 증가
+
+        allMarkers.push(marker); // 전체 마커 배열에 추가
+
     });//$('h6[data-lat][data-lng]').each(function() {
+
+    // 모든 마커의 LatLngBounds를 설정하여 지도 중심을 조정
+    if (allMarkers.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        allMarkers.forEach(marker => bounds.extend(marker.getPosition()));
+        map.fitBounds(bounds);
+    }
 
     // 각 날짜별로 마커 배열을 순회하여 폴리라인 생성 및 설정
     Object.keys(markersByDay).forEach(day => {
@@ -646,11 +656,11 @@ function addMarkersFromHTML() {
         polyline.setMap(map);
 
         // 해당 날짜의 마커들에 맞춰 지도 화면 조정
-        if (dayMarkers.length > 0) {
-            const bounds = new google.maps.LatLngBounds();
-            dayMarkers.forEach(marker => bounds.extend(marker.getPosition()));
-            map.fitBounds(bounds);
-        }
+//        if (dayMarkers.length > 0) {
+//            const bounds = new google.maps.LatLngBounds();
+//            dayMarkers.forEach(marker => bounds.extend(marker.getPosition()));
+//            map.fitBounds(bounds);
+//        }
     });//Object.keys(markersByDay).forEach(day => {
 
 
@@ -728,6 +738,11 @@ function addMarkersFromRoutes(routes) {
         strokeWeight: 2
     });
 
+    marker.addListener('click', function() {
+        infoWindow.setContent('<div><strong>' + placeName + '</strong></div>');
+        infoWindow.open(map, marker);
+    });
+
     polyline.setMap(map);
 
     // 지도 중심을 마커들의 중앙으로 이동
@@ -763,6 +778,7 @@ function deleteRoute(routeIdToDelete, dayNumber, detailPlanId, category){
 
 //---------------------------modifyMemo 메모 수정
 function modifyMemo(modifyRouteId, updatedMemoContent, detailPlanId, dayNumber){
+const category = 'MEMO'
     $.ajax({
            url: '/modifyMemo',
            method: 'POST',
@@ -770,7 +786,7 @@ function modifyMemo(modifyRouteId, updatedMemoContent, detailPlanId, dayNumber){
            success: function(response) {
                if(response.status == 'success') {
                     console.log('메모가 성공적으로 업데이트되었습니다.');
-                    refreshDetailPlan(detailPlanId, dayNumber);
+                    refreshDetailPlan(detailPlanId, dayNumber, category);
 
                }else{
                     console.log('메모 업데이트에 실패했습니다.');
@@ -885,8 +901,8 @@ function getColorForDay(day) {
             return 'red';
         case '2':
             return 'blue';
-        default:
-            return 'green'; // 기본값으로 설정할 색상
+        case '3':
+            return 'green';
     }
 }
 // 예시로 각 케이스의 반환 값을 확인
