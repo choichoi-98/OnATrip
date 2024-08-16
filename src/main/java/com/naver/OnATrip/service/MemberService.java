@@ -5,6 +5,9 @@ import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -114,6 +117,11 @@ public class MemberService implements UserDetailsService  {
 
     public List<Member> findAll() {
         return memberRepository.findAll();
+    }
+
+    public Page<Member> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return memberRepository.findAll(pageable);
     }
 
     public void deleteById(Long id) {
