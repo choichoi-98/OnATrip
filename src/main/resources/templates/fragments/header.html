@@ -138,8 +138,6 @@ layout:decorate="layout/default_layout">
                                    href="/subscribe">구독권</a>
                             </th:block>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
-                               sec:authorize="isAuthenticated()" href="/alert">알림</a>
-                            <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="isAnonymous()" href="/login">로그인</a>
                             <a class="cursor-pointer px-4 py-1 text-black hover:text-lightScheme-primary text-sm"
                                sec:authorize="isAuthenticated()" href="/myPage">마이페이지</a>

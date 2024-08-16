@@ -1,9 +1,4 @@
 $(document).ready(function() {
-    // 페이지 로드 시 결과 메시지 숨기기
-    $('#no-results-all').hide();
-    $('#no-results-domestic').hide();
-    $('#no-results-international').hide();
-
     // 페이지 로드 시 모달 숨김 처리 (CSS에서 처리됨)
     $('#modal-root').hide();
 
@@ -38,19 +33,125 @@ $(document).ready(function() {
         }
     });
 
+    // 검색 입력 처리
+    $('input[name="search"]').on('input', function() {
+        var searchText = $(this).val().toLowerCase(); // 입력된 검색어를 소문자로 변환
+
+        // 검색어와 일치하는 위치 항목 표시 여부
+        var hasResultsAll = false;
+        var hasResultsDomestic = false;
+        var hasResultsInternational = false;
+
+        // 전체 탭 검색 처리
+        $('#tab-all > div').each(function() {
+            var locationCity = $(this).find('.location-city').text().toLowerCase();
+            var locationCountry = $(this).find('.location-country').text().toLowerCase();
+            if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
+                $(this).show();
+                hasResultsAll = true;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // 국내 탭 검색 처리
+        $('#tab-domestic > div').each(function() {
+            var locationCity = $(this).find('.location-city').text().toLowerCase();
+            var locationCountry = $(this).find('.location-country').text().toLowerCase();
+            if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
+                $(this).show();
+                hasResultsDomestic = true;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // 해외 탭 검색 처리
+        $('#tab-international > div').each(function() {
+            var locationCity = $(this).find('.location-city').text().toLowerCase();
+            var locationCountry = $(this).find('.location-country').text().toLowerCase();
+            if (locationCity.includes(searchText) || locationCountry.includes(searchText)) {
+                $(this).show();
+                hasResultsInternational = true;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // 검색 결과가 없을 경우 메시지 표시
+        showNoResultsMessage('#tab-all', !hasResultsAll && searchText.length > 0);
+        showNoResultsMessage('#tab-domestic', !hasResultsDomestic && searchText.length > 0);
+        showNoResultsMessage('#tab-international', !hasResultsInternational && searchText.length > 0);
+    });
+
+    function showNoResultsMessage(tabId, show) {
+        var $tab = $(tabId);
+        var $noResults = $tab.find('.no-results-message');
+
+        if (show) {
+            // 메시지가 존재하지 않으면 생성
+            if ($noResults.length === 0) {
+                var messageHtml = `
+                    <div class="no-results-message container flex flex-wrap" style="width:100vw;">
+                        <div class="w-full bg-[#fafafa] min-h-[20vh] rounded-md flex items-center justify-center my-8">
+                            <div class="flex flex-col items-center justify-center w-full h-full p-8">
+                                <h2 class="font-semibold"></h2>
+                                <p class="text-sm leading-relaxed text-gray-200">검색 결과가 없습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $tab.append(messageHtml);
+            }
+            $noResults.show();
+        } else {
+            $noResults.hide();
+        }
+    }
+
+    function filterLocations(query) {
+        // 모든 탭의 콘텐츠를 필터링
+        $('#tab-all, #tab-domestic, #tab-international').each(function() {
+            var $tabContent = $(this).find('> div');
+            $tabContent.each(function() {
+                var city = $(this).find('.location-city').text().toLowerCase();
+                var country = $(this).find('.location-country').text().toLowerCase();
+
+                // 도시명 또는 국가명에 검색어가 포함되면 표시, 그렇지 않으면 숨김
+                if (city.includes(query) || country.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // 결과가 없을 경우 메시지 표시
+            var visibleCount = $tabContent.filter(':visible').length;
+            var $noResults = $(this).find('.no-results-message');
+            if (visibleCount === 0 && query.length > 0) {
+                showNoResultsMessage('#' + $(this).attr('id'), true);
+            } else {
+                showNoResultsMessage('#' + $(this).attr('id'), false);
+            }
+
+            // 더보기 버튼 상태 업데이트
+            checkLoadMoreButton('#' + $(this).attr('id'));
+        });
+    }
+
     // 정렬 함수
     function sortLocations(tabId) {
-       var $tabContent = $(tabId + ' > div');
-       var sortedContent = $tabContent.sort(function(a, b) {
-           var dateA = new Date($(a).data('createdate'));
-           var dateB = new Date($(b).data('createdate'));
+        var $tabContent = $(tabId + ' > div');
+        var sortedContent = $tabContent.sort(function(a, b) {
+            var dateA = new Date($(a).data('createdate'));
+            var dateB = new Date($(b).data('createdate'));
 
-           // 최신 순서로 정렬 (내림차순)
-           return dateB - dateA;
-       });
+            // 최신 순서로 정렬 (내림차순)
+            return dateB - dateA;
+        });
 
-       // 기존 내용 제거 후 정렬된 내용 삽입
-       $(tabId).empty().append(sortedContent);
+        // 기존 내용 제거 후 정렬된 내용 삽입
+        $(tabId).empty().append(sortedContent);
     }
 
     // 각 탭 초기 로드 및 정렬
