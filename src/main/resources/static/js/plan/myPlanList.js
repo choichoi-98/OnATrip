@@ -65,7 +65,8 @@ $(document).ready(function() {
         var planId =  $('#inviteFriendModal').data('planid');
         console.log("초대할 친구의 email-----", email);
         console.log("초대할 planid-----", planId);
-         inviteFriend(email, planId);
+//         inviteFriend(email, planId);//냅다 초대버전
+        sendInvitation(email,planId); //초대장 보냄-알림 연동(sy)
     });
 
 });//$(document).ready(function() {
@@ -168,7 +169,7 @@ function searchFriendByEmail(email) {
     });
 }
 
-// 친구 초대 함수
+// 친구 추가 함수
 function inviteFriend(email, planId) {
     $.ajax({
         url: '/inviteFriend',
@@ -196,4 +197,33 @@ function inviteFriend(email, planId) {
             }
         }
     });
+
+    //초대장 보내기 sy
+    function sendInvitation(email, planId) {
+        $.ajax({
+            url: '/sendInvitation',
+            method: 'POST',
+            data: { email: email, planId: planId },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function() {
+                console.log('초대장 보내기');
+                $('#inviteFriendModal').modal('hide');
+                window.location.href = '/myPlanList';
+            },
+
+            error: function(xhr, status, error) {
+                if (xhr.status === 409) {
+                    // 이미 초대된 친구일 때
+                    alert("이미 초대된 친구입니다.");
+                } else if (xhr.status === 500) {
+                    // 서버 내부 오류
+                    alert("친구 초대 중 오류 발생");
+                } else {
+                    // 기타 오류
+                    console.log('친구 초대 중 오류 발생: ', error);
+                }
+            }
+        });
 }

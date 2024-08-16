@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.naver.OnATrip.entity.QLocation.location;
+import static com.naver.OnATrip.entity.QMember.member;
 import static com.naver.OnATrip.entity.plan.QPlan.plan;
 
 
@@ -142,13 +143,12 @@ public class PlanRepositoryCustomImpl implements PlanRepositoryCustom {
     }
 
     @Override
-    public SubscribeStatus getStatusByEmail(String email) {
-        SubscribeStatus subscribeStatus = queryFactory
-                .select(QSubscribe.subscribe.status)
-                .from(QSubscribe.subscribe)
-                .where(QSubscribe.subscribe.memberId.eq(email))
+    public String getStatusByEmail(String email) {
+        String subscribeStatus = queryFactory
+                .select(member.subscribe_status)
+                .from(member)
+                .where(member.email.eq(email))
                 .fetchOne();
-
         return subscribeStatus;
     }
 }

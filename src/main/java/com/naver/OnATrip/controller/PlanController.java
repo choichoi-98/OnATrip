@@ -2,6 +2,7 @@ package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.pay.Subscribe;
+import com.naver.OnATrip.entity.pay.SubscribeStatus;
 import com.naver.OnATrip.entity.plan.DetailPlan;
 import com.naver.OnATrip.entity.plan.LocationProjection;
 import com.naver.OnATrip.entity.plan.Plan;
@@ -68,9 +69,12 @@ public class PlanController {
 
 
         String email = principal.getName();
-        //-------null이면 어쩌구~~~
         logger.info("PlanController-selectDate");
-
+        //일정 생성 조건 확인
+        //1. plan > 3
+            //1-1. subscribe_status = 'ON' -> "/selectDate 요청"
+            //1-2. subscribe_status = 'null' -> "구독이 필요한 서비스입니다." alert로 알린 다음 구독권 페이지로 이동('/subscribe')
+        //2. plan < 3 -> "/selectDate" 요청
 
         // Model 객체에 데이터 추가
         mv.addObject("locationId", locationId);
@@ -84,26 +88,31 @@ public class PlanController {
     //Plan 생성
     @PostMapping("/createPlan")
     @ResponseBody
-    public String createPlan(@RequestBody PlanDto planDto) {
+    public String createPlan(@RequestBody PlanDto planDto, Principal principal) {
         logger.info("PlanController-createPlan");
-        String email = planDto.getEmail();
+        String email = principal.getName();
 
         Long planCount = planService.planCount(email);
         System.out.println("planCount = " + planCount);
         //-----------------------------나중에 수정
 //        if (planCount > 3 ){
 //            String msg = "planCount > 3 이상";
-//            SubscribeStatus status = planService.getSubscribeStatus(email);
 //            System.out.println("planCount = " + planCount);
-//            System.out.println("status = " + status);
-//            return msg;
-//        } else {
 //
+//            String status = planService.getSubscribeStatus(email);
+//            System.out.println("status = " + status);
+//            if(status != "ON"){
+//                msg = "구독권 없음";
+//            } else {
+//                Long planId = planService.createPlan(planDto);
+//                return String.valueOf(planId);
+//            }
+//            return msg;
+//
+//        } else {
 //        }
-
-            Long planId = planService.createPlan(planDto);
-            return String.valueOf(planId);
-        // Plan 생성
+        Long planId = planService.createPlan(planDto);
+        return String.valueOf(planId);
 
     }
 

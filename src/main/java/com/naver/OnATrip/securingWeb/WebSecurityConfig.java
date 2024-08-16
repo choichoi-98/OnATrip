@@ -43,7 +43,8 @@ public class WebSecurityConfig {
                                 // 밑 주석은 작업 다 끝나면 다시 적용. 그 전까지는 올 퍼밋
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 //                                .requestMatchers( "/**").permitAll()
-                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe","/location/**", "/check-authentication").permitAll()
+                                .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe","/location/**", "/check-authentication"
+                                , "/selectDate").permitAll()
                                 .requestMatchers("/admin/**","/memberQNAList","/memberQNAView","/submitAnswer").hasRole("ADMIN")
                                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
 
@@ -64,9 +65,9 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/main")
                         .invalidateHttpSession(true)
                 )
-                .exceptionHandling((exceptions) -> exceptions
-                        .accessDeniedHandler(accessDeniedHandler())
-                )
+//                .exceptionHandling((exceptions) -> exceptions
+//                        .accessDeniedHandler(accessDeniedHandler())
+//                )
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers("/payment/**","/admin/**","/member/**","/member/join")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
