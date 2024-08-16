@@ -10,8 +10,12 @@ import com.naver.OnATrip.web.dto.pay.OrderDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,15 +24,23 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
-@RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
     private final HttpSession httpSession;
     private final MemberService memberService;
+
+    public OrderController(OrderService orderService, PaymentService paymentService, HttpSession httpSession, MemberService memberService) {
+        this.orderService = orderService;
+        this.paymentService = paymentService;
+        this.httpSession = httpSession;
+        this.memberService = memberService;
+    }
 
     @PostMapping("/payment/save_buyerInfo") //결제 정보 저장
     @ResponseBody
@@ -83,31 +95,23 @@ public class OrderController {
     }
 
 
-//    @PostMapping("/save_buyerInfo") //결제 정보 저장
-//    @ResponseBody
-//    public void save_buyerInfo(@RequestBody Payments request) {
-//        System.out.println("Saving buyer information: {}");
-//        orderService.save_buyerInfo(request);
-//        System.out.println("Buyer information saved successfully");
-////        log.info("Buyer information saved successfully");
-//    }
+    @GetMapping("/check-subscribe")
+    public ResponseEntity<Map<String, Object>> checkAuthenticationStatus(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
 
-//    @PostMapping("/save_orderInfo") //주문 정보 저장
-//    @ResponseBody
-//    public String orderDone(@RequestBody OrderDto request, Model model) {
-//        log.info("Saving order information: {}", request);
-//
-//        Orders orders = Orders.builder()
-//                .merchantUid(request.getMerchantUid())
-//                .totalPrice(request.getTotalPrice())
-//                .build();
-//
-//        orderService.save_orderInfo(orders);
-//        log.info("Order information saved successfully for merchantUid: {}", request.getMerchantUid());
-//
-//
-//        return request.getMerchantUid();
-//    }
+        if (authentication == null || !authentication.isAuthenticated()) {
+            response.put("isAuthenticated", false);
+            return ResponseEntity.ok(response);
+        }
+
+        // 인증된 사용자라면, 구독 상태를 가져옵니다.
+        User user = (User) authentication.getPrincipal();
+        Member member = memberService.findByEmail(user.getUsername());
+
+        response.put("isAuthenticated", true);
+        response.put("subscribeStatus", member.getSubscribe_status()); // 구독 상태 추가
+        return ResponseEntity.ok(response);
+    }
 
 //    @PostMapping("/create")
 //    public ResponseEntity<String> createOrder(@RequestBody Map<String, Object> payload){
