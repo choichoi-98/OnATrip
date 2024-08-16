@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alert</title>
+    <script type="text/javascript" th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            /* [[${alertMessage}]]는 타임리프 표현식이므로 서버에서 제공하는 메시지로 대체됩니다. */
+            var message = /*[[${alertMessage}]]*/ '4개 이상의 여행 계획 생성은 구독이 필요합니다.';
+            var redirectUrl = /*[[${redirectUrl}]]*/ '/subscribe';
+
+            alert(message);
+            window.location.href = redirectUrl;
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
