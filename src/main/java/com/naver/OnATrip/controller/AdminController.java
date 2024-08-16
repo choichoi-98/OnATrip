@@ -1,6 +1,8 @@
 package com.naver.OnATrip.controller;
 
+import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.service.LocationService;
+import com.naver.OnATrip.service.MemberService;
 import com.naver.OnATrip.web.dto.location.LocationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -21,17 +22,21 @@ import java.util.*;
 public class AdminController {
 
     private final LocationService locationService;
+    private final MemberService memberService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
-    public AdminController(LocationService locationService) {
+    public AdminController(LocationService locationService, MemberService memberService) {
         this.locationService = locationService;
+        this.memberService = memberService;
     }
 
     @GetMapping
     public String admin(Model model) {
+
         return "admin/adminMain";
     }
+
 
     // 여행지 추가
     @PostMapping("/addLocation")
@@ -121,6 +126,20 @@ public class AdminController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete location");
         }
+    }
+
+    //회원관리
+    @GetMapping("/manageMember")
+    @ResponseBody
+    public List<Member> manageMember() {
+        return memberService.findAll();
+    }
+
+    //회원삭제
+    @PostMapping("/manageMember/delete/{id}")
+    public String deleteMember(@PathVariable("id") Long id) {
+        memberService.deleteById(id);
+        return "redirect:/admin/manageMember";
     }
 }
 
