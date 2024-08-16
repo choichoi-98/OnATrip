@@ -133,8 +133,8 @@ public class PlanService {
         return planCount;
     }
 
-    public SubscribeStatus getSubscribeStatus(String email) {
-        SubscribeStatus statusByEmail = planRepository.getStatusByEmail(email);
+    public String getSubscribeStatus(String email) {
+        String statusByEmail = planRepository.getStatusByEmail(email);
         return statusByEmail;
     }
 

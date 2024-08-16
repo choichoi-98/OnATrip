@@ -16,7 +16,7 @@ public interface PlanRepositoryCustom {
 
     boolean deletePlanById(Long planId);
 
-    SubscribeStatus getStatusByEmail(String email);
+    String getStatusByEmail(String email);
 
     boolean ExistPlanByEmail(String email, Long planId);
 
