@@ -24,7 +24,7 @@ public class Alert {
 
     @ManyToOne
     @JoinColumn(name = "source_member_id", nullable = false)
-    private Member sourceMember;  // 알림을 발생시킨 회원 (관리자)
+    private Member sourceMember;  // 알림을 발생시킨 회원
 
     @Column(nullable = false)
     private String message;
