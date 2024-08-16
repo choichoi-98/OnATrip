@@ -61,6 +61,7 @@ public class PayController {
         System.out.println("Payment prepared successfully for merchant_uid");
     }
 
+    //결제 상세 페이지
     @PostMapping("/payPage")
     public String getItemById(@RequestParam("item_id") int itemId, Model model) {
         Optional<Item> itemOptional = itemService.findById(itemId);
@@ -71,6 +72,7 @@ public class PayController {
         return "pay/payPage";
     }
 
+    //결제 인증
     @PostMapping("/payment/validate")
     @ResponseBody
     public Payment validatePayment(@RequestBody PaymentDto request)
@@ -80,7 +82,7 @@ public class PayController {
         return paymentService.validatePayment(request);
     }
 
-
+    //마이페이지 - 결제 더보기 상세 페이지
     @GetMapping("/myPage/subscribe")
     public String subscribe(Model model) {
 

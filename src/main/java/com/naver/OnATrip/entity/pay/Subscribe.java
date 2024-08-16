@@ -22,18 +22,18 @@ public class Subscribe {
     private String memberId;
 
     @CreationTimestamp
-    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime startDate;
+    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_DATE")
+    private LocalDate startDate;
 
     private String endDate;
 
     private int itemPeriod;         //구독권 기간
 
     @Enumerated(EnumType.STRING)
-    private SubscribeStatus status;
+    private SubscribeStatus status;     //현재 구독 여부
 
-    @Enumerated(EnumType.STRING)
-    private SubscribeRenewal renewal;
+//    @Enumerated(EnumType.STRING)
+//    private SubscribeRenewal renewal;
 
 
     @Builder
