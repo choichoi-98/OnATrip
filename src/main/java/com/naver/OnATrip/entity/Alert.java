@@ -1,9 +1,11 @@
 package com.naver.OnATrip.entity;
 
+import com.naver.OnATrip.entity.plan.Plan;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -18,13 +20,15 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;  // 알림을 받을 회원
+    @Column(nullable = false)
+    private String memberEmail;  // 이메일로 식별
+
+    @Column(nullable = false)
+    private String sourceMemberEmail;  // 이메일로 식별
 
     @ManyToOne
-    @JoinColumn(name = "source_member_id", nullable = false)
-    private Member sourceMember;  // 알림을 발생시킨 회원
+    @JoinColumn(name = "plan_id", nullable = true)
+    private Plan plan;
 
     @Column(nullable = false)
     private String message;
@@ -32,10 +36,11 @@ public class Alert {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    public Alert(Member member, Member sourceMember, String message) {
-        this.member = member;
-        this.sourceMember = sourceMember;
+    public Alert(String memberEmail, String sourceMemberEmail, Plan plan, String message) {
+        this.memberEmail = memberEmail;
+        this.sourceMemberEmail = sourceMemberEmail;
+        this.plan = plan;
         this.message = message;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now(); // 현재 시간으로 설정
     }
 }

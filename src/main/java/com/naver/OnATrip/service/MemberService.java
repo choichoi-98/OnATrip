@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService  {
+public class MemberService implements UserDetailsService {
     //implements UserDetailsService
 
     private final MemberRepository memberRepository;
@@ -51,7 +51,7 @@ public class MemberService implements UserDetailsService  {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (optionalMember==null){
+        if (optionalMember == null) {
             throw new UsernameNotFoundException(email);
         }
 
@@ -92,15 +92,15 @@ public class MemberService implements UserDetailsService  {
     }
 
     public String updatePassword(String email, MemberDTO.PasswordDto passwordDto) {
-        Member member = memberRepository.findByEmail(email).orElseGet(()-> null);
+        Member member = memberRepository.findByEmail(email).orElseGet(() -> null);
         passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         member.updatePassword(passwordDto);
         return email;
     }
 
-    public Member findByEmail(String email){
+    public Member findByEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
-        if (member.isPresent()){
+        if (member.isPresent()) {
             return member.get();
         } else {
             throw new RuntimeException("Member not found : " + email);
@@ -119,6 +119,7 @@ public class MemberService implements UserDetailsService  {
     public void deleteById(Long id) {
         memberRepository.deleteById(id);
     }
+
 }
 
 

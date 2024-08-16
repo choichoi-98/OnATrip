@@ -14,16 +14,18 @@ import java.time.LocalDateTime;
 @Builder
 public class AlertDto {
     private Long id;
-    private Long memberId;
-    private Long sourceMemberId;
+    private String memberEmail; // 이메일로 식별
+    private String sourceMemberEmail; // 이메일로 식별
+    private Long planId;
     private String message;
     private LocalDateTime createdAt;
 
     public static AlertDto fromEntity(Alert alert) {
         return AlertDto.builder()
                 .id(alert.getId())
-                .memberId(alert.getMember().getId())
-                .sourceMemberId(alert.getSourceMember().getId())
+                .memberEmail(alert.getMemberEmail()) // 이메일로 가져오기
+                .sourceMemberEmail(alert.getSourceMemberEmail()) // 이메일로 가져오기
+                .planId(alert.getPlan() != null ? alert.getPlan().getId() : null)
                 .message(alert.getMessage())
                 .createdAt(alert.getCreatedAt())
                 .build();
