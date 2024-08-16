@@ -34,13 +34,9 @@
                                     </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
-                                    <tr th:each="myQNA : ${myQNA}">
+                                    <tr th:each="myQNA : ${myQNA}" class="table-row" th:data-href="@{'/memberQNAView/' + ${myQNA.id}}">
                                         <td th:text="${myQNA.id}"></td>
-                                        <td>
-                                            <a th:href="@{'/memberQNAView/' + ${myQNA.id}}" class="link">
-                                                <span th:text="${myQNA.title}"></span>
-                                            </a>
-                                        </td>
+                                        <td th:text="${myQNA.title}"></td>
                                         <td th:text="${myQNA.writer}"></td>
                                         <td th:text="${myQNA.createdAt}"></td>
                                         <td th:text="${myQNA.answer}"></td>
@@ -57,7 +53,17 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<!--    <script th:src="@{/js/admin/admin.js}"></script>-->
+<script>
+    $(document).ready(function() {
+        $('.table-row').on('click', function() {
+            var href = $(this).data('href');
+            console.log('Clicked row href:', href);
+            if (href) {
+                window.location.href = href;
+            }
+        });
+    });
+</script>
 <div th:replace="fragments/footer :: footerFragment"></div>
 </body>
 </html>

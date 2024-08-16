@@ -7,6 +7,7 @@ import com.naver.OnATrip.web.dto.location.LocationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -134,6 +135,20 @@ public class AdminController {
     public List<Member> manageMember() {
         return memberService.findAll();
     }
+//
+//    @GetMapping("/manageMember")
+//    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+//        Page<Member> paging = this.memberService.getList(page);
+//        model.addAttribute("paging", paging);
+//        return "/manageMember";
+//    }
+
+//    @GetMapping("/manageMember")
+//    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+//        Page<Member> paging = this.memberService.getList(page);
+//        model.addAttribute("paging", paging);
+//        return "admin/manageMember";
+//    }
 
     //회원삭제
     @PostMapping("/manageMember/delete/{id}")
