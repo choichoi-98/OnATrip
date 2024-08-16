@@ -61,6 +61,48 @@ body {font-family: Arial;}
         max-width: 1200px;
     }
 }
+
+/*회원관리 css*/
+
+tr {
+    text-align: center;
+}
+th.col1 {
+    width: 10%;
+}
+
+th.col2 {
+    width: 30%;
+}
+
+th.col3 {
+    width: 30%;
+}
+th.col4 {
+    width: 20%;
+}
+th.col5 {
+    width: 10%;
+}
+
+/*회원 삭제 css*/
+.deleteButton {
+    background-color: red;
+    color: white;
+    border: 1px solid red;
+    padding: 2%;
+    font-size: small;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.deleteButton:hover {
+    background-color: darkred;
+    border-color: red;
+}
+
+
 /*여행지_체크박스*/
 
 /* input 숨겨준다 */

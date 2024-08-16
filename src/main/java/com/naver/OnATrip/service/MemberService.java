@@ -111,6 +111,14 @@ public class MemberService implements UserDetailsService  {
     public Member save(Member member) {
         return memberRepository.save(member);
     }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        memberRepository.deleteById(id);
+    }
 }
 
 

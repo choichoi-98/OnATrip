@@ -2,6 +2,9 @@ $(document).ready(function() {
     // 페이지 로드 시 모든 여행지 목록을 불러오는 함수 호출
     loadAllLocations();
 
+    //회원정보 불러오기
+      loadMembers();
+
     // 엔터키 누를 때 기본 동작 방지
     $('#city_input, #country_input').keydown(function(event) {
             if (event.key === 'Enter') {
@@ -629,5 +632,58 @@ $(document).ready(function() {
           }
       });
   }
+
+  //회원리스트 불러오기
+  function loadMembers() {
+      $.ajax({
+          url: '/admin/manageMember',
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+              console.log('서버 응답 데이터:', data);
+              var memberTableBody = $('#memberTableBody');
+              memberTableBody.empty(); // 기존 내용 지우기
+
+              $.each(data, function(index, member) {
+                  var row = `
+                      <tr>
+                          <td class="td">${member.id}</td>
+                          <td class="td">${member.email}</td>
+                          <td class="td">${member.name}</td>
+                          <td class="td">${member.subscribe_status}</td>
+                          <td class="td"><button class="deleteButton" onclick="deleteMember(${member.id})">삭제</button></td>
+                      </tr>
+                  `;
+
+                  memberTableBody.append(row);
+              });
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.error('회원 목록을 가져오는 중 오류 발생:', textStatus, errorThrown); // 오류 로그
+          },
+          complete: function(jqXHR, textStatus) {
+              console.log('AJAX 요청 완료:', textStatus); // 요청 완료 로그
+          }
+      });
+  }
+
+
+  function deleteMember(id) {
+      $.ajax({
+          url: '/admin/manageMember/delete/' + id,
+          method: 'POST',
+          dataType: "json",
+          success: function() {
+              loadMembers(); // 삭제 후 테이블을 다시 로드하여 갱신
+              console.log("회원 삭제 성공:");
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.error('회원 삭제 중 오류가 발생했습니다:', textStatus, errorThrown);
+          }
+      });
+  }
+
+  // 전역 스코프에 함수 등록
+  window.deleteMember = deleteMember;
 
 });
