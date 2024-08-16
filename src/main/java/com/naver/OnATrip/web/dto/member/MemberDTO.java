@@ -31,12 +31,15 @@ public class MemberDTO {
 
     private Role role;
 
-    public MemberDTO(String email, String password, String passwdCheck,String name, Role role) {
+    private String subscribe_status = "OFF";
+
+    public MemberDTO(String email, String password, String passwdCheck,String name, Role role, String subscribe_status) {
         this.email = email;
         this.password = password;
         this.passwdCheck = passwdCheck;
         this.name = name;
         this.role = role;
+        this.subscribe_status = subscribe_status;
     }
 
     public MemberDTO() {
@@ -51,6 +54,7 @@ public class MemberDTO {
                 .password(password)
                 .email(email)
                 .role(role)
+                .subscribe_status(subscribe_status)
                 .build();
         return member;
     }
