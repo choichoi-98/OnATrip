@@ -76,6 +76,8 @@ public class RouteService {
         return routeRepository.modifyMemo(routeId, memoContent);
     }
 
+
+    //순서 변경
     public boolean updateRouteSequence(List<RouteDto> routeDtos) {
         try {
             for (RouteDto routeDto : routeDtos) {
@@ -91,6 +93,16 @@ public class RouteService {
         }
     }
 
-
+    //삭제 이후 순서 변경
+//    @Transactional
+//    public void deleteRouteAndUpdateSequence(Long routeIdToDelete, Long detailPlanId, int dayNumber) {
+//        // Route 삭제
+//        Route routeToDelete = routeRepository.findById(routeIdToDelete)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid route ID: " + routeIdToDelete));
+//        routeRepository.delete(routeToDelete);
+//
+//        // 삭제 후 순서 업데이트
+//        updateRouteSequence(detailPlanId, dayNumber);
+//    }
 
 }
