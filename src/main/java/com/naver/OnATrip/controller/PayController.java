@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,9 +66,16 @@ public class PayController {
     @PostMapping("/payPage")
     public String getItemById(@RequestParam("item_id") int itemId, Model model) {
         Optional<Item> itemOptional = itemService.findById(itemId);
+
         if (itemOptional.isPresent()) {
             Item item = itemOptional.get();
+
+            LocalDate currentDate = LocalDate.now();
+            LocalDate endDate = currentDate.plusDays(item.getPeriod());
+
             model.addAttribute("item", item);
+            model.addAttribute("currentDate", currentDate);
+            model.addAttribute("endDate", endDate);
         }
         return "pay/payPage";
     }

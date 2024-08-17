@@ -49,13 +49,13 @@
                         </div>
                         <span class="text-body-secondary" th:text="${item.itemPrice}"></span>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
-                        <div class="text-success">
-                            <h6 class="my-0">프로모션 코드</h6>
-                            <small>입력후 적용된 코드</small>
-                        </div>
-                        <span class="text-success">−50</span>
-                    </li>
+<!--                    <li class="list-group-item d-flex justify-content-between bg-body-tertiary">-->
+<!--                        <div class="text-success">-->
+<!--                            <h6 class="my-0">프로모션 코드</h6>-->
+<!--                            <small>입력후 적용된 코드</small>-->
+<!--                        </div>-->
+<!--                        <span class="text-success">−50</span>-->
+<!--                    </li>-->
                     <li class="list-group-item d-flex justify-content-between">
                         <span>총 결제 금액</span>
                         <strong id="total_price" th:text="${item.itemPrice}"></strong>
@@ -76,7 +76,7 @@
                 <div class="my-3">
                     <p class="font-weight-bolder" th:text="${item.period}" id="subscribe_period"
                        style="display: none"></p>
-                    <p id="subscribe_date"></p>
+                    <p id="subscribe_date" th:text="${currentDate} + ' ~ ' + ${endDate}"></p>
                 </div>
                 <hr class="my-4">
                 <h4 class="mb-3">구매 약관</h4>
@@ -112,29 +112,29 @@
         let subscribeDate = $('#subscribe_date');
 
         // 현재 날짜
-        let currentDate = new Date();
-        let formatCurrentDate = currentDate.getFullYear() + '-' +
-            ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' +
-            ('0' + currentDate.getDate()).slice(-2);
-
-        // 날짜 더하기 함수
-        function addDays(date, days) {
-            let result = new Date(date);
-            result.setDate(result.getDate() + days);
-            return result;
-        }
-
-        // 구독 기간 종료 날짜 구하기
-        let endDate = addDays(currentDate, period);
-        if (endDate.getHours() !== 0 || endDate.getMinutes() !== 0 || endDate.getSeconds() !== 0) {
-            endDate.setHours(0, 0, 0, 0);
-            endDate.setDate(endDate.getDate() - 1);
-        }
-        let formatEndDate = endDate.getFullYear() + '-' +
-            ('0' + (endDate.getMonth() + 1)).slice(-2) + '-' +
-            ('0' + endDate.getDate()).slice(-2);
-
-        subscribeDate.text(formatCurrentDate + ' - ' + formatEndDate);
+        // let currentDate = new Date();
+        // let formatCurrentDate = currentDate.getFullYear() + '-' +
+        //     ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' +
+        //     ('0' + currentDate.getDate()).slice(-2);
+        //
+        // // 날짜 더하기 함수
+        // function addDays(date, days) {
+        //     let result = new Date(date);
+        //     result.setDate(result.getDate() + days);
+        //     return result;
+        // }
+        //
+        // // 구독 기간 종료 날짜 구하기
+        // let endDate = addDays(currentDate, period);
+        // if (endDate.getHours() !== 0 || endDate.getMinutes() !== 0 || endDate.getSeconds() !== 0) {
+        //     endDate.setHours(0, 0, 0, 0);
+        //     endDate.setDate(endDate.getDate() - 1);
+        // }
+        // let formatEndDate = endDate.getFullYear() + '-' +
+        //     ('0' + (endDate.getMonth() + 1)).slice(-2) + '-' +
+        //     ('0' + endDate.getDate()).slice(-2);
+        //
+        // subscribeDate.text(formatCurrentDate + ' - ' + formatEndDate);
 
         merchant_uid = "O" + new Date().getTime();
         var totalPrice = $('#total_price').text();
