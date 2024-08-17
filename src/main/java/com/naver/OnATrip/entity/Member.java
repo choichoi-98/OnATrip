@@ -1,6 +1,7 @@
 package com.naver.OnATrip.entity;
 
 import com.naver.OnATrip.constant.Role;
+import com.naver.OnATrip.entity.pay.Subscribe;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -37,6 +38,10 @@ public class Member implements UserDetails {
     private Role role;
 
     private String subscribe_status = "OFF";
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Subscribe> subscribes = new ArrayList<>();
+
     public Member(Long id, String email, String password, String name, Role role) {
         this.id = id;
         this.email = email;
@@ -45,13 +50,14 @@ public class Member implements UserDetails {
         this.role = role;
     }
 
-    public Member(Long id, String email, String password, String name, Role role, String subscribe_status) {
+    public Member(Long id, String email, String password, String name, Role role, String subscribe_status, List<Subscribe> subscribes) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
         this.subscribe_status = subscribe_status;
+        this.subscribes = subscribes;
     }
 
     public Member() {

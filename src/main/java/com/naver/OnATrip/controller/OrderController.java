@@ -57,6 +57,7 @@ public class OrderController {
         System.out.println("Saving order information: {}");
 
         String memberId = principal.getName();
+        Member member = memberService.findByEmail(memberId);
 
         Orders orders = Orders.builder()
                 .merchantUid(request.getMerchantUid())
@@ -64,7 +65,7 @@ public class OrderController {
                 .payMethod(request.getPayMethod())
                 .itemId(request.getItemId())
                 .itemPeriod((int) request.getItemPeriod())
-                .memberId(principal.getName())
+                .memberId(memberId)
                 .paymentStatus(true)
                 .build();
 
@@ -76,15 +77,13 @@ public class OrderController {
         LocalDate endDate = currentDate.plusDays(request.getItemPeriod());
 
         Subscribe subscribe = Subscribe.builder()
-                .memberId(principal.getName())
+                .member(member)
                 .itemPeriod(request.getItemPeriod())
-                .endDate(String.valueOf(endDate))
+                .endDate(endDate)
                 .status(SubscribeStatus.ON)
                 .build();
 
         orderService.save_subscribe(subscribe);
-
-        Member member = memberService.findByEmail(memberId);
 
         member.setSubscribe_status("ON");
         memberService.save(member);

@@ -48,23 +48,5 @@ public class Payment {
     private LocalDateTime orderDate;
 
 
-//    public Member getMember() {
-//        if (orders != null) {
-//            return orders.getMember();
-//        }
-//        return null;
-//    }
-
-//    @Builder
-//    public Payments(BigDecimal totalPrice, PaymentStatus status){
-//        this.totalPrice = totalPrice;
-//        this.status = status;
-//    }
-
-//    public void changePaymentBySuccess(PaymentStatus status, String paymentUid){
-//        this.status = status;
-//        this.paymentUid = paymentUid;
-//    }
-
 
 }

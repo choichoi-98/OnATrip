@@ -19,26 +19,24 @@ public class Subscribe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", referencedColumnName = "email")
+    private Member member;
 
     @CreationTimestamp
     @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_DATE")
     private LocalDate startDate;
 
-    private String endDate;
+    private LocalDate endDate;
 
     private int itemPeriod;         //구독권 기간
 
     @Enumerated(EnumType.STRING)
     private SubscribeStatus status;     //현재 구독 여부
 
-//    @Enumerated(EnumType.STRING)
-//    private SubscribeRenewal renewal;
-
-
     @Builder
-    public Subscribe(String memberId, String endDate, int itemPeriod, SubscribeStatus status) {
-        this.memberId = memberId;
+    public Subscribe(Member member, LocalDate endDate, int itemPeriod, SubscribeStatus status) {
+        this.member = member;
         this.endDate = endDate;
         this.itemPeriod = itemPeriod;
         this.status = status;
