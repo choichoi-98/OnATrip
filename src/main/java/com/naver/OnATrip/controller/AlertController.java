@@ -31,7 +31,9 @@ public class AlertController {
 
     @PostMapping("/sendInvitation")
     public ResponseEntity<String> sendInvitation(@RequestBody @Valid InvitationRequest request) {
+        System.out.println("============================alertControler===========");
         try {
+            System.out.println("request.getEmail() + request.getPlanId() = " + request.getEmail() + request.getPlanId());
             invitationService.sendInvitation(request.getEmail(), request.getPlanId());
             return ResponseEntity.ok("Invitation sent successfully.");
         } catch (IllegalStateException e) {

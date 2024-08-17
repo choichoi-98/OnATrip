@@ -72,6 +72,7 @@ $(document).ready(function() {
 
     //초대장 보내기 sy
     function sendInvitation(email, planId) {
+    console.log('-----------------------sendInvitation------------', email, planId);
         $.ajax({
             url: '/alerts/sendInvitation',
             method: 'POST',
