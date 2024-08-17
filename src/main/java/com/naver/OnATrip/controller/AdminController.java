@@ -41,11 +41,11 @@ public class AdminController {
 
     // 여행지 추가
     @PostMapping("/addLocation")
-    public String addLocation(LocationDTO locationDTO) throws IOException {
+    public String addLocation(@ModelAttribute LocationDTO locationDTO) throws IOException {
         logger.info("Received request to add location with country={}, countryCode={}, city={}, description={}, locationType={}", locationDTO.getCountryName(), locationDTO.getCountryCode(), locationDTO.getCity(), locationDTO.getDescription(), locationDTO.getLocationType());
 
         // 파일 유효성 검사
-        if (locationDTO.getFile().isEmpty()) {
+        if (locationDTO.getFile() == null || locationDTO.getFile().isEmpty()) {
             throw new IllegalArgumentException("이미지 파일을 업로드해야 합니다.");
         }
 

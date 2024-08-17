@@ -67,3 +67,9 @@
 #myInfo{
     margin-bottom: 20px;
 }
+
+/*-------------------시연 alert*/
+.alert-recipient {
+    color: #6c757d;
+    font-size: 0.9rem;
+}

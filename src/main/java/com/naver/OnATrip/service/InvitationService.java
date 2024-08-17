@@ -13,6 +13,10 @@ public class InvitationService {
         String sourceMemberEmail = alertService.getLoggedInUserEmail(); // 로그인된 사용자의 이메일 가져오기
         String message = "ON A Trip! 여행일정을 함께 하시겠습니까?";
 
+        if (alertService.isInvitationAlreadySent(email, planId)) {
+            throw new IllegalStateException("이미 초대된 친구입니다.");
+        }
+
         try {
             alertService.sendFriendInviteAlert(email, sourceMemberEmail, planId, message);
         } catch (IllegalStateException e) {
