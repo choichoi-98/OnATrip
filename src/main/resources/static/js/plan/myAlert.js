@@ -1,6 +1,8 @@
 $(document).ready(function() {
     console.log('Alerts section is loaded.');
 
+    //MATEiD값 필요 {ALERT.SOUCRE_MEMBEREM
+    //PLANiD값 필오 {ALERT.PLAN_ID}
     // AJAX 요청을 통해 알림 데이터 가져오기
     $.ajax({
         url: '/alerts/myAlerts',
@@ -19,7 +21,7 @@ $(document).ready(function() {
                                 <p class="alert-recipient">${alert.memberEmail}님이 초대하셨습니다.</p>
                             </div>
                             <div>
-                                <button class="btn accept-btn" style="background-color: #33333; border-color: #a9a9a9; color: #333; font-size: 0.9rem; padding: 0.4rem 0.8rem; border-radius: 0.3rem;" data-alert-id="${alert.id}">수락</button>
+                                <button class="btn accept-btn" style="background-color: #33333; border-color: #a9a9a9; color: #333; font-size: 0.9rem; padding: 0.4rem 0.8rem; border-radius: 0.3rem;" data-alert-id="${alert.id}" data-sourceMemberEmail="${alert.memberEmail}" data-plan-id="${alert.planId}">수락</button>
                                 <button class="btn reject-btn" style="background-color: #33333; border-color: #a9a9a9; color: #333; font-size: 0.9rem; padding: 0.4rem 0.8rem; border-radius: 0.3rem;" data-alert-id="${alert.id}">거절</button>
                             </div>
                         </div>
@@ -40,8 +42,15 @@ $(document).ready(function() {
 
     // 수락 버튼 클릭 이벤트 핸들러
     $(document).on('click', '.accept-btn', function() {
-        let alertId = $(this).data('alert-id');
-        inviteFriend(email, planId)
+            let alertId = $(this).data('alert-id');
+            let email = $(this).data('sourcememberemail'); // camelCase 주의
+            let planId = $(this).data('plan-id'); // plan-id로 변경
+
+            console.log('Alert ID:', alertId);
+            console.log('Email:', email);
+            console.log('Plan ID:', planId);
+
+            inviteFriend(email, planId);
     });
 
     // 거절 버튼 클릭 이벤트 핸들러
