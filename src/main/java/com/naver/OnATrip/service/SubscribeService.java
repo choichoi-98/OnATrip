@@ -27,7 +27,7 @@ public class SubscribeService {
     }
 
 
-    @Scheduled(cron = "0 30 2 * * ?")    //매일밤 자정에 실행
+    @Scheduled(cron = "0 0 0 * * ?")    //매일밤 자정에 실행
     @Transactional
     public void updateSubscription(){
         List<Subscribe> subscribes = subscribeRepository.findAllByEndDateBefore(LocalDate.now());
