@@ -41,18 +41,7 @@ $(document).ready(function() {
     // 수락 버튼 클릭 이벤트 핸들러
     $(document).on('click', '.accept-btn', function() {
         let alertId = $(this).data('alert-id');
-        $.ajax({
-            url: '/alerts/acceptAlert/' + alertId,
-            type: 'POST',
-            success: function(response) {
-                console.log('Alert accepted:', response);
-                // 버튼 클릭 후 UI 업데이트 로직 추가 가능
-                $(this).closest('.alert-item').remove();
-            },
-            error: function(xhr, status, error) {
-                console.error('Failed to accept alert:', error);
-            }
-        });
+        inviteFriend(email, planId)
     });
 
     // 거절 버튼 클릭 이벤트 핸들러
@@ -71,4 +60,37 @@ $(document).ready(function() {
             }
         });
     });
-});
+
+
+});//$(document).ready(function() {
+
+
+// 친구 추가 함수
+function inviteFriend(email, planId) {
+    $.ajax({
+        url: '/inviteFriend',
+        method: 'POST',
+        data: { email: email, planId: planId },
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function() {
+            console.log('친구 초대 성공');
+            $('#inviteFriendModal').modal('hide');
+            window.location.href = '/myPlanList';
+        },
+
+        error: function(xhr, status, error) {
+            if (xhr.status === 409) {
+                // 이미 초대된 친구일 때
+                alert("이미 초대된 친구입니다.");
+            } else if (xhr.status === 500) {
+                // 서버 내부 오류
+                alert("친구 초대 중 오류 발생");
+            } else {
+                // 기타 오류
+                console.log('친구 초대 중 오류 발생: ', error);
+            }
+        }
+    });
+}
