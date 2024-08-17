@@ -30,4 +30,16 @@ public class AlertDto {
                 .createdAt(alert.getCreatedAt())
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "AlertDto{" +
+                "id=" + id +
+                ", memberEmail='" + memberEmail + '\'' +
+                ", sourceMemberEmail='" + sourceMemberEmail + '\'' +
+                ", planId=" + planId +
+                ", message='" + message + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

@@ -48,7 +48,7 @@ public class AlertController {
 
     @GetMapping("/myAlerts")
     public ResponseEntity<List<AlertDto>> getMyAlerts(Principal principal) {
-        String email = principal.getName();
+        String email = principal.getName();//받은 사람(MATE_ID)
 
         if (email == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -57,7 +57,10 @@ public class AlertController {
         // 알림 목록 가져오기
         List<Alert> alerts = alertService.getAlertsForUser(email);
         List<AlertDto> alertDtos = alerts.stream().map(AlertDto::fromEntity).collect(Collectors.toList());
-        
+        for (AlertDto alertDto : alertDtos) {
+            logger.info("알아보기================" + alertDto.toString());
+
+        }
 
         return ResponseEntity.ok(alertDtos);
     }

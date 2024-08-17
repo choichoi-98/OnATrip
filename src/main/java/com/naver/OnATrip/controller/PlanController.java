@@ -340,6 +340,8 @@ public class PlanController {
     @PostMapping("/inviteFriend")
     public ResponseEntity<String> inviteFriend(@RequestParam("email") String email,
                                                @RequestParam("planId") Long planId){
+
+        logger.info("===================================" + email, planId);
         //1. mateEmail 혹은 email에 매개변수로 받은 email과 일치하는 값이 있는지 확인
         boolean result = planService.ExistPlanByEmail(email, planId);
         System.out.println("친구 초대 이메일 Exist result = " + result);

@@ -84,7 +84,7 @@ $(document).ready(function() {
             success: function() {
                 console.log('초대장 보내기');
                 $('#inviteFriendModal').modal('hide');
-                window.location.href = '/myPlanList';
+                window.location.href = '/myPage';
             },
 
             error: function(xhr, status, error) {
