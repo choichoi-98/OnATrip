@@ -242,6 +242,7 @@ public class PlanController {
         logger.info("deleteRoute-routeId", routeId);
         boolean result = routeService.deleteRoute(routeId);
         if (result) {
+//            routeService.deleteRouteAndUpdateSequence(request.getRouteId(), request.getDetailPlanId(), request.getDayNumber());
             return ResponseEntity.ok(result);  // 성공 시 200 OK 응답
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);  // 실패 시 500 응답

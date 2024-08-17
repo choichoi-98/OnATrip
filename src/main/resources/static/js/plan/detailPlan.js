@@ -9,8 +9,10 @@ let detailPlanId;
 let category;//memo, place
 let markers = [];//마커들 저장
 let markerIndex = 1;
+let marker;
 let polyline;
 let originalIcon;// 마커 강조 함수
+let searchMarker = null; // 전역 변수로 선언
 let infoWindow = new google.maps.InfoWindow(); // InfoWindow 인스턴스 생성
 
 $(document).ready(function() {
@@ -52,8 +54,9 @@ $(document).ready(function() {
             const detailPlanId = $(this).data('detailplanid');
             const lat = $(this).data('lat');
             const lng = $(this).data('lng');
+            const address = $(this).data('address');
             const placeName = $(this).closest('.card').find('.card-title').text();
-            addRoute(day, placeName, category,detailPlanId, lat, lng);
+            addRoute(day, placeName, category,detailPlanId, lat, lng, address);
     });
 
     //-----------------------------addMeMo
@@ -65,7 +68,7 @@ $(document).ready(function() {
         if(memoText){
             const day = $(this).closest('.input-group').attr('id').split('-')[1];
             const detailPlanId = $(this).data('detailplanid');
-            addRoute(day,memoText, category , detailPlanId,null,null);
+            addRoute(day,memoText, category , detailPlanId,null,null, null);
             memoInput.val('');
         }
 
@@ -238,14 +241,19 @@ function initAutocomplete(countryCode) {
 function showPlaceOnMap(place, dayNumber, detailPlanId){
     //이름 ,장소 사진, 리뷰, 위경도
     //장소 검색 결과에 대한 마커 추가
-    const marker = new google.maps.Marker({
+    if (searchMarker) {
+        searchMarker.setMap(null); // 기존 검색 마커가 있으면 제거
+    }
+
+    searchMarker = new google.maps.Marker({
         position: place.geometry.location,
         map: map
     });
 
     const lat =  place.geometry.location.lat();
     const lng =  place.geometry.location.lng();
-
+    const address = place.formatted_address; // 주소
+    console.log('==========showPlaceOnMap - address', address);
     //장소의 사진
     let photoUrl = '';
     if(place.photos && place.photos.length > 0){
@@ -265,14 +273,14 @@ function showPlaceOnMap(place, dayNumber, detailPlanId){
                 <img src="${photoUrl}" class="card-img" alt="${place.name}" style="max-height: 250px;">
                 <div class="card-body">
                    <h5 class="card-title">${place.name}</h5>
-                   <p class="card-text"><small class="text-muted">${place.formatted_address}</small></p>
+                   <p class="card-text"><small class="text-muted">${address}</small></p>
                 </div>
                 <div class="card-body" id="placeReview">
                    <p class="card-text">${description}</p>
                 </div>
                 <div class = "card-body">
                     <a herf="#" class="btn btn-primary add-route"
-                            data-day=${dayNumber} data-detailplanid=${detailPlanId} data-lat=${lat} data-lng=${lng}>추가</a>
+                            data-day=${dayNumber} data-detailplanid=${detailPlanId} data-lat=${lat} data-lng=${lng}  data-address=${address}>추가</a>
                 </div>
             </div>
            `;
@@ -286,8 +294,8 @@ function showPlaceOnMap(place, dayNumber, detailPlanId){
 }
 
 //------------ROUTE, addRoute
-function addRoute(day, placeName, category, detailPlanId, lat, lng){
-
+function addRoute(day, placeName, category, detailPlanId, lat, lng, address){
+    console.log('----------addRoute----', address);
     $.ajax({
         url:'/addRoute',
         method: 'POST',
@@ -298,7 +306,8 @@ function addRoute(day, placeName, category, detailPlanId, lat, lng){
                 category: category,
                 detailPlanId: detailPlanId,
                 lat: lat,
-                lng: lng
+                lng: lng,
+                address: address
         }),
         beforeSend : function(xhr)
         { //데이터를 전송하기 전에 헤더에 csrf값을 설정
@@ -327,6 +336,7 @@ function addRoute(day, placeName, category, detailPlanId, lat, lng){
 function refreshDetailPlan(detailPlanId, dayToUpdate, category) {
     console.log('refreshDetailPlan-dayToUpdate: ', dayToUpdate);
     console.log('refreshDetailPlan-category: ', category);
+    console.log('------------------refreshDetailPlan--------------------');
 
     $.ajax({
         url: '/api/viewRoute',
@@ -344,7 +354,7 @@ function refreshDetailPlan(detailPlanId, dayToUpdate, category) {
 }//function refreshDetailPlan(planId, dayToUpdate) {
 
 function updateRoute(dayToUpdate, routes, category) {
-    console.log('------------------updateRoute----------');
+    console.log('---------------------------updateRoute--------------------');
     console.log(`Updating routes for day: ${dayToUpdate}`);
     console.log('updateRoute-category: ', category);
     if (routes.length > 0) {
@@ -372,6 +382,7 @@ function updateRoute(dayToUpdate, routes, category) {
 
         detailPlanElement.append(emptyContainer);
     } else {
+        console.log('----------------------------------------Route 리스트 추가 -------------------------');
         routes.forEach((route, index) => {
             const routeElement = $('<div></div>', {
                 class: 'container place-block',
@@ -577,7 +588,8 @@ function addMarkersFromHTML() {
         const category = $(this).attr('data-category');
         const sortKey = $(this).attr('data-sortkey');
         const day = $(this).attr('data-daynum'); // 날짜 정보 가져오기
-
+        const routeId = $(this).attr('data-routeid'); // routeId 가져오기
+        console.log('=================정적 페이지 마커 추가 함수 - routeId = ',routeId);
         // lat, lng 정보가 없거나 category가 'MEMO'인 경우 건너뛰기
         if (!lat || !lng || category === 'MEMO') {
             return;
@@ -591,12 +603,13 @@ function addMarkersFromHTML() {
             markersByDay[day].markerIndex = 1; // 날짜별 마커 인덱스 초기화
         }
 
-        // 마커 생성 및 라벨 설정
+        //지도 마커 생성 및 라벨 설정
         const marker = new google.maps.Marker({
             position: position,
             map: map,
             title: placeName,
             sortKey: sortKey,
+            routeId: routeId,
             label: {
                 text: String(markersByDay[day].markerIndex),
                 color: 'white',
@@ -669,11 +682,21 @@ function addMarkersFromHTML() {
 
 //-------------------------------------------동적으로 구성된 마커 추가
 function addMarkersFromRoutes(routes) {
-    console.log('-------------------------addMarkersFromRoutes 실행');
+    console.log('-------------------------addMarkersFromRoutes 실행-------------------------------');
 
     // 기존 마커 제거
-    markers.forEach(marker => marker.setMap(null));
-    markers = [];
+    if (markers.length > 0) {
+        console.log('------------------기존 마커 제거----');
+        markers.forEach(marker => marker.setMap(null)); // **기존 마커를 지도에서 제거**
+        markers = [];  // **마커 배열 초기화**
+    }
+
+    // 검색 마커 제거
+    if (searchMarker) {
+        searchMarker.setMap(null);  // **검색 마커를 지도에서 제거**
+        searchMarker = null;  // **검색 마커 초기화**
+    }
+
     let markerIndex = 1; // 마커 인덱스 초기화
 
     // 모든 routes에서 위치 정보를 가져와서 마커 추가
@@ -682,8 +705,10 @@ function addMarkersFromRoutes(routes) {
         const lng = route.lng; // route 객체에서 경도 정보 가져오기
         const placeName = route.placeName; // route 객체에서 장소 이름 가져오기
         const sortKey = route.sortKey; // route 객체에서 정렬 키 가져오기
-        const day = route.day;
-        console.log('addMarkersFromRoute - day : ', day);
+        const day = route.day;  // 날짜 정보
+//        console.log('addMarkersFromRoute - day : ', day);
+        const color = getColorForDay(day);
+//        console.log('-------------------addMarkersFromRoute - color: ' + color);
 
         // category가 'MEMO'인 경우 건너뛰기
         if (!lat || !lng || route.category === 'MEMO') {
@@ -698,6 +723,7 @@ function addMarkersFromRoutes(routes) {
             map: map,
             title: placeName,
             sortKey: sortKey,
+            routeId: route.routeId,
             label: {
                 text: String(markerIndex),
                 color: 'white',
@@ -708,12 +734,18 @@ function addMarkersFromRoutes(routes) {
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
                 scale: 8,
-                fillColor: getColorForDay(day),
+                fillColor: color,
                 fillOpacity: 1,
                 strokeColor: 'white',
                 strokeWeight: 1,
                 strokeOpacity: 0.8
             }
+        });
+
+        // **마커 클릭 이벤트 리스너 추가 (루프 내에서 추가)**
+        marker.addListener('click', function() {
+            infoWindow.setContent('<div><strong>' + placeName + '</strong></div>');
+            infoWindow.open(map, marker);
         });
 
         markers.push(marker);
@@ -738,11 +770,6 @@ function addMarkersFromRoutes(routes) {
         strokeWeight: 2
     });
 
-    marker.addListener('click', function() {
-        infoWindow.setContent('<div><strong>' + placeName + '</strong></div>');
-        infoWindow.open(map, marker);
-    });
-
     polyline.setMap(map);
 
     // 지도 중심을 마커들의 중앙으로 이동
@@ -753,6 +780,7 @@ function addMarkersFromRoutes(routes) {
     }
 }
 
+
 //--------------------------------deleteRoute 루트 삭제
 function deleteRoute(routeIdToDelete, dayNumber, detailPlanId, category){
     console.log('deleteRoute-------------- category : ', category)
@@ -762,7 +790,18 @@ function deleteRoute(routeIdToDelete, dayNumber, detailPlanId, category){
             data: { routeId: routeIdToDelete },
             success: function(response) {
                 console.log('db route 데이터 삭제 성공')
-                refreshDetailPlan(detailPlanId, dayNumber, category);
+                // 루트 삭제 후 관련 마커 제거
+                const markerToDeleteIndex = markers.findIndex(marker => marker.routeId === routeIdToDelete);
+                if (markerToDeleteIndex !== -1) {
+                    console.log('------------------------------deleteRoute -----마커제거');
+                    markers[markerToDeleteIndex].setMap(null); // 지도에서 마커 제거
+                    markers.splice(markerToDeleteIndex, 1); // 마커 배열에서 제거
+                }
+                // 삭제 후 순서 업데이트 호출
+                const container = $(`#sortable-${dayNumber}`);
+                updateRouteSequence(container);
+
+//                refreshDetailPlan(detailPlanId, dayNumber, category);
 
             },
             beforeSend : function(xhr)
@@ -827,7 +866,7 @@ function disableDragAndDrop(sortable) {
 //-------------routeSequence update 로직(순서 변경 db 반영)
 function updateRouteSequence(container){
     let routeDataList = [];
-    console.log('----------updateRouteSequence 시작-------------')
+    console.log('--------------------------------------updateRouteSequence 시작-------------');
     container.children('.place-block, .memo-block').each(function(index){
         const routeSequence = index + 1; //1부터 시작
 
@@ -882,7 +921,7 @@ function setBadgeColor() {
 
     badgeElements.each(function() {
         const dayNumber = $(this).attr('data-daynum');
-        console.log('-------------setBadgeColor dayNumber :', dayNumber);
+//        console.log('-------------setBadgeColor dayNumber :', dayNumber);
         const color = getColorForDay(dayNumber); // JavaScript 함수 호출
         $(this).css({
             'background-color': color,
@@ -895,21 +934,23 @@ function setBadgeColor() {
 
 //---------------날짜에 따라 색상 결정 함수
 function getColorForDay(day) {
-    console.log('----getColorForDay - day : ', day);
-    switch (day) {
+//    console.log('----getColorForDay - day : ', day, typeof day);
+    switch (day.toString()) {
         case '1':
             return 'red';
         case '2':
             return 'blue';
         case '3':
             return 'green';
+        case '4':
+            return 'yellow';
+        case '5':
+            return 'pink';
+        case '6':
+            return 'orange';
     }
 }
-// 예시로 각 케이스의 반환 값을 확인
-console.log(getColorForDay('1')); // 콘솔에 'red' 출력
-console.log(getColorForDay('2')); // 콘솔에 'blue' 출력
-console.log(getColorForDay('3')); // 콘솔에 'green' 출력
-console.log(getColorForDay(''));  // 콘솔에 'green' 출력 (기본값)
+
 //--------------마커 강조 함수
     // 마커 강조 함수
 //    function highlightMarker(marker) {
