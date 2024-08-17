@@ -128,6 +128,12 @@ public class MemberService implements UserDetailsService {
         memberRepository.deleteById(id);
     }
 
+    public void updateSubscribeStatus(String email, String status){
+        Member member = findByEmail(email);
+        member.setSubscribe_status(status);
+        save(member);
+    }
+
 }
 
 
