@@ -1,5 +1,6 @@
 package com.naver.OnATrip.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.naver.OnATrip.constant.Role;
 import com.naver.OnATrip.entity.pay.Subscribe;
 import com.naver.OnATrip.web.dto.member.MemberDTO;
@@ -40,6 +41,7 @@ public class Member implements UserDetails {
     private String subscribe_status = "OFF";
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true)
+    @JsonManagedReference //순환참조 시 직렬화의 '주 관리' 참조를 의미
     private List<Subscribe> subscribes = new ArrayList<>();
 
     public Member(Long id, String email, String password, String name, Role role) {

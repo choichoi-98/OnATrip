@@ -1,5 +1,6 @@
 package com.naver.OnATrip.entity.pay;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.naver.OnATrip.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,7 @@ public class Subscribe {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "email")
+    @JsonBackReference //순환참조 시 역참조를 의미
     private Member member;
 
     @CreationTimestamp
