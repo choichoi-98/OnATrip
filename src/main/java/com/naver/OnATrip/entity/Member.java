@@ -50,6 +50,15 @@ public class Member implements UserDetails {
         this.role = role;
     }
 
+    public Member(Long id, String email, String password, String name, Role role, String subscribe_status) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.subscribe_status = subscribe_status;
+    }
+
     public Member(Long id, String email, String password, String name, Role role, String subscribe_status, List<Subscribe> subscribes) {
         this.id = id;
         this.email = email;
