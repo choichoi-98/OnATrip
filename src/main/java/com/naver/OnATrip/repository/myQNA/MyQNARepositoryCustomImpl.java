@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 
 import java.util.List;
 
+import static com.naver.OnATrip.entity.QMember.member;
 import static com.naver.OnATrip.entity.QMyQNA.myQNA;
 
 
@@ -26,11 +27,14 @@ public class MyQNARepositoryCustomImpl implements MyQNARepositoryCustom {
     @Override
     @Transient
     public List<MyQNA> findAll(String email) {
-        return  queryFactory
+        System.out.println("Fetching QNAs for email: " + email);
+        return queryFactory
                 .select(myQNA)
                 .from(myQNA)
-                .where(myQNA.member.email.eq(email))
+                .join(myQNA.member, member)
+                .where(member.email.eq(email))
                 .fetch();
+
     }
 
 }

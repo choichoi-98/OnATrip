@@ -34,10 +34,10 @@ public class MyQNA {
     private String writer;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDate modifyDate;
+    private LocalDateTime  modifyDate;
 
     @Column
     private String is_deleted; //삭제 여부
@@ -52,6 +52,8 @@ public class MyQNA {
     private Member member;
 
     private String file;
+
+    private String formattedCreatedAt;
 
     public void update(String title, String content){
         this.title = title;
@@ -71,6 +73,5 @@ public class MyQNA {
         this.answer = "N";
         this.reply = reply;
     }
-
 
 }

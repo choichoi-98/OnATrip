@@ -6,11 +6,20 @@ import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.repository.myQNA.MyQNARepository;
 import com.naver.OnATrip.web.dto.myQNA.CreateQNADto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +30,7 @@ public class MyQNAService {
 
 
 
-    public void save(CreateQNADto createQNADto, String email) {
+    public void save(CreateQNADto createQNADto, String email) throws IOException {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(() -> new IllegalArgumentException("해당 이메일로 등록된 사용자가 없습니다: " + email));
 
@@ -50,9 +59,11 @@ public class MyQNAService {
     }
 
 
-    public List<MyQNA> findMyQNA(String email) {
-        return myQNARepository.findAll(email);
+    public Page<MyQNA> getList(int page, String email) {
+        Pageable pageable = PageRequest.of(page, 10); // 페이지 크기는 필요에 따라 조정
+        return myQNARepository.findByMemberEmail(email, pageable);
     }
+
 
     @Transactional(readOnly = true)
     public Optional<MyQNA> getQNADetail(Long id) {
@@ -67,6 +78,11 @@ public class MyQNAService {
 
     public List<MyQNA> findAll() {
         return myQNARepository.findAll();
+    }
+
+    public Page<MyQNA> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdAt")));
+        return this.myQNARepository.findAll(pageable);
     }
 
     public boolean saveReply(Long id, String reply) {
