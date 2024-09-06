@@ -44,6 +44,10 @@ public class Member implements UserDetails {
     @JsonManagedReference //순환참조 시 직렬화의 '주 관리' 참조를 의미
     private List<Subscribe> subscribes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<MyQNA> myQnas = new ArrayList<>();
+
     public Member(Long id, String email, String password, String name, Role role) {
         this.id = id;
         this.email = email;
@@ -69,6 +73,17 @@ public class Member implements UserDetails {
         this.role = role;
         this.subscribe_status = subscribe_status;
         this.subscribes = subscribes;
+    }
+
+    public Member(Long id, String email, String password, String name, Role role, String subscribe_status, List<Subscribe> subscribes, List<MyQNA> myQnas) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.subscribe_status = subscribe_status;
+        this.subscribes = subscribes;
+        this.myQnas = myQnas;
     }
 
     public Member() {

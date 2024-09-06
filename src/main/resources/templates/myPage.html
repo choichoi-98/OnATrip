@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="css/plan/myPage.css">
 <script src="/js/plan/myPlanList.js"></script>
 <script src="/js/plan/myAlert.js"></script>
+<script src="/js/member/withdraw.js"></script>
 
 
 <body>
@@ -66,7 +67,35 @@
                                         <hr class="title-underline">
                                         <div class="button-container">
                                             <p class="changePassword">비밀번호 변경</p>
-                                            <p class="withdraw">회원탈퇴</p>
+                                            <p class="withdraw" data-toggle="modal" data-target="#withdrawModal">회원탈퇴</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 회원탈퇴 모달 -->
+                                    <div class="modal fade" id="withdrawModal" tabindex="-1" role="dialog" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="withdrawModalLabel">회원 탈퇴 확인</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>회원탈퇴를 하시겠습니까?</p>
+                                                    <form id="withdrawForm">
+                                                        <div class="form-group">
+                                                            <label for="password">비밀번호 입력:</label>
+                                                            <input type="password" class="form-control" id="password" name="password" required>
+                                                        </div>
+                                                        <div class="text-danger" id="passwordError"></div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                                    <button type="button" class="btn btn-primary" id="confirmWithdraw">확인</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
