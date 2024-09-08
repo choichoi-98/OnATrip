@@ -44,6 +44,7 @@
 
 .more-link:hover {
     text-decoration: underline; /* 마우스 오버 시 밑줄 표시 */
+    color: #128D47;
 }
 /*------------------------myPlanList section */
 .plan-summary {

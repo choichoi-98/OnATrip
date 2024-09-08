@@ -45,14 +45,10 @@
         <div class="w-screen pl-8 mb-800 md:pl-0"  style="margin-bottom: 150px !important;">
             <div class="container2 relative mx-auto">
                 <!--  여기에 내용 채우기 -->
-
                 <div class="container mt-5">
-                    <ul class="nav nav-tabs" id="travelPlanTabs" role="tablist">
+                    <ul class="nav nav-tabs" id="mySubscribeList" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="upcoming-tab" data-toggle="tab" href="#upcoming" role="tab" aria-controls="upcoming" aria-selected="true">구독권 관리</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">완료된 구독권</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="travelPlanTabsContent">
@@ -61,19 +57,13 @@
                                 <!-- 구독권 목록 -->
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title">예정된 여행 1</h5>
-                                        <p class="card-text">예정된 여행 1에 대한 설명입니다.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
-                            <div class="card-container mt-3">
-                                <!-- 완료된 여행 목록 -->
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">완료된 여행 1</h5>
-                                        <p class="card-text">완료된 여행 1에 대한 설명입니다.</p>
+                                        <p class="card-text" th:text="${itemlist.name}"></p>
+                                        <p class="card-text" th:text="${subscribe.startDate} + ' ~ ' + ${subscribe.endDate}"></p>
+                                        <p class="card-text" th:text="'결제금액 : ' + ${itemlist.itemPrice}"></p>
+
+                                        <div class="p-2 justify-content-center" style="margin-top: 34px">
+                                            <button type="button" id="cancel_subscribe" class="btn btn-secondary mr-2 cancel-subscribe">환불 신청</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -85,8 +75,8 @@
         </div>
     </div>
 </div>
-
                 <!--  Footer -->
 <div th:replace="fragments/footer :: footerFragment"></div>
+
 </body>
 </html>
