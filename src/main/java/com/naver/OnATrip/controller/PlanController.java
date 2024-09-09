@@ -73,6 +73,7 @@ public class PlanController {
 
         // Model 객체에 데이터 추가
         mv.addObject("locationId", locationId);
+
         mv.addObject("email", email);
         mv.setViewName("plan/selectDate"); // View 이름 설정
 
@@ -86,7 +87,7 @@ public class PlanController {
 
         logger.info("=========================checkPlan - controller ====================");
         // 일정 생성 조건 확인
-        Long planCount = planService.planCount(email);
+        Long planCount = planService.planCount(email); // 내가 생성한 plan 개수, 공유된 일정은 상관x --> 추후에 수정 필요. 따로 planCount를 주기..(초대된 것도,, 생성한 것도 모두 포함)
         System.out.println("planCount = " + planCount);
 
         if (planCount >= 4 ){
