@@ -25,7 +25,6 @@
         </div>
     </nav>
 
-
     <div class="container">
         <div class="contents">
             <h1 class="memberJoin">
@@ -48,7 +47,8 @@
                             </div>
                             <div class="error-class" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Invalid email</div>
                         </div>
-                        <div id="input-group" style="display: none;">
+                        <div id="input-group">
+                            <label class="block text-xs text-gray-500 duration-200 group-focus-within:text-lightScheme-primary mb-0.5 undefined">인증번호</label>
                             <div id="mail_number" name="mail_number">
                                 <input type="text" class="flex-1 w-full px-2 py-2.5 text-black placeholder-gray-700 border border-gray-600 rounded-md focus:outline-none focus:border-lightScheme-primary"
                                        name="number" id="number" placeholder="인증번호 입력">
