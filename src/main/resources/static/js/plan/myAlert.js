@@ -18,7 +18,7 @@ $(document).ready(function() {
                         <div class="alert-item d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="alert-message">${alert.message}</h6>
-                                <p class="alert-recipient">${alert.memberEmail}님이 초대하셨습니다.</p>
+                                <p class="alert-recipient">${alert.sourceMemberEmail}님이 초대하셨습니다.</p>
                             </div>
                             <div>
                                 <button class="btn accept-btn" style="background-color: #33333; border-color: #a9a9a9; color: #333; font-size: 0.9rem; padding: 0.4rem 0.8rem; border-radius: 0.3rem;" data-alert-id="${alert.id}" data-sourceMemberEmail="${alert.memberEmail}" data-plan-id="${alert.planId}">수락</button>
