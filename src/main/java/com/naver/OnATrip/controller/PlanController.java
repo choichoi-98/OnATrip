@@ -73,6 +73,7 @@ public class PlanController {
 
         // Model 객체에 데이터 추가
         mv.addObject("locationId", locationId);
+
         mv.addObject("email", email);
         mv.setViewName("plan/selectDate"); // View 이름 설정
 
