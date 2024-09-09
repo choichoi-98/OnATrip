@@ -675,18 +675,27 @@ $(document).ready(function() {
 
 
   function deleteMember(id) {
-      $.ajax({
-          url: '/admin/manageMember/delete/' + id,
-          method: 'POST',
-          dataType: "json",
-          success: function() {
-              loadMembers(); // 삭제 후 테이블을 다시 로드하여 갱신
-              console.log("회원 삭제 성공:");
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              console.error('회원 삭제 중 오류가 발생했습니다:', textStatus, errorThrown);
-          }
-      });
+      // 삭제 확인 대화 상자 표시
+      var isConfirmed = confirm('선택한 회원을 삭제하시겠습니까?');
+
+      // 사용자가 "확인"을 클릭한 경우에만 삭제 진행
+      if (isConfirmed) {
+          $.ajax({
+              url: '/admin/manageMember/delete/' + id,
+              method: 'POST',
+              dataType: 'json',
+              success: function(response) {
+                  loadMembers(); // 삭제 후 테이블을 다시 로드하여 갱신
+                  alert('회원 삭제가 완료되었습니다.'); // 성공 시 alert
+                  console.log('회원 삭제 성공:', response);
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  console.error('회원 삭제 중 오류가 발생했습니다:', textStatus, errorThrown);
+              }
+          });
+      } else {
+          console.log('회원 삭제가 취소되었습니다.');
+      }
   }
 
   // 전역 스코프에 함수 등록

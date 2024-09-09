@@ -1,5 +1,6 @@
 package com.naver.OnATrip.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Builder
 @Entity
@@ -49,10 +51,12 @@ public class MyQNA {
 
     @ManyToOne
     @JoinColumn(name="member_id")
+    @JsonBackReference
     private Member member;
 
     private String file;
 
+    @Transient
     private String formattedCreatedAt;
 
     public void update(String title, String content){
@@ -72,6 +76,15 @@ public class MyQNA {
         this.writer = writer;
         this.answer = "N";
         this.reply = reply;
+    }
+
+    public void setFormattedCreatedAt() {
+        if (this.createdAt != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            this.formattedCreatedAt = this.createdAt.format(formatter);
+        } else {
+            this.formattedCreatedAt = ""; // 또는 null로 설정할 수도 있습니다.
+        }
     }
 
 }
