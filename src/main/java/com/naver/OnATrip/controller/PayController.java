@@ -4,7 +4,9 @@ import com.google.gson.JsonIOException;
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.pay.Item;
 import com.naver.OnATrip.entity.pay.PrePaymentEntity;
+import com.naver.OnATrip.entity.pay.Subscribe;
 import com.naver.OnATrip.service.ItemService;
+import com.naver.OnATrip.service.MemberService;
 import com.naver.OnATrip.service.OrderService;
 import com.naver.OnATrip.service.PaymentService;
 import com.naver.OnATrip.web.dto.pay.PaymentDto;
@@ -19,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -31,10 +34,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PayController {
 
-
     private final PaymentService paymentService;
     private final ItemService itemService;
-
+    private final MemberService memberService;
+    private final OrderService orderService;
 
     /**
      * 아임포트 결제 검증 컨트롤러
@@ -92,9 +95,32 @@ public class PayController {
 
     //마이페이지 - 결제 더보기 상세 페이지
     @GetMapping("/myPage/subscribe")
-    public String subscribe(Model model) {
+    public ModelAndView subscribe(ModelAndView mv, Principal principal) {
+        String email = principal.getName();
 
-        return "pay/myPage_Subscribe";
+        Member member = memberService.findByEmail(email);
+        mv.addObject("member", member);
+
+        Optional<Subscribe> subscribeOptional = orderService.findByMemberId(email);
+        Subscribe subscribe = subscribeOptional.orElse(null);
+        mv.addObject("subscribe", subscribe);
+
+        // 구독 정보가 존재할 경우 아이템 이름 조회
+        if (subscribe != null) {
+            int itemId = subscribe.getItemId(); // 구독 정보에서 itemId 가져오기
+            Optional<Item> item = itemService.findById(itemId); // itemId로 Item 조회
+
+            if (item.isPresent()) {
+                Item itemlist = item.get(); // Optional에서 Item 추출
+                mv.addObject("itemlist", itemlist); // 조회된 item의 이름을 ModelAndView에 추가
+            } else {
+                // item이 존재하지 않을 경우 처리
+                mv.addObject("itemlist", "구독권 정보 없음");
+            }
+        }
+        mv.setViewName("pay/myPage_Subscribe");
+
+        return mv;
     }
 
 //

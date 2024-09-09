@@ -9,6 +9,7 @@ public class SubscribeDto {
 
     private Long id;
     private String memberId;
+    private int itemId;
     private String startDate;
     private String renewal;
     private SubscribeStatus status;

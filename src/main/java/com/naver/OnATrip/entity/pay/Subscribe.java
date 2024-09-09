@@ -26,43 +26,29 @@ public class Subscribe {
     private Member member;
 
     @CreationTimestamp
-    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_DATE")
+    @Column(name = "start_date", nullable = false, updatable = false)
     private LocalDate startDate;
 
     private LocalDate endDate;
 
     private int itemPeriod;         //구독권 기간
 
+    private int itemId;
+
     @Enumerated(EnumType.STRING)
     private SubscribeStatus status;     //현재 구독 여부
 
     @Builder
-    public Subscribe(Member member, LocalDate endDate, int itemPeriod, SubscribeStatus status) {
+    public Subscribe(Member member, LocalDate endDate, int itemPeriod, SubscribeStatus status, int itemId) {
         this.member = member;
         this.endDate = endDate;
         this.itemPeriod = itemPeriod;
         this.status = status;
+        this.itemId = itemId;
     }
 
 
-//    //-- 구독권 결제시 구독 추가 --//
-//    public static Subscribe createSubscribe(Member member, Pay pay) {
-//        Subscribe subscribe = new Subscribe();
-//        subscribe.setMember(member);
-//
-//        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDateTime startDate = LocalDate.parse(pay.getPayDate(), timeFormat);
-//
-//        Item item = pay.getItem();
-//        LocalDateTime endDate = startDate.plusDays(item.getPeriod());
-//
-//        subscribe.setStartDate(startDate.toString());
-//        subscribe.setEndDate(endDate.toString());
-//
-//        subscribe.setStatus(SubscribeStatus.ON);        //구독 상태 기본값 : 구독 ON
-//        subscribe.setRenewal(SubscribeRenewal.RENEW);   //구독 연장 여부 : 연장 RENEW
-//
-//        return subscribe;
+
 
 
 
