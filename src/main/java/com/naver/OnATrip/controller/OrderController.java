@@ -78,6 +78,7 @@ public class OrderController {
 
         Subscribe subscribe = Subscribe.builder()
                 .member(member)
+                .itemId(request.getItemId())
                 .itemPeriod(request.getItemPeriod())
                 .endDate(endDate)
                 .status(SubscribeStatus.ON)
