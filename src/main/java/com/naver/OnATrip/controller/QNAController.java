@@ -180,6 +180,10 @@ public class QNAController {
     public String memberQNA(Model model) {
         List<MyQNA> myQNA = myQNAService.findAll();
 
+        for (MyQNA qna : myQNA) {
+            qna.setFormattedCreatedAt();
+        }
+
         model.addAttribute("myQNA", myQNA);
         return "admin/memberQNAList";
     }

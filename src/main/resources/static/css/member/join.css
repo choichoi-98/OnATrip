@@ -47,7 +47,7 @@
     color: rgb(170 177 184 / var(--tw-text-opacity));
 }
 
-.groupEmail, .groupName {
+.groupEmail, .groupName, #mail_number {
     display: flex;
 }
 
@@ -72,6 +72,10 @@
 }
 
 .input-group:focus-within .block {
+    color: rgb(199 200 122 / var(--tw-text-opacity));
+}
+
+#input-group:focus-within .block {
     color: rgb(199 200 122 / var(--tw-text-opacity));
 }
 
@@ -123,5 +127,14 @@
     text-decoration: underline;
 }
 
+
+
+#input-group {
+    display: none; /* 기본적으로 숨김 */
+}
+
+#input-group.show {
+    display: block; /* 보여질 때는 block으로 변경 */
+}
 
 

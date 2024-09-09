@@ -135,20 +135,7 @@ public class AdminController {
     public List<Member> manageMember() {
         return memberService.findAll();
     }
-//
-//    @GetMapping("/manageMember")
-//    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-//        Page<Member> paging = this.memberService.getList(page);
-//        model.addAttribute("paging", paging);
-//        return "/manageMember";
-//    }
 
-//    @GetMapping("/manageMember")
-//    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-//        Page<Member> paging = this.memberService.getList(page);
-//        model.addAttribute("paging", paging);
-//        return "admin/manageMember";
-//    }
 
     //회원삭제
     @PostMapping("/manageMember/delete/{id}")
