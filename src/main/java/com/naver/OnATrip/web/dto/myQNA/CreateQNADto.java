@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -22,6 +23,7 @@ public class CreateQNADto {
 
     private Long id;
 
+    @NotBlank(message = "문의 유형을 선택해 주세요")
     private String qnaStatus;
 
     @NotBlank(message = "제목을 입력해주세요.")
@@ -32,9 +34,9 @@ public class CreateQNADto {
 
     private String writer;
 
-    private LocalDate createdAt;
+    private LocalDateTime  createdAt;
 
-    private LocalDate modifyDate;
+    private LocalDateTime  modifyDate;
 
     private String answer="N"; // 답변 달림 여부 Y, N
 
@@ -42,12 +44,12 @@ public class CreateQNADto {
 
     private MultipartFile file;
 
-    private String image;
+    private String fileOriginal;
 
 
 
     public CreateQNADto() {
-        this.createdAt = LocalDate.now(); // 기본 생성자에서 현재 날짜로 초기화
+        this.createdAt = LocalDateTime .now(); // 기본 생성자에서 현재 날짜로 초기화
     }
 
 
@@ -72,7 +74,7 @@ public class CreateQNADto {
         this.content = myQNA.getContent();
         this.member = myQNA.getMember(); // MyQNA 객체의 member 필드를 가져옴
         this.writer = myQNA.getMember().getName(); // 작성자 이름 설정
-        //this.writer = member != null ? member.getName() : myQNA.getMember().getName();;
+        this.fileOriginal = myQNA.getFile();
         this.answer = myQNA.getAnswer();
     }
 }

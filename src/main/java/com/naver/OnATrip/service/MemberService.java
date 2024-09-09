@@ -98,7 +98,13 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email).orElseGet(() -> null);
         passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         member.updatePassword(passwordDto);
+        memberRepository.save(member);
         return email;
+    }
+
+    public boolean validatePassword(String email, String password) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        return member != null && passwordEncoder.matches(password, member.getPassword());
     }
 
     public Member findByEmail(String email) {
@@ -133,7 +139,25 @@ public class MemberService implements UserDetailsService {
         member.setSubscribe_status(status);
         save(member);
     }
+    @Transactional
+    public boolean withdraw(String email, String password) {
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            boolean passwordMatches = passwordEncoder.matches(password, member.getPassword());
 
+            System.out.println("Password matches: " + passwordMatches);
+
+            if (passwordMatches) {
+                memberRepository.delete(member); // 회원 삭제
+                return true;
+            } else {
+                return false; // 비밀번호 불일치
+            }
+        } else {
+            return false; // 회원 없음
+        }
+    }
 }
 
 
