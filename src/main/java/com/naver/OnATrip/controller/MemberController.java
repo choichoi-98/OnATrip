@@ -2,6 +2,7 @@ package com.naver.OnATrip.controller;
 
 import com.naver.OnATrip.entity.Member;
 import com.naver.OnATrip.entity.VerifyCode;
+import com.naver.OnATrip.repository.MemberRepository;
 import com.naver.OnATrip.service.EmailService;
 import com.naver.OnATrip.service.MemberService;
 import com.naver.OnATrip.service.VerifyCodeService;
@@ -17,20 +18,27 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final VerifyCodeService verifyCodeService;
+    private final PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @GetMapping("/login")
@@ -155,6 +163,53 @@ public class MemberController {
         return memberService.checkEmail(email);
     }
 
+    //마이페이지 비밀번호 변경
+    @PostMapping("/checkCurrentPassword")
+    public ResponseEntity<String> checkCurrentPassword(Principal principal, @RequestParam("currentPassword") String currentPassword) {
+        String email = principal.getName();
+        boolean isValid = memberService.validatePassword(email, currentPassword);
+        if (isValid) {
+            return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 일치합니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @PostMapping("/newPassword")
+    public ResponseEntity<String> changePassword(Principal principal, @RequestBody MemberDTO.PasswordDto passwordDto) {
+        try {
+            String email = principal.getName(); // 로그인된 사용자의 이메일을 가져옴
+            memberService.updatePassword(email, passwordDto);
+            return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 성공적으로 변경되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경 중 오류가 발생했습니다.");
+        }
+    }
+
     //회원 탈퇴
+    @ResponseBody
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdraw(@RequestParam("password") String password, Principal principal) {
+        try {
+            String email = principal.getName();
+            System.out.println("Withdraw email: " + email + ", password: " + password);
+
+            boolean result = memberService.withdraw(email, password);
+
+            if (result) {
+                return ResponseEntity.ok().body(Collections.singletonMap("success", true));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("success", false));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // 예외 로그를 남깁니다.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "서버 오류가 발생했습니다."));
+        }
+    }
+
+
+
 }
 

@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="css/plan/myPage.css">
 <script src="/js/plan/myPlanList.js"></script>
 <script src="/js/plan/myAlert.js"></script>
-<script src="/js/member/withdraw.js"></script>
+<script src="/js/member/memberInfo.js"></script>
 
 
 <body>
@@ -66,8 +66,39 @@
                                         <h5 class="card-title">사용자 정보</h5>
                                         <hr class="title-underline">
                                         <div class="button-container">
-                                            <p class="changePassword">비밀번호 변경</p>
+                                            <p class="changePassword" data-toggle="modal" data-target="#changePasswordModal">비밀번호 변경</p>
                                             <p class="withdraw" data-toggle="modal" data-target="#withdrawModal">회원탈퇴</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 비밀번호 변경 모달 -->
+                                    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="changePasswordModalLabel">비밀번호 변경</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="changePasswordForm">
+                                                        <div class="form-group">
+                                                            <label for="currentPassword">현재 비밀번호</label>
+                                                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="현재 비밀번호" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="newPassword">새 비밀번호</label>
+                                                            <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="confirmPassword">새 비밀번호 확인</label>
+                                                            <input type="password" class="form-control" id="confirmPassword" placeholder="새 비밀번호 확인" required>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">변경</button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 

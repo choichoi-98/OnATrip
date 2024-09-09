@@ -98,7 +98,13 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email).orElseGet(() -> null);
         passwordDto.setNewPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         member.updatePassword(passwordDto);
+        memberRepository.save(member);
         return email;
+    }
+
+    public boolean validatePassword(String email, String password) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        return member != null && passwordEncoder.matches(password, member.getPassword());
     }
 
     public Member findByEmail(String email) {
@@ -152,7 +158,6 @@ public class MemberService implements UserDetailsService {
             return false; // 회원 없음
         }
     }
-
 }
 
 

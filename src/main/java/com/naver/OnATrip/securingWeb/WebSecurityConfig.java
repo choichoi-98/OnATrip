@@ -45,6 +45,7 @@ public class WebSecurityConfig {
 //                                .requestMatchers( "/**").permitAll()
                                 .requestMatchers("/findPassword/**", "/join", "/checkEmail", "/","/mail","/sendEmail", "/main", "/subscribe","/location/**", "/check-authentication").permitAll()
                                 .requestMatchers("/admin/**","/memberQNAList","/memberQNAView","/submitAnswer").hasRole("ADMIN")
+                                .requestMatchers("/withdraw").authenticated()
                                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
 
                 )
@@ -68,7 +69,7 @@ public class WebSecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler())
                 )
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers("/payment/**","/admin/**","/member/**","/member/join")
+                        .ignoringRequestMatchers("/payment/**","/admin/**","/member/**","/member/join","/createQNA")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 );
 

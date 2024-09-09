@@ -16,4 +16,6 @@ public interface MyQNARepository extends JpaRepository<MyQNA, Long>, MyQNAReposi
     Page<MyQNA> findAll(Pageable pageable);
 
     Page<MyQNA> findByMemberEmail(String email, Pageable pageable);
+
+    void deleteByMemberId(Long memberId);
 }

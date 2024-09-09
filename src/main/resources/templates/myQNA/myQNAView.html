@@ -63,7 +63,8 @@
                         <input type="hidden" id="id" th:value="${myQNA.id}">
 
                         <div class="form-group">
-                            <label th:text="${myQNA.qnaStatus}">문의 유형</label>
+                            <label class="form-label">문의 유형</label>
+                            <p type="text" class="form-control" th:text="${myQNA.qnaStatus}"></p>
                         </div>
 
                         <div class="mb-3" id="title">
