@@ -41,7 +41,7 @@ $(document).ready(function() {
                 console.error("Error message: " + error);
                 console.error("Response text: " + xhr.responseText);
 
-                $passwordError.text('서버 오류가 발생했습니다. 다시 시도해 주세요.');
+                $passwordError.text('비밀번호가 일치하지 않습니다.');
             }
         });
     });
@@ -96,7 +96,7 @@ $(document).ready(function() {
                     console.error("Error status: " + status);
                     console.error("Error message: " + error);
                     console.error("Response text: " + xhr.responseText);
-                    alert('현재 비밀번호 확인 중 오류가 발생했습니다.');
+                    alert('비밀번호가 일치하지 않습니다.');
             }
         }); // 비밀번호 확인 ajax 끝
     });
